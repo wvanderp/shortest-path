@@ -33,6 +33,10 @@ public class Transport {
     @Getter
     private List<Quest> quests = new ArrayList<>();
 
+    /** The ids of items required to use this transport. If the player has **any** matching item, this transport is valid */
+    @Getter
+    private List<Integer> itemRequirements = new ArrayList<>();
+
     /** Whether the transport is an agility shortcut */
     @Getter
     private boolean isAgilityShortcut;
@@ -77,6 +81,10 @@ public class Transport {
     @Getter
     private boolean isTeleportationPortal;
 
+    /** Whether the transport is a player-held item */
+    @Getter
+    private boolean isPlayerItem;
+
     /** The additional travel time */
     @Getter
     private int wait;
@@ -85,9 +93,24 @@ public class Transport {
     @Getter
     private String displayInfo;
 
+    /** If this is an item transport, this tracks if it is consumable (as opposed to having infinite uses) */
+    @Getter
+    private final boolean isConsumable;
+
+    /** If this is an item transport, this is the maximum wilderness level that it can be used in */
+    @Getter
+    private final int maxWildernessLevel;
+
+    /** Any varbits to check for the transport to be valid. All must pass for a transport to be valid */
+    @Getter
+    private final List<TransportVarbit> varbits;
+
     Transport(final WorldPoint origin, final WorldPoint destination) {
         this.origin = origin;
         this.destination = destination;
+        this.isConsumable = false;
+        this.maxWildernessLevel = -1;
+        this.varbits = new ArrayList<>();
     }
 
     Transport(final String line, TransportType transportType) {
@@ -98,10 +121,14 @@ public class Transport {
         String[] parts_origin = parts[0].split(DELIM);
         String[] parts_destination = parts[1].split(DELIM);
 
-        origin = new WorldPoint(
-            Integer.parseInt(parts_origin[0]),
-            Integer.parseInt(parts_origin[1]),
-            Integer.parseInt(parts_origin[2]));
+        if(!TransportType.PLAYER_ITEM.equals(transportType)){
+            origin = new WorldPoint(
+                Integer.parseInt(parts_origin[0]),
+                Integer.parseInt(parts_origin[1]),
+                Integer.parseInt(parts_origin[2]));
+        } else {
+            origin = null;
+        }
         destination = new WorldPoint(
             Integer.parseInt(parts_destination[0]),
             Integer.parseInt(parts_destination[1]),
@@ -127,6 +154,15 @@ public class Transport {
             }
         }
 
+        itemRequirements = new ArrayList<>();
+        //item requirements are currently only implemented for player-held item transports
+        if(TransportType.PLAYER_ITEM.equals(transportType)){
+            for (String item : parts[4].split(DELIM)) {
+                int itemId = Integer.parseInt(item);
+                itemRequirements.add(itemId);
+            }
+        }
+
         // Quest requirements
         if (parts.length >= 6 && !parts[5].isEmpty()) {
             this.quests = findQuests(parts[5]);
@@ -135,11 +171,35 @@ public class Transport {
         // Additional travel time
         if (parts.length >= 7 && !parts[6].isEmpty()) {
             this.wait = Integer.parseInt(parts[6]);
+        } else if (TransportType.PLAYER_ITEM.equals(transportType)){
+            //item transports should always have a non-zero wait, so the pathfinder doesn't calculate the cost by distance
+            this.wait = 1;
         }
 
         // Destination
         if (parts.length >= 8 && !parts[7].isEmpty()) {
             this.displayInfo = parts[7];
+        }
+
+        //Consumable - for item transports
+        this.isConsumable = parts.length >= 9 && parts[8].equals("T");
+
+        //Wilderness level - for item transports
+        if(parts.length >= 10 && !parts[9].isEmpty()){
+            this.maxWildernessLevel = Integer.parseInt(parts[9]);
+        } else {
+            this.maxWildernessLevel = -1;
+        }
+
+        this.varbits = new ArrayList<>();
+        //Varbit check - all must evaluate to true
+        if(parts.length >= 11 && !parts[10].isEmpty()) {
+            for (String varbitCheck : parts[10].split(DELIM)) {
+                var varbitParts = varbitCheck.split("=");
+                int varbitId = Integer.parseInt(varbitParts[0]);
+                int varbitValue = Integer.parseInt(varbitParts[1]);
+                varbits.add(new TransportVarbit(varbitId, varbitValue));
+            }
         }
 
         isAgilityShortcut = TransportType.AGILITY_SHORTCUT.equals(transportType);
@@ -152,6 +212,7 @@ public class Transport {
         isSpiritTree = TransportType.SPIRIT_TREE.equals(transportType);
         isTeleportationLever = TransportType.TELEPORTATION_LEVER.equals(transportType);
         isTeleportationPortal = TransportType.TELEPORTATION_PORTAL.equals(transportType);
+        isPlayerItem = TransportType.PLAYER_ITEM.equals(transportType);
     }
 
     /** The skill level required to use this transport */
@@ -176,6 +237,25 @@ public class Transport {
             }
         }
         return quests;
+    }
+
+    private static void addItemTransports(Map<WorldPoint, List<Transport>> transports) {
+        try {
+            String s = new String(Util.readAllBytes(ShortestPathPlugin.class.getResourceAsStream("/items.tsv")), StandardCharsets.UTF_8);
+            Scanner scanner = new Scanner(s);
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+
+                if (line.startsWith("#") || line.isBlank()) {
+                    continue;
+                }
+                Transport transport = new Transport(line, TransportType.PLAYER_ITEM);
+                transports.computeIfAbsent(null, k -> new ArrayList<>()).add(transport);
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static void addTransports(Map<WorldPoint, List<Transport>> transports, String path, TransportType transportType) {
@@ -241,6 +321,8 @@ public class Transport {
         addTransports(transports, "/levers.tsv", TransportType.TELEPORTATION_LEVER);
         addTransports(transports, "/portals.tsv", TransportType.TELEPORTATION_PORTAL);
 
+        addItemTransports(transports);
+
         return transports;
     }
 
@@ -255,6 +337,7 @@ public class Transport {
         GNOME_GLIDER,
         SPIRIT_TREE,
         TELEPORTATION_LEVER,
-        TELEPORTATION_PORTAL
+        TELEPORTATION_PORTAL,
+        PLAYER_ITEM,
     }
 }
