@@ -18,7 +18,6 @@ import net.runelite.client.ui.JagexColors;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayPosition;
-import net.runelite.client.ui.overlay.OverlayPriority;
 
 import javax.annotation.Nullable;
 
@@ -39,7 +38,7 @@ public class PathMapTooltipOverlay extends Overlay {
         this.plugin = plugin;
         this.config = config;
         setPosition(OverlayPosition.DYNAMIC);
-        setPriority(OverlayPriority.LOW);
+        setPriority(Overlay.PRIORITY_LOW);
         setLayer(OverlayLayer.MANUAL);
         drawAfterInterface(InterfaceID.WORLD_MAP);
     }
@@ -55,8 +54,8 @@ public class PathMapTooltipOverlay extends Overlay {
             Point cursorPos = client.getMouseCanvasPosition();
             for (int i = 0; i < path.size(); i++) {
                 WorldPoint nextPoint = null;
-                if(path.size() > i+1){
-                    nextPoint = path.get(i+1);
+                if (path.size() > i + 1) {
+                    nextPoint = path.get(i + 1);
                 }
                 if (drawTooltip(graphics, cursorPos, path.get(i), nextPoint, i + 1)) {
                     return null;
@@ -83,9 +82,9 @@ public class PathMapTooltipOverlay extends Overlay {
         }
 
         List<String> rows = new ArrayList<>(Arrays.asList("Shortest path:", "Step " + n + " of " + plugin.getPathfinder().getPath().size()));
-        if(nextPoint != null){
-            for(Transport transport : plugin.getPathfinderConfig().getTransports().getOrDefault(point, new ArrayList<>())){
-                if(nextPoint.equals(transport.getDestination())) {
+        if (nextPoint != null) {
+            for (Transport transport : plugin.getPathfinderConfig().getTransports().getOrDefault(point, new ArrayList<>())) {
+                if (nextPoint.equals(transport.getDestination())) {
                     rows.add(transport.getDisplayInfo());
                     break;
                 }

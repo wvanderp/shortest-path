@@ -129,20 +129,20 @@ public class Pathfinder implements Runnable {
 
             node = boundary.removeFirst();
 
-            if(this.maxWildernessLevelItemsAdded > 20){
-                //make sure item transports aren't added twice
+            if (this.maxWildernessLevelItemsAdded > 20) {
+                // make sure item transports aren't added twice
                 boolean shouldAddItems = false;
-                //these are overlapping boundaries, so if the node isn't in level 30, it's in 0-29
+                // these are overlapping boundaries, so if the node isn't in level 30, it's in 0-29
                 // likewise, if the node isn't in level 20, it's in 0-19
-                if(this.maxWildernessLevelItemsAdded > 30 && !config.isInLevel30Wilderness(node.packedPosition)) {
+                if (this.maxWildernessLevelItemsAdded > 30 && !config.isInLevel30Wilderness(node.packedPosition)) {
                     this.maxWildernessLevelItemsAdded = 30;
                     shouldAddItems = true;
                 }
-                if(this.maxWildernessLevelItemsAdded > 20 && !config.isInLevel20Wilderness(node.packedPosition)) {
+                if (this.maxWildernessLevelItemsAdded > 20 && !config.isInLevel20Wilderness(node.packedPosition)) {
                     this.maxWildernessLevelItemsAdded = 20;
                     shouldAddItems = true;
                 }
-                if(shouldAddItems){
+                if (shouldAddItems) {
                     config.refreshPlayerTransportData(WorldPointUtil.unpackWorldPoint(node.packedPosition), this.maxWildernessLevelItemsAdded);
                 }
             }

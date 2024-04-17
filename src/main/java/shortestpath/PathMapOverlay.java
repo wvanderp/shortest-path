@@ -17,7 +17,6 @@ import net.runelite.api.widgets.Widget;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayPosition;
-import net.runelite.client.ui.overlay.OverlayPriority;
 import net.runelite.client.ui.overlay.worldmap.WorldMapOverlay;
 import shortestpath.pathfinder.CollisionMap;
 
@@ -35,7 +34,7 @@ public class PathMapOverlay extends Overlay {
         this.plugin = plugin;
         this.config = config;
         setPosition(OverlayPosition.DYNAMIC);
-        setPriority(OverlayPriority.LOW);
+        setPriority(Overlay.PRIORITY_LOW);
         setLayer(OverlayLayer.MANUAL);
         drawAfterLayer(ComponentID.WORLD_MAP_MAPVIEW);
     }

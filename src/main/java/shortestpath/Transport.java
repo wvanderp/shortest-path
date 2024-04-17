@@ -121,7 +121,7 @@ public class Transport {
         String[] parts_origin = parts[0].split(DELIM);
         String[] parts_destination = parts[1].split(DELIM);
 
-        if(!TransportType.PLAYER_ITEM.equals(transportType)){
+        if (!TransportType.PLAYER_ITEM.equals(transportType)) {
             origin = new WorldPoint(
                 Integer.parseInt(parts_origin[0]),
                 Integer.parseInt(parts_origin[1]),
@@ -155,9 +155,10 @@ public class Transport {
         }
 
         itemRequirements = new ArrayList<>();
-        //item requirements are currently only implemented for player-held item transports
-        if(TransportType.PLAYER_ITEM.equals(transportType)){
-            for (String item : parts[4].split(DELIM)) {
+        // Item requirements are currently only implemented for player-held item transports
+        if (TransportType.PLAYER_ITEM.equals(transportType)) {
+            String[] itemIds = parts[4].split(";");
+            for (String item : itemIds) {
                 int itemId = Integer.parseInt(item);
                 itemRequirements.add(itemId);
             }
@@ -171,9 +172,10 @@ public class Transport {
         // Additional travel time
         if (parts.length >= 7 && !parts[6].isEmpty()) {
             this.wait = Integer.parseInt(parts[6]);
-        } else if (TransportType.PLAYER_ITEM.equals(transportType)){
-            //item transports should always have a non-zero wait, so the pathfinder doesn't calculate the cost by distance
-            this.wait = 1;
+        }
+        if (TransportType.PLAYER_ITEM.equals(transportType)) {
+            // Item transports should always have a non-zero wait, so the pathfinder doesn't calculate the cost by distance
+            this.wait = Math.max(this.wait, 1);
         }
 
         // Destination
@@ -181,19 +183,19 @@ public class Transport {
             this.displayInfo = parts[7];
         }
 
-        //Consumable - for item transports
+        // Consumable - for item transports
         this.isConsumable = parts.length >= 9 && parts[8].equals("T");
 
-        //Wilderness level - for item transports
-        if(parts.length >= 10 && !parts[9].isEmpty()){
+        // Wilderness level - for item transports
+        if (parts.length >= 10 && !parts[9].isEmpty()) {
             this.maxWildernessLevel = Integer.parseInt(parts[9]);
         } else {
             this.maxWildernessLevel = -1;
         }
 
         this.varbits = new ArrayList<>();
-        //Varbit check - all must evaluate to true
-        if(parts.length >= 11 && !parts[10].isEmpty()) {
+        // Varbit check - all must evaluate to true
+        if (parts.length >= 11 && !parts[10].isEmpty()) {
             for (String varbitCheck : parts[10].split(DELIM)) {
                 var varbitParts = varbitCheck.split("=");
                 int varbitId = Integer.parseInt(varbitParts[0]);
@@ -252,6 +254,7 @@ public class Transport {
                 Transport transport = new Transport(line, TransportType.PLAYER_ITEM);
                 transports.computeIfAbsent(null, k -> new ArrayList<>()).add(transport);
             }
+            scanner.close();
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -302,6 +305,7 @@ public class Transport {
                     }
                 }
             }
+            scanner.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

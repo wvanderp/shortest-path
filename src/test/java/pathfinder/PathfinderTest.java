@@ -141,6 +141,7 @@ public class PathfinderTest {
                     Integer.parseInt(parts_destination[1]),
                     Integer.parseInt(parts_destination[2])});
             }
+            scanner.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

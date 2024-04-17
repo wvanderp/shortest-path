@@ -15,7 +15,6 @@ import net.runelite.api.GameState;
 import net.runelite.api.InventoryID;
 import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
-import net.runelite.api.Player;
 import net.runelite.api.Quest;
 import net.runelite.api.QuestState;
 import net.runelite.api.Skill;
@@ -35,7 +34,6 @@ public class PathfinderConfig {
     private static final WorldArea WILDERNESS_ABOVE_GROUND_LEVEL_20 = new WorldArea(2944, 3680, 448, 448, 0);
     private static final WorldArea WILDERNESS_ABOVE_GROUND_LEVEL_30 = new WorldArea(2944, 3760, 448, 448, 0);
     private static final WorldArea WILDERNESS_UNDERGROUND = new WorldArea(2944, 9918, 320, 442, 0);
-    //todo: check that these are correct y values.
     private static final WorldArea WILDERNESS_UNDERGROUND_LEVEL_20 = new WorldArea(2944, 10075, 320, 442, 0);
     private static final WorldArea WILDERNESS_UNDERGROUND_LEVEL_30 = new WorldArea(2944, 10155, 320, 442, 0);
 
@@ -123,13 +121,13 @@ public class PathfinderConfig {
     public void refreshPlayerTransportData(@Nonnull WorldPoint location, int wildernessLevel) {
         //TODO: This just checks the player's inventory and equipment. Later, bank items could be included, but the player will probably need to configure which items are considered
         var inventoryItems = Arrays.stream(new InventoryID[]{InventoryID.INVENTORY, InventoryID.EQUIPMENT})
-                .map(client::getItemContainer)
-                .filter(Objects::nonNull)
-                .map(ItemContainer::getItems)
-                .flatMap(Arrays::stream)
-                .map(Item::getId)
-                .filter(itemId -> itemId != -1)
-                .collect(Collectors.toList());
+            .map(client::getItemContainer)
+            .filter(Objects::nonNull)
+            .map(ItemContainer::getItems)
+            .flatMap(Arrays::stream)
+            .map(Item::getId)
+            .filter(itemId -> itemId != -1)
+            .collect(Collectors.toList());
 
         boolean skipInventoryCheck = config.playerItemTransportSetting() == PlayerItemTransportSetting.All;
 
@@ -137,10 +135,8 @@ public class PathfinderConfig {
         List<Transport> usableTransports = new ArrayList<>(playerItemTransports.size());
         for (Transport transport : playerItemTransports) {
             boolean itemInInventory = skipInventoryCheck || transport.getItemRequirements().isEmpty() ||
-                    transport.getItemRequirements().stream().anyMatch(inventoryItems::contains);
-
-            //questStates and varbits cannot be checked in a non-main thread, so item transports' quests and varbits are cached in `refreshTransportData`
-
+                transport.getItemRequirements().stream().anyMatch(inventoryItems::contains);
+            // questStates and varbits cannot be checked in a non-main thread, so item transports' quests and varbits are cached in `refreshTransportData`
             if (useTransport(transport) && itemInInventory && transport.getMaxWildernessLevel() >= wildernessLevel) {
                 usableTransports.add(transport);
             }
@@ -171,13 +167,13 @@ public class PathfinderConfig {
                     }
                 }
 
-                for(TransportVarbit varbitCheck : transport.getVarbits()) {
+                for (TransportVarbit varbitCheck : transport.getVarbits()) {
                     varbitValues.put(varbitCheck.getVarbitId(), client.getVarbitValue(varbitCheck.getVarbitId()));
                 }
 
-                if(entry.getKey() == null){
-                    //null keys are for player-centered transports. They are added in refreshPlayerTransportData at pathfinding time.
-                    //still need to get quest states for these transports while we're in the client thread though
+                if (entry.getKey() == null) {
+                    // null keys are for player-centered transports. They are added in refreshPlayerTransportData at pathfinding time.
+                    // still need to get quest states for these transports while we're in the client thread though
                     continue;
                 }
 
@@ -188,7 +184,7 @@ public class PathfinderConfig {
 
             WorldPoint point = entry.getKey();
 
-            if(point != null) {
+            if (point != null) {
                 transports.put(point, usableTransports);
                 transportsPacked.put(WorldPointUtil.packWorldPoint(point), usableTransports);
             }
@@ -200,19 +196,23 @@ public class PathfinderConfig {
     }
 
     public static boolean isInWilderness(int packedPoint) {
-        return WorldPointUtil.distanceToArea(packedPoint, WILDERNESS_ABOVE_GROUND) == 0 || WorldPointUtil.distanceToArea(packedPoint, WILDERNESS_UNDERGROUND) == 0;
+        return WorldPointUtil.distanceToArea(packedPoint, WILDERNESS_ABOVE_GROUND) == 0
+            || WorldPointUtil.distanceToArea(packedPoint, WILDERNESS_UNDERGROUND) == 0;
     }
 
     public boolean avoidWilderness(int packedPosition, int packedNeightborPosition, boolean targetInWilderness) {
-        return avoidWilderness && !isInWilderness(packedPosition) && isInWilderness(packedNeightborPosition) && !targetInWilderness;
+        return avoidWilderness && !targetInWilderness
+            && !isInWilderness(packedPosition) && isInWilderness(packedNeightborPosition);
     }
 
     public boolean isInLevel20Wilderness(int packedPoint) {
-        return WorldPointUtil.distanceToArea(packedPoint, WILDERNESS_ABOVE_GROUND_LEVEL_20) == 0 || WorldPointUtil.distanceToArea(packedPoint, WILDERNESS_UNDERGROUND_LEVEL_20) == 0;
+        return WorldPointUtil.distanceToArea(packedPoint, WILDERNESS_ABOVE_GROUND_LEVEL_20) == 0
+            || WorldPointUtil.distanceToArea(packedPoint, WILDERNESS_UNDERGROUND_LEVEL_20) == 0;
     }
 
     public boolean isInLevel30Wilderness(int packedPoint){
-        return WorldPointUtil.distanceToArea(packedPoint, WILDERNESS_ABOVE_GROUND_LEVEL_30) == 0 || WorldPointUtil.distanceToArea(packedPoint, WILDERNESS_UNDERGROUND_LEVEL_30) == 0;
+        return WorldPointUtil.distanceToArea(packedPoint, WILDERNESS_ABOVE_GROUND_LEVEL_30) == 0
+            || WorldPointUtil.distanceToArea(packedPoint, WILDERNESS_UNDERGROUND_LEVEL_30) == 0;
 
     }
 
@@ -230,8 +230,8 @@ public class PathfinderConfig {
     }
 
     private boolean varbitChecks(Transport transport) {
-        for(TransportVarbit varbitCheck : transport.getVarbits()) {
-            if(!varbitValues.get(varbitCheck.getVarbitId()).equals(varbitCheck.getValue())) {
+        for (TransportVarbit varbitCheck : transport.getVarbits()) {
+            if (!varbitValues.get(varbitCheck.getVarbitId()).equals(varbitCheck.getValue())) {
                 return false;
             }
         }
@@ -314,19 +314,19 @@ public class PathfinderConfig {
             return false;
         }
 
-        if (isPlayerItem){
-            switch (playerItemsSetting){
+        if (isPlayerItem) {
+            switch (playerItemsSetting) {
                 case None:
                     return false;
                 case InventoryNonConsumable:
                 case AllNonConsumable:
-                    if(transport.isConsumable()){
+                    if (transport.isConsumable()) {
                         return false;
                     }
             }
         }
 
-        if(!varbitChecks(transport)){
+        if (!varbitChecks(transport)) {
             return false;
         }
 
