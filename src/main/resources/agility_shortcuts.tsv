@@ -26,6 +26,12 @@
 2948 3313 0	2948 3309 0	Climb-into Underwall tunnel 16528	26 Agility				
 2485 2898 0	2489 2898 0	Climb-down Rocks 31759	30 Agility		Dragon Slayer I		
 2489 2898 0	2485 2898 0	Climb-down Rocks 31758	30 Agility		Dragon Slayer I		
+2925 2951 0	2925 2950 0	Cross Stepping stones 23645	30 Agility			2	
+2925 2949 0	2925 2950 0	Cross Stepping stones 23645	30 Agility			2	
+2925 2950 0	2925 2949 0	Cross Stepping stones 23646	30 Agility			2	
+2925 2948 0	2925 2949 0	Cross Stepping stones 23646	30 Agility			2	
+2925 2949 0	2925 2948 0	Cross Stepping stones 23647	30 Agility			2	
+2925 2947 0	2925 2948 0	Cross Stepping stones 23647	30 Agility			2	
 3149 3363 0	3150 3363 0	Jump-onto Stepping stone 16533	31 Agility			4	
 3154 3363 0	3153 3363 0	Jump-onto Stepping stone 16533	31 Agility			4	
 3150 3363 0	3151 3363 0	Jump-onto Stepping stone 16533	31 Agility			4	
@@ -144,6 +150,8 @@
 2838 3693 0	2844 3693 0	Climb Rocks 16464	73 Agility				
 2844 3693 0	2838 3693 0	Climb Rocks 16464	73 Agility				
 2843 3692 0	2838 3693 0	Climb Rocks 16464	73 Agility				
+2871 3008 0	2871 3003 0	Climb Rocks	79 Agility			5	
+2871 3003 0	2871 3008 0	Climb Rocks	79 Agility			5	
 2880 9813 0	2877 9813 0	Jump-over Strange floor 16510	80 Agility				
 2878 9813 0	2881 9813 0	Jump-over Strange floor 16510	80 Agility				
 2775 10003 0	2773 10003 0	Jump-over Strange floor 16544	81 Agility				
