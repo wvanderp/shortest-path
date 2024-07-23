@@ -26,14 +26,14 @@
 2948 3313 0	2948 3309 0	Climb-into Underwall tunnel 16528	26 Agility				
 2485 2898 0	2489 2898 0	Climb-down Rocks 31759	30 Agility		Dragon Slayer I		
 2489 2898 0	2485 2898 0	Climb-down Rocks 31758	30 Agility		Dragon Slayer I		
-3149 3363 0	3150 3363 0	Jump-onto Stepping stone 16533	31 Agility				
-3154 3363 0	3153 3363 0	Jump-onto Stepping stone 16533	31 Agility				
-3150 3363 0	3151 3363 0	Jump-onto Stepping stone 16533	31 Agility				
-3151 3363 0	3152 3363 0	Jump-onto Stepping stone 16533	31 Agility				
-3152 3363 0	3154 3363 0	Jump-onto Stepping stone 16533	31 Agility				
-3153 3363 0	3152 3363 0	Jump-onto Stepping stone 16533	31 Agility				
-3152 3363 0	3151 3363 0	Jump-onto Stepping stone 16533	31 Agility				
-3151 3363 0	3149 3363 0	Jump-onto Stepping stone 16533	31 Agility				
+3149 3363 0	3150 3363 0	Jump-onto Stepping stone 16533	31 Agility			4	
+3154 3363 0	3153 3363 0	Jump-onto Stepping stone 16533	31 Agility			4	
+3150 3363 0	3151 3363 0	Jump-onto Stepping stone 16533	31 Agility			4	
+3151 3363 0	3152 3363 0	Jump-onto Stepping stone 16533	31 Agility			4	
+3152 3363 0	3153 3363 0	Jump-onto Stepping stone 16533	31 Agility			4	
+3153 3363 0	3152 3363 0	Jump-onto Stepping stone 16533	31 Agility			4	
+3152 3363 0	3151 3363 0	Jump-onto Stepping stone 16533	31 Agility			4	
+3151 3363 0	3150 3363 0	Jump-onto Stepping stone 16533	31 Agility			4	
 2866 3428 0	2869 3428 0	Grapple Rocks 17042	32 Agility;35 Ranged;35 Strength				
 2602 3336 0	2598 3336 0	Walk-across Log balance 16548	33 Agility				
 2598 3336 0	2602 3336 0	Walk-across Log balance 16546	33 Agility				

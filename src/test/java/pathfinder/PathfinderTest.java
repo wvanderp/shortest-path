@@ -108,7 +108,7 @@ public class PathfinderTest {
         // 5 tiles is using the stepping stones
         // ~40 tiles is using the combat bracelet teleport to Champions Guild
         // >100 tiles is walking around the river via Barbarian Village
-        testTransportLength(5, new WorldPoint(3149, 3363, 0), new WorldPoint(3154, 3363, 0));
+        testTransportLength(6, new WorldPoint(3149, 3363, 0), new WorldPoint(3154, 3363, 0));
     }
 
     @Test
@@ -164,7 +164,7 @@ public class PathfinderTest {
         }
 
         assertTrue("No tests were performed", counter > 0);
-        System.out.println(String.format("Completed %d " + transportType + " transport length tests successfully", counter));
+        System.out.println(String.format("Successfully completed %d " + transportType + " transport length tests", counter));
     }
 
     private int calculateTransportLength(Transport transport) {
