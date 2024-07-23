@@ -172,13 +172,10 @@ public class Transport {
         if ((value = fieldMap.get("Duration")) != null) {
             this.duration = Integer.parseInt(value);
         }
-        if (TransportType.FAIRY_RING.equals(transportType)) {
-            this.duration = 5;
-        } else if (TransportType.TELEPORTATION_ITEM.equals(transportType)) {
-            // Teleportation items should always have a non-zero wait, so the pathfinder doesn't calculate the cost by distance
-            this.duration = Math.max(this.duration, 1);
-        } else if (TransportType.TELEPORTATION_SPELL.equals(transportType)) {
-            // Teleportation spells should always have a non-zero wait, so the pathfinder doesn't calculate the cost by distance
+        if (TransportType.TELEPORTATION_ITEM.equals(transportType)
+            || TransportType.TELEPORTATION_SPELL.equals(transportType)) {
+            // Teleportation items and spells should always have a non-zero wait,
+            // so the pathfinder doesn't calculate the cost by distance
             this.duration = Math.max(this.duration, 1);
         }
 
