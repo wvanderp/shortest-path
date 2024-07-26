@@ -36,11 +36,13 @@ import static shortestpath.TransportType.CHARTER_SHIP;
 import static shortestpath.TransportType.SHIP;
 import static shortestpath.TransportType.FAIRY_RING;
 import static shortestpath.TransportType.GNOME_GLIDER;
+import static shortestpath.TransportType.MINECART;
 import static shortestpath.TransportType.SPIRIT_TREE;
 import static shortestpath.TransportType.TELEPORTATION_LEVER;
 import static shortestpath.TransportType.TELEPORTATION_PORTAL;
 import static shortestpath.TransportType.TELEPORTATION_ITEM;
 import static shortestpath.TransportType.TELEPORTATION_SPELL;
+import static shortestpath.TransportType.WILDERNESS_OBELISK;
 
 public class PathfinderConfig {
     private static final WorldArea WILDERNESS_ABOVE_GROUND = new WorldArea(2944, 3523, 448, 448, 0);
@@ -76,10 +78,12 @@ public class PathfinderConfig {
         useShips,
         useFairyRings,
         useGnomeGliders,
+        useMinecarts,
         useSpiritTrees,
         useTeleportationLevers,
         useTeleportationPortals,
-        useTeleportationSpells;
+        useTeleportationSpells,
+        useWildernessObelisks;
     private TeleportationItem useTeleportationItems;
     private int agilityLevel;
     private int rangedLevel;
@@ -114,12 +118,14 @@ public class PathfinderConfig {
         useCharterShips = config.useCharterShips();
         useShips = config.useShips();
         useFairyRings = config.useFairyRings();
-        useSpiritTrees = config.useSpiritTrees();
         useGnomeGliders = config.useGnomeGliders();
+        useMinecarts = config.useMinecarts();
+        useSpiritTrees = config.useSpiritTrees();
+        useTeleportationItems = config.useTeleportationItems();
         useTeleportationLevers = config.useTeleportationLevers();
         useTeleportationPortals = config.useTeleportationPortals();
-        useTeleportationItems = config.useTeleportationItems();
         useTeleportationSpells = config.useTeleportationSpells();
+        useWildernessObelisks = config.useWildernessObelisks();
 
         if (GameState.LOGGED_IN.equals(client.getGameState())) {
             agilityLevel = client.getBoostedSkillLevel(Skill.AGILITY);
@@ -270,31 +276,29 @@ public class PathfinderConfig {
         if (AGILITY_SHORTCUT.equals(type)
             && (!useAgilityShortcuts || agilityLevel < transportAgilityLevel)) {
             return false;
-        } else if (GRAPPLE_SHORTCUT.equals(transport.getType())
+        } else if (GRAPPLE_SHORTCUT.equals(type)
             && (!useGrappleShortcuts
             || rangedLevel < transportRangedLevel
             || strengthLevel < transportStrengthLevel)) {
             return false;
-        } else if (BOAT.equals(transport.getType()) && !useBoats) {
+        } else if (BOAT.equals(type) && !useBoats) {
             return false;
-        } else if (CANOE.equals(transport.getType())
+        } else if (CANOE.equals(type)
             && (!useCanoes || woodcuttingLevel < transportWoodcuttingLevel)) {
             return false;
-        } else if (CHARTER_SHIP.equals(transport.getType()) && !useCharterShips) {
+        } else if (CHARTER_SHIP.equals(type) && !useCharterShips) {
             return false;
-        } else if (SHIP.equals(transport.getType()) && !useShips) {
+        } else if (SHIP.equals(type) && !useShips) {
             return false;
-        } else if (FAIRY_RING.equals(transport.getType()) && !useFairyRings) {
+        } else if (FAIRY_RING.equals(type) && !useFairyRings) {
             return false;
-        } else if (GNOME_GLIDER.equals(transport.getType()) && !useGnomeGliders) {
+        } else if (GNOME_GLIDER.equals(type) && !useGnomeGliders) {
             return false;
-        } else if (SPIRIT_TREE.equals(transport.getType()) && !useSpiritTrees) {
+        } else if (MINECART.equals(type) && !useMinecarts) {
             return false;
-        } else if (TELEPORTATION_LEVER.equals(transport.getType()) && !useTeleportationLevers) {
+        } else if (SPIRIT_TREE.equals(type) && !useSpiritTrees) {
             return false;
-        } else if (TELEPORTATION_PORTAL.equals(transport.getType()) && !useTeleportationPortals) {
-            return false;
-        } else if (TELEPORTATION_ITEM.equals(transport.getType())) {
+        } else if (TELEPORTATION_ITEM.equals(type)) {
             switch (useTeleportationItems) {
                 case NONE:
                     return false;
@@ -304,7 +308,13 @@ public class PathfinderConfig {
                         return false;
                     }
             }
-        } else if (TELEPORTATION_SPELL.equals(transport.getType()) && !useTeleportationSpells) {
+        } else if (TELEPORTATION_LEVER.equals(type) && !useTeleportationLevers) {
+            return false;
+        } else if (TELEPORTATION_PORTAL.equals(type) && !useTeleportationPortals) {
+            return false;
+        } else if (TELEPORTATION_SPELL.equals(type) && !useTeleportationSpells) {
+            return false;
+        } else if (WILDERNESS_OBELISK.equals(type) && !useWildernessObelisks) {
             return false;
         }
 

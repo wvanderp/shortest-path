@@ -169,7 +169,7 @@ public class Transport {
             this.quests = findQuests(value);
         }
 
-        if ((value = fieldMap.get("Duration")) != null) {
+        if ((value = fieldMap.get("Duration")) != null && !value.isEmpty()) {
             this.duration = Integer.parseInt(value);
         }
         if (TransportType.TELEPORTATION_ITEM.equals(transportType)
@@ -187,13 +187,13 @@ public class Transport {
             this.isConsumable = "T".equals(value) || "yes".equals(value.toLowerCase());
         }
 
-        if ((value = fieldMap.get("Wilderness level")) != null) {
+        if ((value = fieldMap.get("Wilderness level")) != null && !value.isEmpty()) {
             this.maxWildernessLevel =  Integer.parseInt(value);
         }
 
         if ((value = fieldMap.get("Varbits")) != null) {
             for (String varbitCheck : value.split(DELIM_MULTI)) {
-                var varbitParts = varbitCheck.split(DELIM_STATE);
+                String[] varbitParts = varbitCheck.split(DELIM_STATE);
                 int varbitId = Integer.parseInt(varbitParts[0]);
                 int varbitValue = Integer.parseInt(varbitParts[1]);
                 varbits.add(new TransportVarbit(varbitId, varbitValue));
@@ -232,6 +232,10 @@ public class Transport {
     }
 
     private static void addTransports(Map<WorldPoint, Set<Transport>> transports, String path, TransportType transportType) {
+        addTransports(transports, path, transportType, 0);
+    }
+
+    private static void addTransports(Map<WorldPoint, Set<Transport>> transports, String path, TransportType transportType, int radiusThreshold) {
         final String DELIM_COLUMN = "\t";
         final String PREFIX_COMMENT = "#";
 
@@ -281,7 +285,9 @@ public class Transport {
              * but can go from all origins with a missing destination to destination B.
              * Example: fairy ring <blank> -> AIQ
              * 
-             * Transports from origin A to destination A are skipped.
+             * Identical transports from origin A to destination A are skipped, and
+             * non-identical transports from origin A to destination A can be skipped
+             * by specifying a radius threshold to ignore almost identical coordinates.
              * Example: fairy ring AIQ -> AIQ
              */
             Set<Transport> transportOrigins = new HashSet<>();
@@ -308,8 +314,10 @@ public class Transport {
             }
             for (Transport origin : transportOrigins) {
                 for (Transport destination : transportDestinations) {
-                    transports.computeIfAbsent(origin.getOrigin(), k -> new HashSet<>())
-                        .add(new Transport(origin, destination));
+                    if (origin.getOrigin().distanceTo2D(destination.getDestination()) > radiusThreshold) {
+                        transports.computeIfAbsent(origin.getOrigin(), k -> new HashSet<>())
+                            .add(new Transport(origin, destination));
+                    }
                 }
             }
         } catch (IOException e) {
@@ -326,12 +334,14 @@ public class Transport {
         addTransports(transports, "/charter_ships.tsv", TransportType.CHARTER_SHIP);
         addTransports(transports, "/ships.tsv", TransportType.SHIP);
         addTransports(transports, "/fairy_rings.tsv", TransportType.FAIRY_RING);
-        addTransports(transports, "/gnome_gliders.tsv", TransportType.GNOME_GLIDER);
-        addTransports(transports, "/spirit_trees.tsv", TransportType.SPIRIT_TREE);
+        addTransports(transports, "/gnome_gliders.tsv", TransportType.GNOME_GLIDER, 6);
+        addTransports(transports, "/minecarts.tsv", TransportType.MINECART);
+        addTransports(transports, "/spirit_trees.tsv", TransportType.SPIRIT_TREE, 5);
+        addTransports(transports, "/teleportation_items.tsv", TransportType.TELEPORTATION_ITEM);
         addTransports(transports, "/teleportation_levers.tsv", TransportType.TELEPORTATION_LEVER);
         addTransports(transports, "/teleportation_portals.tsv", TransportType.TELEPORTATION_PORTAL);
-        addTransports(transports, "/teleportation_items.tsv", TransportType.TELEPORTATION_ITEM);
         addTransports(transports, "/teleportation_spells.tsv", TransportType.TELEPORTATION_SPELL);
+        addTransports(transports, "/wilderness_obelisks.tsv", TransportType.WILDERNESS_OBELISK);
         return transports;
     }
 }

@@ -82,14 +82,27 @@ public class PathfinderTest {
     }
 
     @Test
+    public void testFairyRings() {
+        when(config.useFairyRings()).thenReturn(true);
+        testTransportLength(2, TransportType.FAIRY_RING);
+    }
+
+    @Test
     public void testGnomeGliders() {
         when(config.useGnomeGliders()).thenReturn(true);
         testTransportLength(2, TransportType.GNOME_GLIDER);
     }
 
     @Test
+    public void testMinecarts() {
+        when(config.useMinecarts()).thenReturn(true);
+        testTransportLength(2, TransportType.MINECART);
+    }
+
+    @Test
     public void testSpiritTrees() {
         when(config.useSpiritTrees()).thenReturn(true);
+        when(client.getVarbitValue(any(Integer.class))).thenReturn(20);
         testTransportLength(2, TransportType.SPIRIT_TREE);
     }
 
@@ -97,6 +110,18 @@ public class PathfinderTest {
     public void testTeleportationLevers() {
         when(config.useTeleportationLevers()).thenReturn(true);
         testTransportLength(2, TransportType.TELEPORTATION_LEVER);
+    }
+
+    @Test
+    public void testTeleportationPortals() {
+        when(config.useTeleportationPortals()).thenReturn(true);
+        testTransportLength(2, TransportType.TELEPORTATION_PORTAL);
+    }
+
+    @Test
+    public void testWildernessObelisks() {
+        when(config.useWildernessObelisks()).thenReturn(true);
+        testTransportLength(2, TransportType.WILDERNESS_OBELISK);
     }
 
     @Test
@@ -118,6 +143,62 @@ public class PathfinderTest {
             new WorldPoint(3199, 3336, 0),
             new WorldPoint(3200, 3355, 0),
             TeleportationItem.ALL);
+    }
+
+    @Test
+    public void testNumberOfGnomeGliders() {
+        // All permutations of gnome glider transports are resolved from origins and destinations
+        int actualCount = 0;
+        for (WorldPoint origin : transports.keySet()) {
+            for (Transport transport : transports.get(origin)) {
+                if (TransportType.GNOME_GLIDER.equals(transport.getType())) {
+                    actualCount++;
+                }
+            }
+        }
+        /* Info:
+         * NB: Lemanto Andra (Digsite) can only be destination and origin
+         * single_glider_origin_locations * (number_of_gnome_gliders - 1)
+         *   1 * 6   // Ta Quir Priw (Gnome Stronghold)
+         * + 3 * 6   // Gandius (Karamja)
+         * + 3 * 6   // Kar-Hewo (Al-Kharid)
+         * + 2 * 6   // Sindarpos (White Wolf Mountain)
+         * + 3 * 6   // Lemantolly Undri (Feldip Hills)
+         * + 3 * 6   // Ookookolly Undri (Ape Atoll)
+         * = 90
+         */
+        assertEquals(90, actualCount);
+    }
+
+    @Test
+    public void testNumberOfSpiritTrees() {
+        // All permutations of spirit tree transports are resolved from origins and destinations
+        int actualCount = 0;
+        for (WorldPoint origin : transports.keySet()) {
+            for (Transport transport : transports.get(origin)) {
+                if (TransportType.SPIRIT_TREE.equals(transport.getType())) {
+                    actualCount++;
+                }
+            }
+        }
+        /* Info:
+         * single_tree_origin_locations * (number_of_spirit_trees - 1)
+         *   15 * 11   // Tree Gnome Village
+         * + 14 * 11   // Gnome Stronghold
+         * +  8 * 11   // Battlefield of Khazard
+         * +  8 * 11   // Grand Exchange
+         * +  8 * 11   // Feldip Hills
+         * +  7 * 11   // Prifddinas
+         * + 12 * 11   // Port Sarim
+         * + 12 * 11   // Etceteria
+         * + 12 * 11   // Brimhaven
+         * + 12 * 11   // Hosidius
+         * + 12 * 11   // Farming Guild
+         * +  0 * 11   // Player-owned house
+         * + 12 * 11   // Poison Waste
+         * = 1452
+         */
+        assertEquals(1452, actualCount);
     }
 
     private void setupConfig(QuestState questState, int skillLevel, TeleportationItem useTeleportationItems) {
