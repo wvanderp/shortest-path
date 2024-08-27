@@ -73,7 +73,7 @@ public class Transport {
         this.destination = destination.destination;
 
         for (int i = 0; i < skillLevels.length; i++) {
-            this.skillLevels[0] = Math.max(
+            this.skillLevels[i] = Math.max(
                 origin.skillLevels[i],
                 destination.skillLevels[i]);
         }
