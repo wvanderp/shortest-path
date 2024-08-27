@@ -3797,6 +3797,10 @@
 2666 3694 0	2666 3694 1	Climb-up Ladder 4187				2	
 2666 3694 1	2666 3694 0	Climb-down Ladder 4189				2	
 							
+# Mountain Camp							
+2761 3657 0	2761 3660 0	Climb-over Rockslide 5847			Mountain Daughter	4	260>=20
+2761 3660 0	2761 3657 0	Climb-over Rockslide 5847			Mountain Daughter	4	260>=20
+							
 # Isle of Stone							
 2465 4010 0	2461 10417 0	Enter Cave 37433					
 2461 10417 0	2465 4010 0	Exit Steps 37411					
