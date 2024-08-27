@@ -1,15 +1,15 @@
-# Origin	Destination	menuOption menuTarget objectID	Skills	Items	Quests	Duration	Info
+# Origin	Destination	menuOption menuTarget objectID	Skills	Items	Quests	Duration	Display info
 # Port Sarim, Musa Point							
 3029 3217 0	2956 3146 0	Pay-fare Captain Tobias 3644		30 Coins		10	
 2956 3146 0	3029 3217 0	Pay-Fare Customs officer 3648		30 Coins		10	
 							
 # Ardougne, Brimhaven, Rimmington							
-2683 3271 0	2772 3234 0	Brimhaven Captain Barnaby 9250		30 Coins		6	
-2683 3271 0	2915 3225 0	Rimmington Captain Barnaby 9250		30 Coins		6	
-2772 3234 0	2683 3271 0	Ardougne Captain Barnaby 8764		30 Coins		6	
-2772 3234 0	2915 3225 0	Rimmington Captain Barnaby 8764		30 Coins		6	
-2915 3225 0	2683 3271 0	Ardougne Captain Barnaby 8763		30 Coins		6	
-2915 3225 0	2772 3234 0	Brimhaven Captain Barnaby 8763		30 Coins		6	
+2683 3271 0	2772 3234 0	Brimhaven Captain Barnaby 9250		30 Coins		6	Brimhaven
+2683 3271 0	2915 3225 0	Rimmington Captain Barnaby 9250		30 Coins		6	Rimmington
+2772 3234 0	2683 3271 0	Ardougne Captain Barnaby 8764		30 Coins		6	Ardougne
+2772 3234 0	2915 3225 0	Rimmington Captain Barnaby 8764		30 Coins		6	Rimmington
+2915 3225 0	2683 3271 0	Ardougne Captain Barnaby 8763		30 Coins		6	Ardougne
+2915 3225 0	2772 3234 0	Brimhaven Captain Barnaby 8763		30 Coins		6	Brimhaven
 							
 # Rimmington, Corsair Cove							
 2909 3226 0	2578 2840 0	Travel Cabin Boy Colin 7967			The Corsair Curse	6	
@@ -37,12 +37,12 @@
 2138 3899 2	2222 3796 2	Travel Captain Bentley 6650				12	
 							
 # Port Sarim, Port Piscarilius, Land's End							
-3055 3245 0	1824 3691 0	Port Piscarilius Veos 8630				6	
-3055 3245 0	1504 3399 0	Land's End Veos 8630				6	
-1824 3691 0	3055 3245 0	Port Sarim Veos 10726				6	
-1824 3691 0	1504 3399 0	Land's End Veos 10726				6	
-1504 3399 0	3055 3245 0	Port Sarim Captain Magoro 7471				6	
-1504 3399 0	1824 3691 0	Port Piscarilius Captain Magoro 7471				6	
+3055 3245 0	1824 3691 0	Port Piscarilius Veos 8630				6	Port Piscarilius
+3055 3245 0	1504 3399 0	Land's End Veos 8630				6	Land's End
+1824 3691 0	3055 3245 0	Port Sarim Veos 10726				6	Port Sarim
+1824 3691 0	1504 3399 0	Land's End Veos 10726				6	Land's End
+1504 3399 0	3055 3245 0	Port Sarim Captain Magoro 7471				6	Port Sarim
+1504 3399 0	1824 3691 0	Port Piscarilius Captain Magoro 7471				6	Port Piscarilius
 							
 # Port Sarim, Entrana							
 3048 3234 0	2834 3331 1	Travel-boat Monk of Entrana 1165				15	

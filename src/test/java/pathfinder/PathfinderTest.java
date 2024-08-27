@@ -177,6 +177,46 @@ public class PathfinderTest {
     }
 
     @Test
+    public void testImpossibleCharterShips() {
+        when(config.useCharterShips()).thenReturn(true);
+
+        testTransportMinimumLength(3,
+            new WorldPoint(3702, 3503, 0), // Port Phasmatys
+            new WorldPoint(3671, 2931, 0)); // Mos Le'Harmless
+        testTransportMinimumLength(3,
+            new WorldPoint(3671, 2931, 0), // Mos Le'Harmless
+            new WorldPoint(3702, 3503, 0)); // Port Phasmatys
+
+        testTransportMinimumLength(3,
+            new WorldPoint(1808, 3679, 0), // Port Piscarilius
+            new WorldPoint(1496, 3403, 0)); // Land's End
+        testTransportMinimumLength(3,
+            new WorldPoint(1496, 3403, 0), // Land's End
+            new WorldPoint(1808, 3679, 0)); // Port Piscarilius
+
+        testTransportMinimumLength(3,
+            new WorldPoint(3038, 3192, 0), // Port Sarim
+            new WorldPoint(1496, 3403, 0)); // Land's End
+        testTransportMinimumLength(3,
+            new WorldPoint(1496, 3403, 0), // Land's End
+            new WorldPoint(3038, 3192, 0)); // Port Sarim
+
+        testTransportMinimumLength(3,
+            new WorldPoint(3038, 3192, 0), // Port Sarim
+            new WorldPoint(2954, 3158, 0)); // Musa Point
+        testTransportMinimumLength(3,
+            new WorldPoint(2954, 3158, 0), // Musa Point
+            new WorldPoint(3038, 3192, 0)); // Port Sarim
+
+        testTransportMinimumLength(3,
+            new WorldPoint(3038, 3192, 0), // Port Sarim
+            new WorldPoint(1808, 3679, 0)); // Port Piscarilius
+        testTransportMinimumLength(3,
+            new WorldPoint(1808, 3679, 0), // Port Piscarilius
+            new WorldPoint(3038, 3192, 0)); // Port Sarim
+    }
+
+    @Test
     public void testNumberOfGnomeGliders() {
         // All permutations of gnome glider transports are resolved from origins and destinations
         int actualCount = 0;
@@ -287,6 +327,15 @@ public class PathfinderTest {
 
         assertTrue("No tests were performed", counter > 0);
         System.out.println(String.format("Successfully completed %d " + transportType + " transport length tests", counter));
+    }
+
+    private void testTransportMinimumLength(int minimumLength, WorldPoint origin, WorldPoint destination) {
+        setupConfig(QuestState.FINISHED, 99, TeleportationItem.ALL);
+        int actualLength = calculatePathLength(origin, destination);
+        assertTrue("An impossible transport was used with length " + actualLength, actualLength >= minimumLength);
+        System.out.println("Successfully completed transport length test from " +
+            "(" + origin.getX() + ", " + origin.getY() + ", " + origin.getPlane() + ") to " +
+            "(" + destination.getX() + ", " + destination.getY() + ", " + destination.getPlane() + ")");
     }
 
     private int calculateTransportLength(Transport transport) {

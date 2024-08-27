@@ -129,7 +129,9 @@ public class CollisionMap {
                 @SuppressWarnings("unchecked") // Casting EMPTY_LIST to List<Transport> is safe here
                 Set<Transport> neighborTransports = config.getTransportsPacked().getOrDefault(neighborPacked, (Set<Transport>)Collections.EMPTY_SET);
                 for (Transport transport : neighborTransports) {
-                    if (visited.get(transport.getOrigin())) continue;
+                    if (transport.getOrigin() == null || visited.get(transport.getOrigin())) {
+                        continue;
+                    }
                     neighbors.add(new Node(transport.getOrigin(), node));
                 }
             }
