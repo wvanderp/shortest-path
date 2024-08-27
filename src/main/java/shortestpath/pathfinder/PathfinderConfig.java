@@ -85,11 +85,7 @@ public class PathfinderConfig {
         useTeleportationSpells,
         useWildernessObelisks;
     private TeleportationItem useTeleportationItems;
-    private int agilityLevel;
-    private int rangedLevel;
-    private int strengthLevel;
-    private int prayerLevel;
-    private int woodcuttingLevel;
+    private final int[] boostedLevels = new int[Skill.values().length];
     private Map<Quest, QuestState> questStates = new HashMap<>();
     private Map<Integer, Integer> varbitValues = new HashMap<>();
 
@@ -128,11 +124,9 @@ public class PathfinderConfig {
         useWildernessObelisks = config.useWildernessObelisks();
 
         if (GameState.LOGGED_IN.equals(client.getGameState())) {
-            agilityLevel = client.getBoostedSkillLevel(Skill.AGILITY);
-            rangedLevel = client.getBoostedSkillLevel(Skill.RANGED);
-            strengthLevel = client.getBoostedSkillLevel(Skill.STRENGTH);
-            prayerLevel = client.getBoostedSkillLevel(Skill.PRAYER);
-            woodcuttingLevel = client.getBoostedSkillLevel(Skill.WOODCUTTING);
+            for (int i = 0; i < Skill.values().length; i++) {
+                boostedLevels[i] = client.getBoostedSkillLevel(Skill.values()[i]);
+            }
 
             refreshTransportData();
         }
@@ -262,29 +256,21 @@ public class PathfinderConfig {
     }
 
     private boolean useTransport(Transport transport) {
-        final int transportAgilityLevel = transport.getRequiredLevel(Skill.AGILITY);
-        final int transportRangedLevel = transport.getRequiredLevel(Skill.RANGED);
-        final int transportStrengthLevel = transport.getRequiredLevel(Skill.STRENGTH);
-        final int transportPrayerLevel = transport.getRequiredLevel(Skill.PRAYER);
-        final int transportWoodcuttingLevel = transport.getRequiredLevel(Skill.WOODCUTTING);
-
-        final boolean isPrayerLocked = transportPrayerLevel > 1;
         final boolean isQuestLocked = transport.isQuestLocked();
+
+        if (!hasRequiredLevels(transport)) {
+            return false;
+        }
 
         TransportType type = transport.getType();
 
-        if (AGILITY_SHORTCUT.equals(type)
-            && (!useAgilityShortcuts || agilityLevel < transportAgilityLevel)) {
+        if (AGILITY_SHORTCUT.equals(type) && !useAgilityShortcuts) {
             return false;
-        } else if (GRAPPLE_SHORTCUT.equals(type)
-            && (!useGrappleShortcuts
-            || rangedLevel < transportRangedLevel
-            || strengthLevel < transportStrengthLevel)) {
+        } else if (GRAPPLE_SHORTCUT.equals(type) && !useGrappleShortcuts) {
             return false;
         } else if (BOAT.equals(type) && !useBoats) {
             return false;
-        } else if (CANOE.equals(type)
-            && (!useCanoes || woodcuttingLevel < transportWoodcuttingLevel)) {
+        } else if (CANOE.equals(type) && !useCanoes) {
             return false;
         } else if (CHARTER_SHIP.equals(type) && !useCharterShips) {
             return false;
@@ -318,10 +304,6 @@ public class PathfinderConfig {
             return false;
         }
 
-        if (isPrayerLocked && prayerLevel < transportPrayerLevel) {
-            return false;
-        }
-
         if (isQuestLocked && !completedQuests(transport)) {
             return false;
         }
@@ -330,6 +312,19 @@ public class PathfinderConfig {
             return false;
         }
 
+        return true;
+    }
+
+    /** Checks if the player has all the required skill levels for the transport */
+    private boolean hasRequiredLevels(Transport transport) {
+        int[] requiredLevels = transport.getSkillLevels();
+        for (int i = 0; i < boostedLevels.length; i++) {
+            int boostedLevel = boostedLevels[i];
+            int requiredLevel = requiredLevels[i];
+            if (boostedLevel < requiredLevel) {
+                return false;
+            }
+        }
         return true;
     }
 }

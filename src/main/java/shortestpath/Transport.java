@@ -28,6 +28,7 @@ public class Transport {
     private WorldPoint destination = null;
 
     /** The skill levels required to use this transport */
+    @Getter
     private final int[] skillLevels = new int[Skill.values().length];
 
     /** The quests required to use this transport */
@@ -208,7 +209,7 @@ public class Transport {
     }
 
     /** The skill level required to use this transport */
-    public int getRequiredLevel(Skill skill) {
+    private int getRequiredLevel(Skill skill) {
         return skillLevels[skill.ordinal()];
     }
 
