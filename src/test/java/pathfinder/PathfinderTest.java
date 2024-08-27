@@ -4,6 +4,10 @@ import java.util.Map;
 import java.util.Set;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
+import net.runelite.api.InventoryID;
+import net.runelite.api.Item;
+import net.runelite.api.ItemContainer;
+import net.runelite.api.ItemID;
 import net.runelite.api.Quest;
 import net.runelite.api.QuestState;
 import net.runelite.api.Skill;
@@ -36,6 +40,9 @@ public class PathfinderTest {
 
     @Mock
     Client client;
+
+    @Mock
+    ItemContainer inventory;
 
     @Mock
     ShortestPathConfig config;
@@ -146,6 +153,30 @@ public class PathfinderTest {
     }
 
     @Test
+    public void testVarrockTeleport() {
+        // West of Varrock teleport destination to Varrock teleport destination
+        when(config.useTeleportationSpells()).thenReturn(true);
+
+        // With magic level 1 and no item requirements
+        testTransportLength(4,
+            new WorldPoint(3216, 3424, 0),
+            new WorldPoint(3213, 3424, 0),
+            TeleportationItem.NONE,
+            1);
+
+        // With magic level 99 with magic runes
+        setupInventory(
+            new Item(ItemID.LAW_RUNE, 1),
+            new Item(ItemID.AIR_RUNE, 3),
+            new Item(ItemID.FIRE_RUNE, 1));
+        testTransportLength(2,
+            new WorldPoint(3216, 3424, 0),
+            new WorldPoint(3213, 3424, 0),
+            TeleportationItem.INVENTORY,
+            99);
+    }
+
+    @Test
     public void testNumberOfGnomeGliders() {
         // All permutations of gnome glider transports are resolved from origins and destinations
         int actualCount = 0;
@@ -213,13 +244,23 @@ public class PathfinderTest {
         pathfinderConfig.refresh();
     }
 
+    private void setupInventory(Item... items) {
+        doReturn(inventory).when(client).getItemContainer(InventoryID.INVENTORY);
+        doReturn(items).when(inventory).getItems();
+    }
+
     private void testTransportLength(int expectedLength, WorldPoint origin, WorldPoint destination) {
-        testTransportLength(expectedLength, origin, destination, TeleportationItem.NONE);
+        testTransportLength(expectedLength, origin, destination, TeleportationItem.NONE, 99);
     }
 
     private void testTransportLength(int expectedLength, WorldPoint origin, WorldPoint destination,
         TeleportationItem useTeleportationItems) {
-        setupConfig(QuestState.FINISHED, 99, useTeleportationItems);
+        testTransportLength(expectedLength, origin, destination, useTeleportationItems, 99);
+    }
+
+    private void testTransportLength(int expectedLength, WorldPoint origin, WorldPoint destination,
+        TeleportationItem useTeleportationItems, int skillLevel) {
+        setupConfig(QuestState.FINISHED, skillLevel, useTeleportationItems);
         assertEquals(expectedLength, calculatePathLength(origin, destination));
         System.out.println("Successfully completed transport length test from " +
             "(" + origin.getX() + ", " + origin.getY() + ", " + origin.getPlane() + ") to " +
