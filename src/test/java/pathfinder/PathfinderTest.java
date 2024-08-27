@@ -164,7 +164,7 @@ public class PathfinderTest {
             TeleportationItem.NONE,
             1);
 
-        // With magic level 99 with magic runes
+        // With magic level 99 and magic runes
         setupInventory(
             new Item(ItemID.LAW_RUNE, 1),
             new Item(ItemID.AIR_RUNE, 3),
