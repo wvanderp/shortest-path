@@ -58,6 +58,7 @@ public class PathfinderConfig {
     private final Map<WorldPoint, Set<Transport>> allTransports;
     @Getter
     private Map<WorldPoint, Set<Transport>> transports;
+    private Set<Transport> teleports;
 
     // Copy of transports with packed positions for the hotpath; lists are not copied and are the same reference in both maps
     @Getter
@@ -96,6 +97,7 @@ public class PathfinderConfig {
         this.allTransports = transports;
         this.transports = new HashMap<>(allTransports.size());
         this.transportsPacked = new PrimitiveIntHashMap<>(allTransports.size());
+        this.teleports = new HashSet<>(allTransports.size());
         this.client = client;
         this.config = config;
     }
@@ -134,32 +136,16 @@ public class PathfinderConfig {
 
     /** Specialized method for only updating player-held item and spell transports */
     public void refreshPlayerTransportData(@Nonnull WorldPoint location, int wildernessLevel) {
-        //TODO: This just checks the player's inventory and equipment. Later, bank items could be included, but the player will probably need to configure which items are considered
-        List<Integer> inventoryItems = Arrays.stream(new InventoryID[]{InventoryID.INVENTORY, InventoryID.EQUIPMENT})
-            .map(client::getItemContainer)
-            .filter(Objects::nonNull)
-            .map(ItemContainer::getItems)
-            .flatMap(Arrays::stream)
-            .map(Item::getId)
-            .filter(itemId -> itemId != -1)
-            .collect(Collectors.toList());
-
-        boolean skipInventoryCheck = TeleportationItem.ALL.equals(useTeleportationItems);
-
-        Set<Transport> playerItemTransports = allTransports.getOrDefault(null, new HashSet<>());
-        Set<Transport> usableTransports = new HashSet<>(playerItemTransports.size());
-        for (Transport transport : playerItemTransports) {
-            boolean itemInInventory = skipInventoryCheck ||
-                (!transport.getItemIdRequirements().isEmpty() && transport.getItemIdRequirements().stream().anyMatch(requirements -> requirements.stream().allMatch(inventoryItems::contains)));
-            // questStates and varbits cannot be checked in a non-main thread, so item transports' quests and varbits are cached in `refreshTransportData`
-            if (useTransport(transport) && itemInInventory && transport.getMaxWildernessLevel() >= wildernessLevel) {
-                usableTransports.add(transport);
+        Set<Transport> usableTeleports = new HashSet<>(teleports.size());
+        for (Transport teleport : teleports) {
+            if (teleport.getMaxWildernessLevel() >= wildernessLevel) {
+                usableTeleports.add(teleport);
             }
         }
 
-        if (!usableTransports.isEmpty()) {
-            transports.put(location, usableTransports);
-            transportsPacked.put(WorldPointUtil.packWorldPoint(location), usableTransports);
+        if (!usableTeleports.isEmpty()) {
+            transports.put(location, usableTeleports);
+            transportsPacked.put(WorldPointUtil.packWorldPoint(location), usableTeleports);
         }
     }
 
@@ -188,13 +174,9 @@ public class PathfinderConfig {
                     varbitValues.put(varbitCheck.getVarbitId(), client.getVarbitValue(varbitCheck.getVarbitId()));
                 }
 
-                if (entry.getKey() == null) {
-                    // null keys are for player-centered transports. They are added in refreshPlayerTransportData at pathfinding time.
-                    // still need to get quest states for these transports while we're in the client thread though
-                    continue;
-                }
-
-                if (useTransport(transport)) {
+                if (entry.getKey() == null && hasRequiredItems(transport) && useTransport(transport)) {
+                    teleports.add(transport);
+                } else if (useTransport(transport)) {
                     usableTransports.add(transport);
                 }
             }
@@ -326,5 +308,23 @@ public class PathfinderConfig {
             }
         }
         return true;
+    }
+
+    /** Checks if the player has all the required equipment and inventory items for the transport */
+    private boolean hasRequiredItems(Transport transport) {
+        if (TeleportationItem.ALL.equals(useTeleportationItems) &&
+            TransportType.TELEPORTATION_ITEM.equals(transport.getType())) {
+            return true;
+        }
+        List<Integer> inventoryItems = Arrays.stream(new InventoryID[]{InventoryID.INVENTORY, InventoryID.EQUIPMENT})
+            .map(client::getItemContainer)
+            .filter(Objects::nonNull)
+            .map(ItemContainer::getItems)
+            .flatMap(Arrays::stream)
+            .map(Item::getId)
+            .filter(itemId -> itemId != -1)
+            .collect(Collectors.toList());
+        // TODO: this does not check quantity
+        return transport.getItemIdRequirements().stream().anyMatch(requirements -> requirements.stream().allMatch(inventoryItems::contains));
     }
 }
