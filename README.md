@@ -9,3 +9,6 @@ Draws the shortest path to a chosen destination on the map (right click a spot o
 
 ## Features, examples and options
 Read the [plugin wiki](../../wiki) for info about features, examples and plugin options.
+
+## Discord server
+Join the [Discord server](https://discord.gg/uX47xg8u3M) if you want to talk about the plugin with other people.
