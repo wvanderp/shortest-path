@@ -40,6 +40,7 @@ import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
+import net.runelite.client.events.PluginMessage;
 import net.runelite.client.game.SpriteManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
@@ -63,6 +64,10 @@ import shortestpath.pathfinder.SplitFlagMap;
 )
 public class ShortestPathPlugin extends Plugin {
     protected static final String CONFIG_GROUP = "shortestpath";
+    private static final String PLUGIN_MESSAGE_PATH = "path";
+    private static final String PLUGIN_MESSAGE_CLEAR = "clear";
+    private static final String PLUGIN_MESSAGE_START = "start";
+    private static final String PLUGIN_MESSAGE_TARGET = "target";
     private static final String CLEAR = "Clear";
     private static final String PATH = ColorUtil.wrapWithColorTag("Path", JagexColors.MENU_TARGET);
     private static final String SET = "Set";
@@ -218,6 +223,31 @@ public class ShortestPathPlugin extends Plugin {
             if (pathfinder != null) {
                 restartPathfinding(pathfinder.getStart(), pathfinder.getTarget());
             }
+        }
+    }
+
+    @Subscribe
+    public void onPluginMessage(PluginMessage event) {
+        if (!CONFIG_GROUP.equals(event.getNamespace())) {
+            return;
+        }
+
+        String action = event.getName();
+        if (PLUGIN_MESSAGE_PATH.equals(action)) {
+            Map<String, Object> data = event.getData();
+            Object objStart = data.getOrDefault(PLUGIN_MESSAGE_START, null);
+            Object objTarget = data.getOrDefault(PLUGIN_MESSAGE_TARGET, null);
+            WorldPoint start = (objStart instanceof WorldPoint) ? ((WorldPoint) objStart) : null;
+            WorldPoint target = (objTarget instanceof WorldPoint) ? ((WorldPoint) objTarget) : null;
+            if (target == null || (start == null && client.getLocalPlayer() == null)) {
+                return;
+            }
+            if (start == null) {
+                start = client.getLocalPlayer().getWorldLocation();
+            }
+            restartPathfinding(start, target);
+        } else if (PLUGIN_MESSAGE_CLEAR.equals(action)) {
+            setTarget(null);
         }
     }
 
