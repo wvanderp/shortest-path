@@ -367,11 +367,6 @@ public class ShortestPathPlugin extends Plugin {
     }
 
     private void setTarget(WorldPoint target) {
-        Player localPlayer = client.getLocalPlayer();
-        if (!startPointSet && localPlayer == null) {
-            return;
-        }
-
         if (target == null) {
             synchronized (pathfinderMutex) {
                 if (pathfinder != null) {
@@ -384,6 +379,10 @@ public class ShortestPathPlugin extends Plugin {
             marker = null;
             startPointSet = false;
         } else {
+            Player localPlayer = client.getLocalPlayer();
+            if (!startPointSet && localPlayer == null) {
+                return;
+            }
             worldMapPointManager.removeIf(x -> x == marker);
             marker = new WorldMapPoint(target, MARKER_IMAGE);
             marker.setName("Target");
