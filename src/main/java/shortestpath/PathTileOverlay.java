@@ -8,6 +8,7 @@ import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import net.runelite.api.Client;
@@ -198,8 +199,15 @@ public class PathTileOverlay extends Overlay {
     }
 
     private void drawLine(Graphics2D graphics, WorldPoint startLoc, WorldPoint endLoc, Color color, int counter) {
-        WorldPoint start = WorldPoint.toLocalInstance(client, startLoc).iterator().next();
-        WorldPoint end = WorldPoint.toLocalInstance(client, endLoc).iterator().next();
+        Collection<WorldPoint> starts = WorldPoint.toLocalInstance(client, startLoc);
+        Collection<WorldPoint> ends = WorldPoint.toLocalInstance(client, endLoc);
+
+        if (starts.isEmpty() || ends.isEmpty()) {
+            return;
+        }
+
+        WorldPoint start = starts.iterator().next();
+        WorldPoint end = ends.iterator().next();
 
         final int z = client.getPlane();
         if (start.getPlane() != z) {
