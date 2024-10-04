@@ -56,10 +56,10 @@ public class PathfinderConfig {
     private final ThreadLocal<CollisionMap> map;
     /** All transports by origin {@link WorldPoint}. The null key is used for transports centered on the player. */
     private final Map<WorldPoint, Set<Transport>> allTransports;
+    private final Set<Transport> usableTeleports;
+
     @Getter
     private Map<WorldPoint, Set<Transport>> transports;
-    private Set<Transport> teleports;
-
     // Copy of transports with packed positions for the hotpath; lists are not copied and are the same reference in both maps
     @Getter
     private PrimitiveIntHashMap<Set<Transport>> transportsPacked;
@@ -95,9 +95,9 @@ public class PathfinderConfig {
         this.mapData = mapData;
         this.map = ThreadLocal.withInitial(() -> new CollisionMap(this.mapData));
         this.allTransports = transports;
-        this.transports = new HashMap<>(allTransports.size());
-        this.transportsPacked = new PrimitiveIntHashMap<>(allTransports.size());
-        this.teleports = new HashSet<>(allTransports.size());
+        this.usableTeleports = new HashSet<>(allTransports.size() / 20);
+        this.transports = new HashMap<>(allTransports.size() / 2);
+        this.transportsPacked = new PrimitiveIntHashMap<>(allTransports.size() / 2);
         this.client = client;
         this.config = config;
     }
@@ -130,26 +130,27 @@ public class PathfinderConfig {
                 boostedLevels[i] = client.getBoostedSkillLevel(Skill.values()[i]);
             }
 
-            refreshTransportData();
+            refreshTransports();
         }
     }
 
     /** Specialized method for only updating player-held item and spell transports */
-    public void refreshPlayerTransportData(@Nonnull WorldPoint location, int wildernessLevel) {
-        Set<Transport> usableTeleports = new HashSet<>(teleports.size());
-        for (Transport teleport : teleports) {
-            if (teleport.getMaxWildernessLevel() >= wildernessLevel) {
-                usableTeleports.add(teleport);
+    public void refreshTeleports(int packedLocation, int wildernessLevel) {
+        Set<Transport> usableWildyTeleports = new HashSet<>(usableTeleports.size());
+
+        for (Transport teleport : usableTeleports) {
+            if (wildernessLevel <= teleport.getMaxWildernessLevel()) {
+                usableWildyTeleports.add(teleport);
             }
         }
 
-        if (!usableTeleports.isEmpty()) {
-            transports.put(location, usableTeleports);
-            transportsPacked.put(WorldPointUtil.packWorldPoint(location), usableTeleports);
+        if (!usableWildyTeleports.isEmpty()) {
+            transports.put(WorldPointUtil.unpackWorldPoint(packedLocation), usableWildyTeleports);
+            transportsPacked.put(packedLocation, usableWildyTeleports);
         }
     }
 
-    private void refreshTransportData() {
+    private void refreshTransports() {
         if (!Thread.currentThread().equals(client.getClientThread())) {
             return; // Has to run on the client thread; data will be refreshed when path finding commences
         }
@@ -160,7 +161,9 @@ public class PathfinderConfig {
 
         transports.clear();
         transportsPacked.clear();
+        usableTeleports.clear();
         for (Map.Entry<WorldPoint, Set<Transport>> entry : allTransports.entrySet()) {
+            WorldPoint point = entry.getKey();
             Set<Transport> usableTransports = new HashSet<>(entry.getValue().size());
             for (Transport transport : entry.getValue()) {
                 for (Quest quest : transport.getQuests()) {
@@ -174,14 +177,12 @@ public class PathfinderConfig {
                     varbitValues.put(varbitCheck.getVarbitId(), client.getVarbitValue(varbitCheck.getVarbitId()));
                 }
 
-                if (entry.getKey() == null && hasRequiredItems(transport) && useTransport(transport)) {
-                    teleports.add(transport);
+                if (point == null && hasRequiredItems(transport) && useTransport(transport)) {
+                    usableTeleports.add(transport);
                 } else if (useTransport(transport)) {
                     usableTransports.add(transport);
                 }
             }
-
-            WorldPoint point = entry.getKey();
 
             if (point != null && !usableTransports.isEmpty()) {
                 transports.put(point, usableTransports);
@@ -315,6 +316,10 @@ public class PathfinderConfig {
         if (TeleportationItem.ALL.equals(useTeleportationItems) &&
             TransportType.TELEPORTATION_ITEM.equals(transport.getType())) {
             return true;
+        }
+        if (TeleportationItem.NONE.equals(useTeleportationItems) &&
+            TransportType.TELEPORTATION_ITEM.equals(transport.getType())) {
+            return false;
         }
         List<Integer> inventoryItems = Arrays.stream(new InventoryID[]{InventoryID.INVENTORY, InventoryID.EQUIPMENT})
             .map(client::getItemContainer)

@@ -83,7 +83,7 @@ public class PathMapTooltipOverlay extends Overlay {
 
         List<String> rows = new ArrayList<>(Arrays.asList("Shortest path:", "Step " + n + " of " + plugin.getPathfinder().getPath().size()));
         if (nextPoint != null) {
-            for (Transport transport : plugin.getPathfinderConfig().getTransports().getOrDefault(point, new HashSet<>())) {
+            for (Transport transport : plugin.getTransports().getOrDefault(point, new HashSet<>())) {
                 if (nextPoint.equals(transport.getDestination())
                     && transport.getDisplayInfo() != null && !transport.getDisplayInfo().isEmpty()) {
                     rows.add(transport.getDisplayInfo());

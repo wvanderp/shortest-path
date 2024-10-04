@@ -58,7 +58,7 @@ public class Transport {
     @Getter
     private boolean isConsumable = false;
 
-    /** If this is an item transport, this is the maximum wilderness level that it can be used in */
+    /** The maximum wilderness level that the transport can be used in */
     @Getter
     private int maxWildernessLevel = -1;
 
