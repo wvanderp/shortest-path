@@ -43,10 +43,23 @@ public class WorldPointUtil {
     public static int distanceBetween(int previousPacked, int currentPacked, int diagonal) {
         final int previousX = WorldPointUtil.unpackWorldX(previousPacked);
         final int previousY = WorldPointUtil.unpackWorldY(previousPacked);
+        final int previousZ = WorldPointUtil.unpackWorldPlane(previousPacked);
         final int currentX = WorldPointUtil.unpackWorldX(currentPacked);
         final int currentY = WorldPointUtil.unpackWorldY(currentPacked);
+        final int currentZ = WorldPointUtil.unpackWorldPlane(currentPacked);
+        return distanceBetween(previousX, previousY, previousZ,
+            currentX, currentY, currentZ, diagonal);
+    }
+
+    public static int distanceBetween(int previousX, int previousY, int previousZ,
+        int currentX, int currentY, int currentZ, int diagonal) {
         final int dx = Math.abs(previousX - currentX);
         final int dy = Math.abs(previousY - currentY);
+        final int dz = Math.abs(previousZ - currentZ);
+
+        if (dz != 0) {
+            return Integer.MAX_VALUE;
+        }
 
         if (diagonal == 1) {
             return Math.max(dx, dy);
@@ -62,16 +75,8 @@ public class WorldPointUtil {
     }
 
     public static int distanceBetween(WorldPoint previous, WorldPoint current, int diagonal) {
-        final int dx = Math.abs(previous.getX() - current.getX());
-        final int dy = Math.abs(previous.getY() - current.getY());
-
-        if (diagonal == 1) {
-            return Math.max(dx, dy);
-        } else if (diagonal == 2) {
-            return dx + dy;
-        }
-
-        return Integer.MAX_VALUE;
+        return distanceBetween(previous.getX(), previous.getY(), previous.getPlane(),
+            current.getX(), current.getY(), current.getPlane(), diagonal);
     }
 
     // Matches WorldArea.distanceTo

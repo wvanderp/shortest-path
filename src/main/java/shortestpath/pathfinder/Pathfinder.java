@@ -154,7 +154,7 @@ public class Pathfinder implements Runnable {
             }
 
             int distance = WorldPointUtil.distanceBetween(node.packedPosition, targetPacked);
-            long heuristic = distance + WorldPointUtil.distanceBetween(node.packedPosition, targetPacked, 2);
+            long heuristic = distance + (long) WorldPointUtil.distanceBetween(node.packedPosition, targetPacked, 2);
             if (heuristic < bestHeuristic || (heuristic <= bestHeuristic && distance < bestDistance)) {
                 bestLastNode = node;
                 pathNeedsUpdate = true;

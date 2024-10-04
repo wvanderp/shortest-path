@@ -70,13 +70,13 @@ public class WorldPointTests {
         Assert.assertEquals(0, distanceBetween(pointA, pointA));
         Assert.assertEquals(29228, distanceBetween(pointA, pointB));
         Assert.assertEquals(29228, distanceBetween(pointB, pointA));
-        Assert.assertEquals(21301, distanceBetween(pointA, pointC));
+        Assert.assertEquals(Integer.MAX_VALUE, distanceBetween(pointA, pointC));
 
         // with diagonal = 2
         Assert.assertEquals(0, distanceBetween(pointA, pointA, 2));
         Assert.assertEquals(50529, distanceBetween(pointA, pointB, 2));
         Assert.assertEquals(50529, distanceBetween(pointB, pointA, 2));
-        Assert.assertEquals(28949, distanceBetween(pointB, pointC, 2));
+        Assert.assertEquals(Integer.MAX_VALUE, distanceBetween(pointB, pointC, 2));
     }
 
     @Test
@@ -91,12 +91,12 @@ public class WorldPointTests {
         Assert.assertEquals(0, distanceBetween(packedPointA, packedPointA));
         Assert.assertEquals(29228, distanceBetween(packedPointA, packedPointB));
         Assert.assertEquals(29228, distanceBetween(packedPointB, packedPointA));
-        Assert.assertEquals(21301, distanceBetween(packedPointA, packedPointC));
+        Assert.assertEquals(Integer.MAX_VALUE, distanceBetween(packedPointA, packedPointC));
 
         // with diagonal = 2
         Assert.assertEquals(0, distanceBetween(packedPointA, packedPointA, 2));
         Assert.assertEquals(50529, distanceBetween(packedPointA, packedPointB, 2));
         Assert.assertEquals(50529, distanceBetween(packedPointB, packedPointA, 2));
-        Assert.assertEquals(28949, distanceBetween(packedPointB, packedPointC, 2));
+        Assert.assertEquals(Integer.MAX_VALUE, distanceBetween(packedPointB, packedPointC, 2));
     }
 }
