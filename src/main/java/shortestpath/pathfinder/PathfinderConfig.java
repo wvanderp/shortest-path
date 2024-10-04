@@ -269,6 +269,9 @@ public class PathfinderConfig {
             return false;
         } else if (TELEPORTATION_ITEM.equals(type)) {
             switch (useTeleportationItems) {
+                case ALL:
+                case INVENTORY:
+                    break;
                 case NONE:
                     return false;
                 case INVENTORY_NON_CONSUMABLE:
@@ -276,6 +279,7 @@ public class PathfinderConfig {
                     if (transport.isConsumable()) {
                         return false;
                     }
+                    break;
             }
         } else if (TELEPORTATION_LEVER.equals(type) && !useTeleportationLevers) {
             return false;
@@ -313,7 +317,8 @@ public class PathfinderConfig {
 
     /** Checks if the player has all the required equipment and inventory items for the transport */
     private boolean hasRequiredItems(Transport transport) {
-        if (TeleportationItem.ALL.equals(useTeleportationItems) &&
+        if ((TeleportationItem.ALL.equals(useTeleportationItems) ||
+            TeleportationItem.ALL_NON_CONSUMABLE.equals(useTeleportationItems)) &&
             TransportType.TELEPORTATION_ITEM.equals(transport.getType())) {
             return true;
         }
