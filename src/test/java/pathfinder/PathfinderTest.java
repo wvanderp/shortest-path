@@ -177,6 +177,19 @@ public class PathfinderTest {
     }
 
     @Test
+    public void testPathViaOtherPlane() {
+        // Shortest path from east to west Keldagrim is via the first floor
+        // of the Keldagrim Palace, and not via the bridge to the north
+        testTransportLength(64,
+            new WorldPoint(2894, 10199, 0), // east
+            new WorldPoint(2864, 10199, 0)); // west
+
+        testTransportLength(64,
+            new WorldPoint(2864, 10199, 0), // west
+            new WorldPoint(2894, 10199, 0)); // east
+    }
+
+    @Test
     public void testImpossibleCharterShips() {
         when(config.useCharterShips()).thenReturn(true);
 
