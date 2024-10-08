@@ -138,7 +138,6 @@ public class ShortestPathPlugin extends Plugin {
     private ExecutorService pathfindingExecutor = Executors.newSingleThreadExecutor();
     private Future<?> pathfinderFuture;
     private final Object pathfinderMutex = new Object();
-    @Getter
     private final Map<String, Object> configOverride = new HashMap<>(50);
     @Getter
     private Pathfinder pathfinder;
