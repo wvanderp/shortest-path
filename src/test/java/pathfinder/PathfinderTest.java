@@ -1,5 +1,6 @@
 package pathfinder;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import net.runelite.api.Client;
@@ -107,16 +108,16 @@ public class PathfinderTest {
     }
 
     @Test
+    public void testQuetzals() {
+        when(config.useQuetzals()).thenReturn(true);
+        testTransportLength(2, TransportType.QUETZAL);
+    }
+
+    @Test
     public void testSpiritTrees() {
         when(config.useSpiritTrees()).thenReturn(true);
         when(client.getVarbitValue(any(Integer.class))).thenReturn(20);
         testTransportLength(2, TransportType.SPIRIT_TREE);
-    }
-
-    @Test
-    public void testQuetzals() {
-        when(config.useQuetzals()).thenReturn(true);
-        testTransportLength(2, TransportType.QUETZAL);
     }
 
     @Test
@@ -261,6 +262,39 @@ public class PathfinderTest {
     }
 
     @Test
+    public void testNumberOfQuetzals() {
+        // All but 2 permutations of quetzal transports are resolved from origins and destinations
+        int actualCount = 0;
+        for (WorldPoint origin : transports.keySet()) {
+            for (Transport transport : transports.get(origin)) {
+                if (TransportType.QUETZAL.equals(transport.getType())) {
+                    actualCount++;
+                }
+            }
+        }
+        /* Info:
+         * NB: Primio can only be used between Varrock and Civitas illa Fortis
+         * single_quetzal_origin_locations * (number_of_quetzals - 1) + 2
+         *   1 * 10 // Aldarin
+         * + 1 * 10 // Civitas illa Fortis
+         * + 1 * 10 // Hunter Guild
+         * + 1 * 10 // Quetzacalli Gorge
+         * + 1 * 10 // Sunset Coast
+         * + 1 * 10 // The Teomat
+         * + 1 * 10 // Fortis Colosseum
+         * + 1 * 10 // Outer Fortis
+         * + 1 * 10 // Colossal Wyrm Remains
+         * + 1 * 10 // Cam Torum
+         * + 1 * 10 // Salvager Overlook
+         * + 1 // Varrock -> Civitas illa Fortis
+         * + 1 // Civitas illa Fortis -> Varrock
+         * = 110 + 2
+         * = 112
+         */
+        assertEquals(112, actualCount);
+    }
+
+    @Test
     public void testNumberOfSpiritTrees() {
         // All permutations of spirit tree transports are resolved from origins and destinations
         int actualCount = 0;
@@ -292,7 +326,7 @@ public class PathfinderTest {
     }
 
     private void setupConfig(QuestState questState, int skillLevel, TeleportationItem useTeleportationItems) {
-        pathfinderConfig = spy(new PathfinderConfig(map, transports, client, config));
+        pathfinderConfig = spy(new PathfinderConfig(map, transports, client, config, new HashMap<>()));
 
         when(client.getGameState()).thenReturn(GameState.LOGGED_IN);
         when(client.getClientThread()).thenReturn(Thread.currentThread());

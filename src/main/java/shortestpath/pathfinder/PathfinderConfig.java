@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
 import lombok.Getter;
 import net.runelite.api.Client;
 import net.runelite.api.Constants;
@@ -37,8 +36,8 @@ import static shortestpath.TransportType.SHIP;
 import static shortestpath.TransportType.FAIRY_RING;
 import static shortestpath.TransportType.GNOME_GLIDER;
 import static shortestpath.TransportType.MINECART;
-import static shortestpath.TransportType.SPIRIT_TREE;
 import static shortestpath.TransportType.QUETZAL;
+import static shortestpath.TransportType.SPIRIT_TREE;
 import static shortestpath.TransportType.TELEPORTATION_LEVER;
 import static shortestpath.TransportType.TELEPORTATION_PORTAL;
 import static shortestpath.TransportType.TELEPORTATION_ITEM;
@@ -67,6 +66,7 @@ public class PathfinderConfig {
 
     private final Client client;
     private final ShortestPathConfig config;
+    private final Map<String, Object> configOverride;
 
     @Getter
     private long calculationCutoffMillis;
@@ -81,8 +81,8 @@ public class PathfinderConfig {
         useFairyRings,
         useGnomeGliders,
         useMinecarts,
-        useSpiritTrees,
         useQuetzals,
+        useSpiritTrees,
         useTeleportationLevers,
         useTeleportationPortals,
         useTeleportationSpells,
@@ -93,7 +93,7 @@ public class PathfinderConfig {
     private Map<Integer, Integer> varbitValues = new HashMap<>();
 
     public PathfinderConfig(SplitFlagMap mapData, Map<WorldPoint, Set<Transport>> transports,
-                            Client client, ShortestPathConfig config) {
+                            Client client, ShortestPathConfig config, Map<String, Object> configOverride) {
         this.mapData = mapData;
         this.map = ThreadLocal.withInitial(() -> new CollisionMap(this.mapData));
         this.allTransports = transports;
@@ -102,6 +102,7 @@ public class PathfinderConfig {
         this.transportsPacked = new PrimitiveIntHashMap<>(allTransports.size() / 2);
         this.client = client;
         this.config = config;
+        this.configOverride = configOverride;
     }
 
     public CollisionMap getMap() {
@@ -110,23 +111,23 @@ public class PathfinderConfig {
 
     public void refresh() {
         calculationCutoffMillis = config.calculationCutoff() * Constants.GAME_TICK_LENGTH;
-        avoidWilderness = config.avoidWilderness();
-        useAgilityShortcuts = config.useAgilityShortcuts();
-        useGrappleShortcuts = config.useGrappleShortcuts();
-        useBoats = config.useBoats();
-        useCanoes = config.useCanoes();
-        useCharterShips = config.useCharterShips();
-        useShips = config.useShips();
-        useFairyRings = config.useFairyRings();
-        useGnomeGliders = config.useGnomeGliders();
-        useMinecarts = config.useMinecarts();
-        useSpiritTrees = config.useSpiritTrees();
-        useQuetzals = config.useQuetzals();
-        useTeleportationItems = config.useTeleportationItems();
-        useTeleportationLevers = config.useTeleportationLevers();
-        useTeleportationPortals = config.useTeleportationPortals();
-        useTeleportationSpells = config.useTeleportationSpells();
-        useWildernessObelisks = config.useWildernessObelisks();
+        avoidWilderness = override("avoidWilderness", config.avoidWilderness());
+        useAgilityShortcuts = override("useAgilityShortcuts", config.useAgilityShortcuts());
+        useGrappleShortcuts = override("useGrappleShortcuts", config.useGrappleShortcuts());
+        useBoats = override("useBoats", config.useBoats());
+        useCanoes = override("useCanoes", config.useCanoes());
+        useCharterShips = override("useCharterShips", config.useCharterShips());
+        useShips = override("useShips", config.useShips());
+        useFairyRings = override("useFairyRings", config.useFairyRings());
+        useGnomeGliders = override("useGnomeGliders", config.useGnomeGliders());
+        useMinecarts = override("useMinecarts", config.useMinecarts());
+        useQuetzals = override("useQuetzals", config.useQuetzals());
+        useSpiritTrees = override("useSpiritTrees", config.useSpiritTrees());
+        useTeleportationItems = override("useTeleportationItems", config.useTeleportationItems());
+        useTeleportationLevers = override("useTeleportationLevers", config.useTeleportationLevers());
+        useTeleportationPortals = override("useTeleportationPortals", config.useTeleportationPortals());
+        useTeleportationSpells = override("useTeleportationSpells", config.useTeleportationSpells());
+        useWildernessObelisks = override("useWildernessObelisks", config.useWildernessObelisks());
 
         if (GameState.LOGGED_IN.equals(client.getGameState())) {
             for (int i = 0; i < Skill.values().length; i++) {
@@ -135,6 +136,29 @@ public class PathfinderConfig {
 
             refreshTransports();
         }
+    }
+
+    private boolean override(String configOverrideKey, boolean defaultValue) {
+        if (!configOverride.isEmpty()) {
+            Object value = configOverride.get(configOverrideKey);
+            if (value instanceof Boolean) {
+                return (boolean) value;
+            }
+        }
+        return defaultValue;
+    }
+
+    private TeleportationItem override(String configOverrideKey, TeleportationItem defaultValue) {
+        if (!configOverride.isEmpty()) {
+            Object value = configOverride.get(configOverrideKey);
+            if (value instanceof String) {
+                TeleportationItem teleportationItem = TeleportationItem.fromType((String) value);
+                if (teleportationItem != null) {
+                    return teleportationItem;
+                }
+            }
+        }
+        return defaultValue;
     }
 
     /** Specialized method for only updating player-held item and spell transports */
@@ -268,9 +292,9 @@ public class PathfinderConfig {
             return false;
         } else if (MINECART.equals(type) && !useMinecarts) {
             return false;
-        } else if (SPIRIT_TREE.equals(type) && !useSpiritTrees) {
-            return false;
         } else if (QUETZAL.equals(type) && !useQuetzals) { 
+            return false;
+        } else if (SPIRIT_TREE.equals(type) && !useSpiritTrees) {
             return false;
         } else if (TELEPORTATION_ITEM.equals(type)) {
             switch (useTeleportationItems) {

@@ -25,14 +25,12 @@ import shortestpath.pathfinder.CollisionMap;
 public class PathTileOverlay extends Overlay {
     private final Client client;
     private final ShortestPathPlugin plugin;
-    private final ShortestPathConfig config;
     private static final int TRANSPORT_LABEL_GAP = 3;
 
     @Inject
-    public PathTileOverlay(Client client, ShortestPathPlugin plugin, ShortestPathConfig config) {
+    public PathTileOverlay(Client client, ShortestPathPlugin plugin) {
         this.client = client;
         this.plugin = plugin;
-        this.config = config;
         setPosition(OverlayPosition.DYNAMIC);
         setPriority(Overlay.PRIORITY_LOW);
         setLayer(OverlayLayer.ABOVE_SCENE);
@@ -40,7 +38,7 @@ public class PathTileOverlay extends Overlay {
 
     private void renderTransports(Graphics2D graphics) {
         for (WorldPoint a : plugin.getTransports().keySet()) {
-            drawTile(graphics, a, config.colourTransports(), -1, true);
+            drawTile(graphics, a, plugin.colourTransports, -1, true);
 
             Point ca = tileCenter(a);
 
@@ -95,7 +93,7 @@ public class PathTileOverlay extends Overlay {
                         (!map.w(x, y, z) ? "w" : "");
 
                 if (map.isBlocked(x, y, z)) {
-                    graphics.setColor(config.colourCollisionMap());
+                    graphics.setColor(plugin.colourCollisionMap);
                     graphics.fill(tilePolygon);
                 }
                 if (!s.isEmpty() && !s.equals("nsew")) {
@@ -110,39 +108,39 @@ public class PathTileOverlay extends Overlay {
 
     @Override
     public Dimension render(Graphics2D graphics) {
-        if (config.drawTransports()) {
+        if (plugin.drawTransports) {
             this.renderTransports(graphics);
         }
 
-        if (config.drawCollisionMap()) {
+        if (plugin.drawCollisionMap) {
             this.renderCollisionMap(graphics);
         }
 
-        if (config.drawTiles() && plugin.getPathfinder() != null && plugin.getPathfinder().getPath() != null) {
+        if (plugin.drawTiles && plugin.getPathfinder() != null && plugin.getPathfinder().getPath() != null) {
             Color color;
             if (plugin.getPathfinder().isDone()) {
                 color = new Color(
-                    config.colourPath().getRed(),
-                    config.colourPath().getGreen(),
-                    config.colourPath().getBlue(),
-                    config.colourPath().getAlpha() / 2);
+                    plugin.colourPath.getRed(),
+                    plugin.colourPath.getGreen(),
+                    plugin.colourPath.getBlue(),
+                    plugin.colourPath.getAlpha() / 2);
             } else {
                 color = new Color(
-                    config.colourPathCalculating().getRed(),
-                    config.colourPathCalculating().getGreen(),
-                    config.colourPathCalculating().getBlue(),
-                    config.colourPathCalculating().getAlpha() / 2);
+                    plugin.colourPathCalculating.getRed(),
+                    plugin.colourPathCalculating.getGreen(),
+                    plugin.colourPathCalculating.getBlue(),
+                    plugin.colourPathCalculating.getAlpha() / 2);
             }
 
             List<WorldPoint> path = plugin.getPathfinder().getPath();
             int counter = 0;
-            if (TileStyle.LINES.equals(config.pathStyle())) {
+            if (TileStyle.LINES.equals(plugin.pathStyle)) {
                 for (int i = 1; i < path.size(); i++) {
                     drawLine(graphics, path.get(i - 1), path.get(i), color, 1 + counter++);
                     drawTransportInfo(graphics, path.get(i - 1), path.get(i));
                 }
             } else {
-                boolean showTiles = TileStyle.TILES.equals(config.pathStyle());
+                boolean showTiles = TileStyle.TILES.equals(plugin.pathStyle);
                 for (int i = 0; i <  path.size(); i++) {
                     drawTile(graphics, path.get(i), color, counter++, showTiles);
                     drawTransportInfo(graphics, path.get(i), (i + 1 == path.size()) ? null : path.get(i + 1));
@@ -244,20 +242,20 @@ public class PathTileOverlay extends Overlay {
     }
 
     private void drawCounter(Graphics2D graphics, double x, double y, int counter) {
-        if (counter >= 0 && !TileCounter.DISABLED.equals(config.showTileCounter())) {
-            int n = config.tileCounterStep() > 0 ? config.tileCounterStep() : 1;
+        if (counter >= 0 && !TileCounter.DISABLED.equals(plugin.showTileCounter)) {
+            int n = plugin.tileCounterStep > 0 ? plugin.tileCounterStep : 1;
             int s = plugin.getPathfinder().getPath().size();
             if ((counter % n != 0) && (s != (counter + 1))) {
                 return;
             }
-            if (TileCounter.REMAINING.equals(config.showTileCounter())) {
+            if (TileCounter.REMAINING.equals(plugin.showTileCounter)) {
                 counter = s - counter - 1;
             }
             if (n > 1 && counter == 0) {
                 return;
             }
             String counterText = Integer.toString(counter);
-            graphics.setColor(config.colourText());
+            graphics.setColor(plugin.colourText);
             graphics.drawString(
                 counterText,
                 (int) (x - graphics.getFontMetrics().getStringBounds(counterText, graphics).getWidth() / 2), (int) y);
@@ -265,7 +263,7 @@ public class PathTileOverlay extends Overlay {
     }
 
     private void drawTransportInfo(Graphics2D graphics, WorldPoint location, WorldPoint locationEnd) {
-        if (locationEnd == null || !config.showTransportInfo()) {
+        if (locationEnd == null || !plugin.showTransportInfo) {
             return;
         }
         for (WorldPoint point : WorldPoint.toLocalInstance(client, location)) {
@@ -302,7 +300,7 @@ public class PathTileOverlay extends Overlay {
                     int y = (int) (p.getY() - height) - (vertical_offset);
                     graphics.setColor(Color.BLACK);
                     graphics.drawString(text, x + 1, y + 1);
-                    graphics.setColor(config.colourText());
+                    graphics.setColor(plugin.colourText);
                     graphics.drawString(text, x, y);
 
                     vertical_offset += (int) height + TRANSPORT_LABEL_GAP;

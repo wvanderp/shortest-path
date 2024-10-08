@@ -136,24 +136,24 @@ public interface ShortestPathConfig extends Config {
     }
 
     @ConfigItem(
-        keyName = "useSpiritTrees",
-        name = "Use spirit trees",
-        description = "Whether to include spirit trees in the path",
+        keyName = "useQuetzals",
+        name = "Use quetzals",
+        description = "Whether to include quetzals in the path",
         position = 11,
         section = sectionSettings
     )
-    default boolean useSpiritTrees() {
+    default boolean useQuetzals() {
         return true;
     }
 
     @ConfigItem(
-        keyName = "useQuetzals",
-        name = "Use quetzals",
-        description = "Whether to include quetzals in the path.<br>",
+        keyName = "useSpiritTrees",
+        name = "Use spirit trees",
+        description = "Whether to include spirit trees in the path",
         position = 12,
         section = sectionSettings
     )
-    default boolean useQuetzals() {
+    default boolean useSpiritTrees() {
         return true;
     }
 

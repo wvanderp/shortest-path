@@ -11,6 +11,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +69,7 @@ public class ShortestPathPlugin extends Plugin {
     private static final String PLUGIN_MESSAGE_CLEAR = "clear";
     private static final String PLUGIN_MESSAGE_START = "start";
     private static final String PLUGIN_MESSAGE_TARGET = "target";
+    private static final String PLUGIN_MESSAGE_CONFIG_OVERRIDE = "config";
     private static final String CLEAR = "Clear";
     private static final String PATH = ColorUtil.wrapWithColorTag("Path", JagexColors.MENU_TARGET);
     private static final String SET = "Set";
@@ -109,6 +111,21 @@ public class ShortestPathPlugin extends Plugin {
     @Inject
     private WorldMapPointManager worldMapPointManager;
 
+    boolean drawCollisionMap;
+    boolean drawMap;
+    boolean drawMinimap;
+    boolean drawTiles;
+    boolean drawTransports;
+    boolean showTransportInfo;
+    Color colourCollisionMap;
+    Color colourPath;
+    Color colourPathCalculating;
+    Color colourText;
+    Color colourTransports;
+    int tileCounterStep;
+    TileCounter showTileCounter;
+    TileStyle pathStyle;
+
     private Point lastMenuOpenedPoint;
     private WorldMapPoint marker;
     private WorldPoint lastLocation = new WorldPoint(0, 0, 0);
@@ -121,6 +138,8 @@ public class ShortestPathPlugin extends Plugin {
     private ExecutorService pathfindingExecutor = Executors.newSingleThreadExecutor();
     private Future<?> pathfinderFuture;
     private final Object pathfinderMutex = new Object();
+    @Getter
+    private final Map<String, Object> configOverride = new HashMap<>(50);
     @Getter
     private Pathfinder pathfinder;
     @Getter
@@ -138,7 +157,9 @@ public class ShortestPathPlugin extends Plugin {
         SplitFlagMap map = SplitFlagMap.fromResources();
         Map<WorldPoint, Set<Transport>> transports = Transport.loadAllFromResources();
 
-        pathfinderConfig = new PathfinderConfig(map, transports, client, config);
+        cacheConfigValues();
+
+        pathfinderConfig = new PathfinderConfig(map, transports, client, config, configOverride);
 
         overlayManager.add(pathOverlay);
         overlayManager.add(pathMinimapOverlay);
@@ -209,6 +230,8 @@ public class ShortestPathPlugin extends Plugin {
             return;
         }
 
+        cacheConfigValues();
+
         if ("drawDebugPanel".equals(event.getKey())) {
             if (config.drawDebugPanel()) {
                 overlayManager.add(debugOverlayPanel);
@@ -237,16 +260,26 @@ public class ShortestPathPlugin extends Plugin {
             Map<String, Object> data = event.getData();
             Object objStart = data.getOrDefault(PLUGIN_MESSAGE_START, null);
             Object objTarget = data.getOrDefault(PLUGIN_MESSAGE_TARGET, null);
+            Object objConfigOverride = data.getOrDefault(PLUGIN_MESSAGE_CONFIG_OVERRIDE, null);
             WorldPoint start = (objStart instanceof WorldPoint) ? ((WorldPoint) objStart) : null;
             WorldPoint target = (objTarget instanceof WorldPoint) ? ((WorldPoint) objTarget) : null;
+            @SuppressWarnings("unchecked")
+            Map<String, Object> configOverride = (objConfigOverride instanceof Map) ? ((Map<String, Object>) objConfigOverride) : null;
             if (target == null || (start == null && client.getLocalPlayer() == null)) {
                 return;
             }
             if (start == null) {
                 start = client.getLocalPlayer().getWorldLocation();
             }
+            if (objConfigOverride != null) {
+                this.configOverride.clear();
+                for (String key : configOverride.keySet()) {
+                    this.configOverride.put(key, configOverride.get(key));
+                }
+            }
             restartPathfinding(start, target);
         } else if (PLUGIN_MESSAGE_CLEAR.equals(action)) {
+            this.configOverride.clear();
             setTarget(null);
         }
     }
@@ -337,6 +370,82 @@ public class ShortestPathPlugin extends Plugin {
 
     public CollisionMap getMap() {
         return pathfinderConfig.getMap();
+    }
+
+    private boolean override(String configOverrideKey, boolean defaultValue) {
+        if (!configOverride.isEmpty()) {
+            Object value = configOverride.get(configOverrideKey);
+            if (value instanceof Boolean) {
+                return (boolean) value;
+            }
+        }
+        return defaultValue;
+    }
+
+    private Color override(String configOverrideKey, Color defaultValue) {
+        if (!configOverride.isEmpty()) {
+            Object value = configOverride.get(configOverrideKey);
+            if (value instanceof Color) {
+                return (Color) value;
+            }
+        }
+        return defaultValue;
+    }
+
+    private int override(String configOverrideKey, int defaultValue) {
+        if (!configOverride.isEmpty()) {
+            Object value = configOverride.get(configOverrideKey);
+            if (value instanceof Integer) {
+                return (int) value;
+            }
+        }
+        return defaultValue;
+    }
+
+    private TileCounter override(String configOverrideKey, TileCounter defaultValue) {
+        if (!configOverride.isEmpty()) {
+            Object value = configOverride.get(configOverrideKey);
+            if (value instanceof String) {
+                TileCounter tileCounter = TileCounter.fromType((String) value);
+                if (tileCounter != null) {
+                    return tileCounter;
+                }
+            }
+        }
+        return defaultValue;
+    }
+
+    private TileStyle override(String configOverrideKey, TileStyle defaultValue) {
+        if (!configOverride.isEmpty()) {
+            Object value = configOverride.get(configOverrideKey);
+            if (value instanceof String) {
+                TileStyle tileStyle = TileStyle.fromType((String) value);
+                if (tileStyle != null) {
+                    return tileStyle;
+                }
+            }
+        }
+        return defaultValue;
+    }
+
+    private void cacheConfigValues() {
+        drawCollisionMap = override("drawCollisionMap", config.drawCollisionMap());
+        drawMap = override("drawMap", config.drawMap());
+        drawMinimap = override("drawMinimap", config.drawMinimap());
+        drawTiles = override("drawTiles", config.drawTiles());
+        drawTransports = override("drawTransports", config.drawTransports());
+        showTransportInfo = override("showTransportInfo", config.showTransportInfo());
+
+        colourCollisionMap = override("colourCollisionMap", config.colourCollisionMap());
+        colourPath = override("colourPath", config.colourPath());
+        colourPathCalculating = override("colourPathCalculating", config.colourPathCalculating());
+        colourText = override("colourText", config.colourText());
+        colourTransports = override("colourTransports", config.colourTransports());
+
+        tileCounterStep = override("tileCounterStep", config.tileCounterStep());
+
+        showTileCounter = override("showTileCounter", config.showTileCounter());
+        pathStyle = override("pathStyle", config.pathStyle());
     }
 
     private void onMenuOptionClicked(MenuEntry entry) {

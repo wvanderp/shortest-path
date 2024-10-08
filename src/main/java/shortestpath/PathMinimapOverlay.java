@@ -18,13 +18,11 @@ import net.runelite.client.ui.overlay.OverlayPosition;
 public class PathMinimapOverlay extends Overlay {
     private final Client client;
     private final ShortestPathPlugin plugin;
-    private final ShortestPathConfig config;
 
     @Inject
-    private PathMinimapOverlay(Client client, ShortestPathPlugin plugin, ShortestPathConfig config) {
+    private PathMinimapOverlay(Client client, ShortestPathPlugin plugin) {
         this.client = client;
         this.plugin = plugin;
-        this.config = config;
         setPosition(OverlayPosition.DYNAMIC);
         setPriority(Overlay.PRIORITY_LOW);
         setLayer(OverlayLayer.ABOVE_WIDGETS);
@@ -32,7 +30,7 @@ public class PathMinimapOverlay extends Overlay {
 
     @Override
     public Dimension render(Graphics2D graphics) {
-        if (!config.drawMinimap() || plugin.getPathfinder() == null) {
+        if (!plugin.drawMinimap || plugin.getPathfinder() == null) {
             return null;
         }
 
@@ -40,7 +38,7 @@ public class PathMinimapOverlay extends Overlay {
         graphics.setClip(plugin.getMinimapClipArea());
 
         List<WorldPoint> pathPoints = plugin.getPathfinder().getPath();
-        Color pathColor = plugin.getPathfinder().isDone() ? config.colourPath() : config.colourPathCalculating();
+        Color pathColor = plugin.getPathfinder().isDone() ? plugin.colourPath : plugin.colourPathCalculating;
         for (WorldPoint pathPoint : pathPoints) {
             if (pathPoint.getPlane() != client.getPlane()) {
                 continue;
