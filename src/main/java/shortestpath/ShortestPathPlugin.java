@@ -279,6 +279,7 @@ public class ShortestPathPlugin extends Plugin {
             restartPathfinding(start, target);
         } else if (PLUGIN_MESSAGE_CLEAR.equals(action)) {
             this.configOverride.clear();
+            cacheConfigValues();
             setTarget(null);
         }
     }
