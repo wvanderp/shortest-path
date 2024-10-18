@@ -201,6 +201,13 @@ public class PathfinderTest {
         when(config.useCharterShips()).thenReturn(true);
 
         testTransportMinimumLength(3,
+            new WorldPoint(1455, 2968, 0), // Aldarin
+            new WorldPoint(1514, 2971, 0)); // Sunset Coast
+        testTransportMinimumLength(3,
+            new WorldPoint(1514, 2971, 0), // Sunset Coast
+            new WorldPoint(1455, 2968, 0)); // Aldarin
+
+        testTransportMinimumLength(3,
             new WorldPoint(3702, 3503, 0), // Port Phasmatys
             new WorldPoint(3671, 2931, 0)); // Mos Le'Harmless
         testTransportMinimumLength(3,
