@@ -22,6 +22,7 @@ import net.runelite.api.coords.WorldArea;
 import net.runelite.api.coords.WorldPoint;
 import shortestpath.TeleportationItem;
 import shortestpath.ShortestPathConfig;
+import shortestpath.ShortestPathPlugin;
 import shortestpath.PrimitiveIntHashMap;
 import shortestpath.Transport;
 import shortestpath.TransportType;
@@ -66,7 +67,6 @@ public class PathfinderConfig {
 
     private final Client client;
     private final ShortestPathConfig config;
-    private final Map<String, Object> configOverride;
 
     @Getter
     private long calculationCutoffMillis;
@@ -93,7 +93,7 @@ public class PathfinderConfig {
     private Map<Integer, Integer> varbitValues = new HashMap<>();
 
     public PathfinderConfig(SplitFlagMap mapData, Map<WorldPoint, Set<Transport>> transports,
-                            Client client, ShortestPathConfig config, Map<String, Object> configOverride) {
+                            Client client, ShortestPathConfig config) {
         this.mapData = mapData;
         this.map = ThreadLocal.withInitial(() -> new CollisionMap(this.mapData));
         this.allTransports = transports;
@@ -102,7 +102,6 @@ public class PathfinderConfig {
         this.transportsPacked = new PrimitiveIntHashMap<>(allTransports.size() / 2);
         this.client = client;
         this.config = config;
-        this.configOverride = configOverride;
     }
 
     public CollisionMap getMap() {
@@ -111,23 +110,23 @@ public class PathfinderConfig {
 
     public void refresh() {
         calculationCutoffMillis = config.calculationCutoff() * Constants.GAME_TICK_LENGTH;
-        avoidWilderness = override("avoidWilderness", config.avoidWilderness());
-        useAgilityShortcuts = override("useAgilityShortcuts", config.useAgilityShortcuts());
-        useGrappleShortcuts = override("useGrappleShortcuts", config.useGrappleShortcuts());
-        useBoats = override("useBoats", config.useBoats());
-        useCanoes = override("useCanoes", config.useCanoes());
-        useCharterShips = override("useCharterShips", config.useCharterShips());
-        useShips = override("useShips", config.useShips());
-        useFairyRings = override("useFairyRings", config.useFairyRings());
-        useGnomeGliders = override("useGnomeGliders", config.useGnomeGliders());
-        useMinecarts = override("useMinecarts", config.useMinecarts());
-        useQuetzals = override("useQuetzals", config.useQuetzals());
-        useSpiritTrees = override("useSpiritTrees", config.useSpiritTrees());
-        useTeleportationItems = override("useTeleportationItems", config.useTeleportationItems());
-        useTeleportationLevers = override("useTeleportationLevers", config.useTeleportationLevers());
-        useTeleportationPortals = override("useTeleportationPortals", config.useTeleportationPortals());
-        useTeleportationSpells = override("useTeleportationSpells", config.useTeleportationSpells());
-        useWildernessObelisks = override("useWildernessObelisks", config.useWildernessObelisks());
+        avoidWilderness = ShortestPathPlugin.override("avoidWilderness", config.avoidWilderness());
+        useAgilityShortcuts = ShortestPathPlugin.override("useAgilityShortcuts", config.useAgilityShortcuts());
+        useGrappleShortcuts = ShortestPathPlugin.override("useGrappleShortcuts", config.useGrappleShortcuts());
+        useBoats = ShortestPathPlugin.override("useBoats", config.useBoats());
+        useCanoes = ShortestPathPlugin.override("useCanoes", config.useCanoes());
+        useCharterShips = ShortestPathPlugin.override("useCharterShips", config.useCharterShips());
+        useShips = ShortestPathPlugin.override("useShips", config.useShips());
+        useFairyRings = ShortestPathPlugin.override("useFairyRings", config.useFairyRings());
+        useGnomeGliders = ShortestPathPlugin.override("useGnomeGliders", config.useGnomeGliders());
+        useMinecarts = ShortestPathPlugin.override("useMinecarts", config.useMinecarts());
+        useQuetzals = ShortestPathPlugin.override("useQuetzals", config.useQuetzals());
+        useSpiritTrees = ShortestPathPlugin.override("useSpiritTrees", config.useSpiritTrees());
+        useTeleportationItems = ShortestPathPlugin.override("useTeleportationItems", config.useTeleportationItems());
+        useTeleportationLevers = ShortestPathPlugin.override("useTeleportationLevers", config.useTeleportationLevers());
+        useTeleportationPortals = ShortestPathPlugin.override("useTeleportationPortals", config.useTeleportationPortals());
+        useTeleportationSpells = ShortestPathPlugin.override("useTeleportationSpells", config.useTeleportationSpells());
+        useWildernessObelisks = ShortestPathPlugin.override("useWildernessObelisks", config.useWildernessObelisks());
 
         if (GameState.LOGGED_IN.equals(client.getGameState())) {
             for (int i = 0; i < Skill.values().length; i++) {
@@ -136,29 +135,6 @@ public class PathfinderConfig {
 
             refreshTransports();
         }
-    }
-
-    private boolean override(String configOverrideKey, boolean defaultValue) {
-        if (!configOverride.isEmpty()) {
-            Object value = configOverride.get(configOverrideKey);
-            if (value instanceof Boolean) {
-                return (boolean) value;
-            }
-        }
-        return defaultValue;
-    }
-
-    private TeleportationItem override(String configOverrideKey, TeleportationItem defaultValue) {
-        if (!configOverride.isEmpty()) {
-            Object value = configOverride.get(configOverrideKey);
-            if (value instanceof String) {
-                TeleportationItem teleportationItem = TeleportationItem.fromType((String) value);
-                if (teleportationItem != null) {
-                    return teleportationItem;
-                }
-            }
-        }
-        return defaultValue;
     }
 
     /** Specialized method for only updating player-held item and spell transports */

@@ -38,7 +38,11 @@ public class PathTileOverlay extends Overlay {
 
     private void renderTransports(Graphics2D graphics) {
         for (WorldPoint a : plugin.getTransports().keySet()) {
-            drawTile(graphics, a, plugin.colourTransports, -1, true);
+            if (a == null) {
+                continue; // skip teleports
+            }
+
+            boolean drawStart = false;
 
             Point ca = tileCenter(a);
 
@@ -48,10 +52,19 @@ public class PathTileOverlay extends Overlay {
 
             StringBuilder s = new StringBuilder();
             for (Transport b : plugin.getTransports().getOrDefault(a, new HashSet<>())) {
+                if (b == null
+                    || TransportType.TELEPORTATION_ITEM.equals(b.getType())
+                    || TransportType.TELEPORTATION_SPELL.equals(b.getType())) {
+                    continue; // skip teleports
+                }
                 for (WorldPoint destination : WorldPoint.toLocalInstance(client, b.getDestination())) {
+                    if (destination == null) {
+                        continue;
+                    }
                     Point cb = tileCenter(destination);
                     if (cb != null) {
                         graphics.drawLine(ca.getX(), ca.getY(), cb.getX(), cb.getY());
+                        drawStart = true;
                     }
                     if (destination.getPlane() > a.getPlane()) {
                         s.append("+");
@@ -62,6 +75,11 @@ public class PathTileOverlay extends Overlay {
                     }
                 }
             }
+
+            if (drawStart) {
+                drawTile(graphics, a, plugin.colourTransports, -1, true);
+            }
+
             graphics.setColor(Color.WHITE);
             graphics.drawString(s.toString(), ca.getX(), ca.getY());
         }
@@ -109,11 +127,11 @@ public class PathTileOverlay extends Overlay {
     @Override
     public Dimension render(Graphics2D graphics) {
         if (plugin.drawTransports) {
-            this.renderTransports(graphics);
+            renderTransports(graphics);
         }
 
         if (plugin.drawCollisionMap) {
-            this.renderCollisionMap(graphics);
+            renderCollisionMap(graphics);
         }
 
         if (plugin.drawTiles && plugin.getPathfinder() != null && plugin.getPathfinder().getPath() != null) {
@@ -152,6 +170,10 @@ public class PathTileOverlay extends Overlay {
     }
 
     private Point tileCenter(WorldPoint b) {
+        if (b == null || client == null) {
+            return null;
+        }
+
         if (b.getPlane() != client.getPlane()) {
             return null;
         }
@@ -172,7 +194,15 @@ public class PathTileOverlay extends Overlay {
     }
 
     private void drawTile(Graphics2D graphics, WorldPoint location, Color color, int counter, boolean draw) {
+        if (client == null) {
+            return;
+        }
+
         for (WorldPoint point : WorldPoint.toLocalInstance(client, location)) {
+            if (point == null) {
+                continue;
+            }
+
             if (point.getPlane() != client.getPlane()) {
                 continue;
             }

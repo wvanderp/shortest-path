@@ -1,6 +1,5 @@
 package pathfinder;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import net.runelite.api.Client;
@@ -333,7 +332,7 @@ public class PathfinderTest {
     }
 
     private void setupConfig(QuestState questState, int skillLevel, TeleportationItem useTeleportationItems) {
-        pathfinderConfig = spy(new PathfinderConfig(map, transports, client, config, new HashMap<>()));
+        pathfinderConfig = spy(new PathfinderConfig(map, transports, client, config));
 
         when(client.getGameState()).thenReturn(GameState.LOGGED_IN);
         when(client.getClientThread()).thenReturn(Thread.currentThread());

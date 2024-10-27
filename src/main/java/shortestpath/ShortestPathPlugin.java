@@ -23,6 +23,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.regex.Pattern;
 import lombok.Getter;
 import net.runelite.api.Client;
+import net.runelite.api.GameState;
 import net.runelite.api.KeyCode;
 import net.runelite.api.MenuAction;
 import net.runelite.api.MenuEntry;
@@ -31,6 +32,7 @@ import net.runelite.api.Point;
 import net.runelite.api.SpriteID;
 import net.runelite.api.Varbits;
 import net.runelite.api.coords.WorldPoint;
+import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.MenuEntryAdded;
 import net.runelite.api.events.MenuOpened;
@@ -135,10 +137,12 @@ public class ShortestPathPlugin extends Plugin {
     private BufferedImage minimapSpriteResizeable;
     private Rectangle minimapRectangle = new Rectangle();
 
+    private List<Runnable> pendingTasks = new ArrayList<>(3);
+
     private ExecutorService pathfindingExecutor = Executors.newSingleThreadExecutor();
     private Future<?> pathfinderFuture;
     private final Object pathfinderMutex = new Object();
-    private final Map<String, Object> configOverride = new HashMap<>(50);
+    private static final Map<String, Object> configOverride = new HashMap<>(50);
     @Getter
     private Pathfinder pathfinder;
     @Getter
@@ -158,7 +162,7 @@ public class ShortestPathPlugin extends Plugin {
 
         cacheConfigValues();
 
-        pathfinderConfig = new PathfinderConfig(map, transports, client, config, configOverride);
+        pathfinderConfig = new PathfinderConfig(map, transports, client, config);
 
         overlayManager.add(pathOverlay);
         overlayManager.add(pathMinimapOverlay);
@@ -231,6 +235,10 @@ public class ShortestPathPlugin extends Plugin {
 
         cacheConfigValues();
 
+        if (pathfinderConfig != null) {
+            clientThread.invokeLater(pathfinderConfig::refresh);
+        }
+
         if ("drawDebugPanel".equals(event.getKey())) {
             if (config.drawDebugPanel()) {
                 overlayManager.add(debugOverlayPanel);
@@ -246,6 +254,25 @@ public class ShortestPathPlugin extends Plugin {
                 restartPathfinding(pathfinder.getStart(), pathfinder.getTarget());
             }
         }
+    }
+
+    @Subscribe
+    public void onGameStateChanged(GameStateChanged event) {
+        if (pathfinderConfig == null
+            || !GameState.LOGGED_IN.equals(event.getGameState())) {
+            return;
+        }
+
+        pendingTasks.add(new Runnable() {
+            @Override
+            public void run() {
+                pathfinderConfig.refresh();
+            }
+            @Override
+            public int hashCode() {
+                return client.getTickCount() + 1;
+            }
+        });
     }
 
     @Subscribe
@@ -291,6 +318,12 @@ public class ShortestPathPlugin extends Plugin {
 
     @Subscribe
     public void onGameTick(GameTick tick) {
+        for (int i = 0; i < pendingTasks.size(); i++) {
+            if (pendingTasks.get(i).hashCode() >= client.getTickCount()) {
+                pendingTasks.remove(i--).run();
+            }
+        }
+
         Player localPlayer = client.getLocalPlayer();
         if (localPlayer == null || pathfinder == null) {
             return;
@@ -372,7 +405,7 @@ public class ShortestPathPlugin extends Plugin {
         return pathfinderConfig.getMap();
     }
 
-    private boolean override(String configOverrideKey, boolean defaultValue) {
+    public static boolean override(String configOverrideKey, boolean defaultValue) {
         if (!configOverride.isEmpty()) {
             Object value = configOverride.get(configOverrideKey);
             if (value instanceof Boolean) {
@@ -397,6 +430,19 @@ public class ShortestPathPlugin extends Plugin {
             Object value = configOverride.get(configOverrideKey);
             if (value instanceof Integer) {
                 return (int) value;
+            }
+        }
+        return defaultValue;
+    }
+
+    public static TeleportationItem override(String configOverrideKey, TeleportationItem defaultValue) {
+        if (!configOverride.isEmpty()) {
+            Object value = configOverride.get(configOverrideKey);
+            if (value instanceof String) {
+                TeleportationItem teleportationItem = TeleportationItem.fromType((String) value);
+                if (teleportationItem != null) {
+                    return teleportationItem;
+                }
             }
         }
         return defaultValue;

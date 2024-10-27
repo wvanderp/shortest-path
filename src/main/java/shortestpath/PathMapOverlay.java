@@ -67,12 +67,22 @@ public class PathMapOverlay extends Overlay {
         if (plugin.drawTransports) {
             graphics.setColor(Color.WHITE);
             for (WorldPoint a : plugin.getTransports().keySet()) {
+                if (a == null) {
+                    continue; // skip teleports
+                }
+
                 Point mapA = worldMapOverlay.mapWorldPointToGraphicsPoint(a);
                 if (mapA == null || !worldMapClipArea.contains(mapA.getX(), mapA.getY())) {
                     continue;
                 }
 
                 for (Transport b : plugin.getTransports().getOrDefault(a, new HashSet<>())) {
+                    if (b == null
+                        || TransportType.TELEPORTATION_ITEM.equals(b.getType())
+                        || TransportType.TELEPORTATION_SPELL.equals(b.getType())) {
+                        continue; // skip teleports
+                    }
+
                     Point mapB = worldMapOverlay.mapWorldPointToGraphicsPoint(b.getDestination());
                     if (mapB == null || !worldMapClipArea.contains(mapB.getX(), mapB.getY())) {
                         continue;
