@@ -165,6 +165,9 @@ public class ShortestPathPlugin extends Plugin {
         cacheConfigValues();
 
         pathfinderConfig = new PathfinderConfig(map, transports, client, config);
+        if (GameState.LOGGED_IN.equals(client.getGameState())) {
+            clientThread.invokeLater(pathfinderConfig::refresh);
+        }
 
         overlayManager.add(pathOverlay);
         overlayManager.add(pathMinimapOverlay);
