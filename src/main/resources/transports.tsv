@@ -2150,6 +2150,26 @@
 3691 9886 3	3688 9888 2	Climb-down Stairs 16109					
 3690 9886 3	3688 9888 2	Climb-down Stairs 16109					
 							
+# Port Phasmatys								
+3659 3509 0	3659 3507 0	Pay-toll(2-Ecto) Energy Barrier 16105		2 Ecto-token		2	
+3660 3509 0	3660 3507 0	Pay-toll(2-Ecto) Energy Barrier 16105		2 Ecto-token		2	
+3659 3507 0	3659 3509 0	Pay-toll(2-Ecto) Energy Barrier 16105				2	
+3660 3507 0	3660 3509 0	Pay-toll(2-Ecto) Energy Barrier 16105				2	
+3651 3486 0	3653 3486 0	Pay-toll(2-Ecto) Energy Barrier 16105		2 Ecto-token		2	
+3651 3485 0	3653 3485 0	Pay-toll(2-Ecto) Energy Barrier 16105		2 Ecto-token		2	
+3653 3486 0	3651 3486 0	Pay-toll(2-Ecto) Energy Barrier 16105				2	
+3653 3485 0	3651 3485 0	Pay-toll(2-Ecto) Energy Barrier 16105				2	
+3669 3452 0	3669 3454 0	Pay-toll(2-Ecto) Energy Barrier 16105		2 Ecto-token		2	
+3670 3452 0	3670 3454 0	Pay-toll(2-Ecto) Energy Barrier 16105		2 Ecto-token		2	
+3669 3454 0	3669 3452 0	Pay-toll(2-Ecto) Energy Barrier 16105					2	
+3670 3454 0	3670 3452 0	Pay-toll(2-Ecto) Energy Barrier 16105				2	
+3702 3503 0	3705 3503 1	Cross Gangplank 17392				2	
+3705 3503 1	3702 3503 0	Cross Gangplank 17393				2	
+3709 3496 0	3712 3496 0	Cross Gangplank 11209				2	
+3712 3496 0	3709 3496 0	Cross Gangplank 11210				2	
+3714 3503 0	3714 3503 1	Climb-up Ship's ladder 11308				2	
+3714 3503 1	3714 3503 0	Climb-up Ship's ladder 11309				2	
+							
 # Shipwreck (Morytania)							
 3614 3541 1	3616 3541 2	Climb-up Ship's ladder 16111					
 3616 3541 2	3614 3541 1	Climb-down Ship's ladder 16112					
