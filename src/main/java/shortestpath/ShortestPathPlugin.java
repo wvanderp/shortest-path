@@ -137,7 +137,9 @@ public class ShortestPathPlugin extends Plugin {
     private BufferedImage minimapSpriteResizeable;
     private Rectangle minimapRectangle = new Rectangle();
 
-    private List<Runnable> pendingTasks = new ArrayList<>(3);
+    private GameState lastGameState = null;
+    private GameState lastLastGameState = null;
+    private List<PendingTask> pendingTasks = new ArrayList<>(3);
 
     private ExecutorService pathfindingExecutor = Executors.newSingleThreadExecutor();
     private Future<?> pathfinderFuture;
@@ -259,20 +261,15 @@ public class ShortestPathPlugin extends Plugin {
     @Subscribe
     public void onGameStateChanged(GameStateChanged event) {
         if (pathfinderConfig == null
-            || !GameState.LOGGED_IN.equals(event.getGameState())) {
+            || !GameState.LOGGING_IN.equals(lastLastGameState)
+            || !GameState.LOADING.equals(lastLastGameState = lastGameState)
+            || !GameState.LOGGED_IN.equals(lastGameState = event.getGameState())) {
+            lastLastGameState = lastGameState;
+            lastGameState = event.getGameState();
             return;
         }
 
-        pendingTasks.add(new Runnable() {
-            @Override
-            public void run() {
-                pathfinderConfig.refresh();
-            }
-            @Override
-            public int hashCode() {
-                return client.getTickCount() + 1;
-            }
-        });
+        pendingTasks.add(new PendingTask(client.getTickCount() + 1, pathfinderConfig::refresh));
     }
 
     @Subscribe
@@ -319,7 +316,7 @@ public class ShortestPathPlugin extends Plugin {
     @Subscribe
     public void onGameTick(GameTick tick) {
         for (int i = 0; i < pendingTasks.size(); i++) {
-            if (pendingTasks.get(i).hashCode() >= client.getTickCount()) {
+            if (pendingTasks.get(i).check(client.getTickCount())) {
                 pendingTasks.remove(i--).run();
             }
         }
