@@ -2168,7 +2168,7 @@
 3709 3496 0	3712 3496 0	Cross Gangplank 11209				2	
 3712 3496 0	3709 3496 0	Cross Gangplank 11210				2	
 3714 3503 0	3714 3503 1	Climb-up Ship's ladder 11308				2	
-3714 3503 1	3714 3503 0	Climb-up Ship's ladder 11309				2	
+3714 3503 1	3714 3503 0	Climb-down Ship's ladder 11309				2	
 							
 # Shipwreck (Morytania)							
 3614 3541 1	3616 3541 2	Climb-up Ship's ladder 16111					
