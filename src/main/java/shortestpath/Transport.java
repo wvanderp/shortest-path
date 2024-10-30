@@ -132,37 +132,45 @@ public class Transport {
         if ((value = fieldMap.get("Skills")) != null) {
             String[] skillRequirements = value.split(DELIM_MULTI);
 
-            for (String requirement : skillRequirements) {
-                String[] levelAndSkill = requirement.split(DELIM);
+            try {
+                for (String requirement : skillRequirements) {
+                    if (requirement.isEmpty()) {
+                        continue;
+                    }
+                    String[] levelAndSkill = requirement.split(DELIM);
+                    assert levelAndSkill.length == 2 : "Invalid level and skill: '" + requirement + "'";
 
-                if (levelAndSkill.length < 2) {
-                    continue;
-                }
+                    int level = Integer.parseInt(levelAndSkill[0]);
+                    String skillName = levelAndSkill[1];
 
-                int level = Integer.parseInt(levelAndSkill[0]);
-                String skillName = levelAndSkill[1];
-
-                Skill[] skills = Skill.values();
-                for (int i = 0; i < skills.length; i++) {
-                    if (skills[i].getName().equals(skillName)) {
-                        skillLevels[i] = level;
-                        break;
+                    Skill[] skills = Skill.values();
+                    for (int i = 0; i < skills.length; i++) {
+                        if (skills[i].getName().equals(skillName)) {
+                            skillLevels[i] = level;
+                            break;
+                        }
                     }
                 }
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
             }
         }
 
         if ((value = fieldMap.get("Item IDs")) != null) {
             String[] itemIdsList = value.split(DELIM_MULTI);
-            for (String listIds : itemIdsList)
-            {
-                Set<Integer> multiitemList = new HashSet<>();
-                String[] itemIds = listIds.split(DELIM);
-                for (String item : itemIds) {
-                    int itemId = Integer.parseInt(item);
-                    multiitemList.add(itemId);
+            try {
+                for (String listIds : itemIdsList)
+                {
+                    Set<Integer> multiitemList = new HashSet<>();
+                    String[] itemIds = listIds.split(DELIM);
+                    for (String item : itemIds) {
+                        int itemId = Integer.parseInt(item);
+                        multiitemList.add(itemId);
+                    }
+                    itemIdRequirements.add(multiitemList);
                 }
-                itemIdRequirements.add(multiitemList);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
             }
         }
 
@@ -171,7 +179,11 @@ public class Transport {
         }
 
         if ((value = fieldMap.get("Duration")) != null && !value.isEmpty()) {
-            this.duration = Integer.parseInt(value);
+            try {
+                this.duration = Integer.parseInt(value);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
         }
         if (TransportType.TELEPORTATION_ITEM.equals(transportType)
             || TransportType.TELEPORTATION_SPELL.equals(transportType)) {
@@ -189,15 +201,27 @@ public class Transport {
         }
 
         if ((value = fieldMap.get("Wilderness level")) != null && !value.isEmpty()) {
-            this.maxWildernessLevel =  Integer.parseInt(value);
+            try {
+                this.maxWildernessLevel =  Integer.parseInt(value);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
         }
 
         if ((value = fieldMap.get("Varbits")) != null) {
-            for (String varbitCheck : value.split(DELIM_MULTI)) {
-                String[] varbitParts = varbitCheck.split(DELIM_STATE);
-                int varbitId = Integer.parseInt(varbitParts[0]);
-                int varbitValue = Integer.parseInt(varbitParts[1]);
-                varbits.add(new TransportVarbit(varbitId, varbitValue));
+            try {
+                for (String varbitCheck : value.split(DELIM_MULTI)) {
+                    if (varbitCheck.isEmpty()) {
+                        continue;
+                    }
+                    String[] varbitParts = varbitCheck.split(DELIM_STATE);
+                    assert varbitParts.length == 2 : "Invalid varbit id and value: '" + varbitCheck + "'";
+                    int varbitId = Integer.parseInt(varbitParts[0]);
+                    int varbitValue = Integer.parseInt(varbitParts[1]);
+                    varbits.add(new TransportVarbit(varbitId, varbitValue));
+                }
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
             }
         }
 
