@@ -3226,6 +3226,10 @@
 3326 2857 0	3319 2796 0	Enter Rock 6621					
 3326 2858 0	3319 2796 0	Enter Rock 6621					
 							
+# Necropolis							
+3347 2759 0	3349 2759 0	Climb-over Rubble 44003				4	
+3349 2759 0	3347 2759 0	Climb-over Rubble 44003				4	
+							
 # Pyramid							
 3233 2900 0	3233 2898 0	Open Pyramid entrance 6545					
 3232 2900 0	3232 2898 0	Open Pyramid entrance 6547					
