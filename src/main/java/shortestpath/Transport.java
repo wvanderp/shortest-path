@@ -11,10 +11,12 @@ import lombok.Getter;
 import net.runelite.api.Quest;
 import net.runelite.api.Skill;
 import net.runelite.api.coords.WorldPoint;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * This class represents a travel point between two WorldPoints.
  */
+@Slf4j
 public class Transport {
     /** A location placeholder different from null to use for permutation transports */
     private static final WorldPoint LOCATION_PERMUTATION = new WorldPoint(-1, -1, -1);
@@ -152,7 +154,7 @@ public class Transport {
                     }
                 }
             } catch (NumberFormatException e) {
-                e.printStackTrace();
+                log.error("Invalid level and skill", e);
             }
         }
 
@@ -170,7 +172,7 @@ public class Transport {
                     itemIdRequirements.add(multiitemList);
                 }
             } catch (NumberFormatException e) {
-                e.printStackTrace();
+                log.error("Invalid item ID", e);
             }
         }
 
@@ -182,7 +184,7 @@ public class Transport {
             try {
                 this.duration = Integer.parseInt(value);
             } catch (NumberFormatException e) {
-                e.printStackTrace();
+                log.error("Invalid tick duration", e);
             }
         }
         if (TransportType.TELEPORTATION_ITEM.equals(transportType)
@@ -204,7 +206,7 @@ public class Transport {
             try {
                 this.maxWildernessLevel =  Integer.parseInt(value);
             } catch (NumberFormatException e) {
-                e.printStackTrace();
+                log.error("Invalid wilderness level", e);
             }
         }
 
@@ -221,7 +223,7 @@ public class Transport {
                     varbits.add(new TransportVarbit(varbitId, varbitValue));
                 }
             } catch (NumberFormatException e) {
-                e.printStackTrace();
+                log.error("Invalid varbit id and value", e);
             }
         }
 
