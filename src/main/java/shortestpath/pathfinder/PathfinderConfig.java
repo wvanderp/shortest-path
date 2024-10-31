@@ -232,7 +232,7 @@ public class PathfinderConfig {
         return true;
     }
 
-    private boolean varbitChecks(Transport transport) {
+    public boolean varbitChecks(Transport transport) {
         for (TransportVarbit varbitCheck : transport.getVarbits()) {
             if (!varbitValues.get(varbitCheck.getVarbitId()).equals(varbitCheck.getValue())) {
                 return false;
