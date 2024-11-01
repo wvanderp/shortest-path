@@ -12,7 +12,7 @@ Draws the shortest path to a chosen destination on the map (right click a spot o
 |:--|:-:|
 |**🐛 Bug report**<br>Report an issue encountered while using the plugin|[![issue](https://github.com/user-attachments/assets/983e048d-75c6-4fb8-9dd4-accbdc4588c0)](../Skretzo/shortest-path/issues/new?assignees=&labels=bug&projects=&template=bug_report.md&title=)|
 |**💡 Feature request**<br>Request a new feature or suggestion|[![feature](https://github.com/user-attachments/assets/983e048d-75c6-4fb8-9dd4-accbdc4588c0)](/Skretzo/shortest-path/issues/new?assignees=&labels=enhancement&projects=&template=feature_request.md&title=)|
-|**💬 Discord server**<br>Found a bug or issue, need help with using the plugin, or just want to talk about it with other people?|[![discord](https://github.com/user-attachments/assets/db4d6bfd-9529-4d94-b03d-6c3fd69f855a)](https://discord.gg/uX47xg8u3M)|
+|**💬 Discord server**<br>Found a bug, need help with using the plugin, or just want to talk about it with other people?|[![discord](https://github.com/user-attachments/assets/db4d6bfd-9529-4d94-b03d-6c3fd69f855a)](https://discord.gg/uX47xg8u3M)|
 
 ## Features, examples and options
 Read the [plugin wiki](../../wiki) for info about features, examples and plugin options.
