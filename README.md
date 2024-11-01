@@ -7,7 +7,7 @@ Draws the shortest path to a chosen destination on the map (right click a spot o
 
 ![illustration](https://user-images.githubusercontent.com/53493631/154380329-e1cacdce-a589-4ac3-b6d8-d0dc19f88b2a.png)
 
-## Issues, bugs and feature requests
+## Issues, bugs, suggestions and help
 |Problem|Link|
 |:--|:-:|
 |**🐛 Bug report**<br>Report an issue encountered while using the plugin|[![issue](https://github.com/user-attachments/assets/983e048d-75c6-4fb8-9dd4-accbdc4588c0)](../../issues/new?assignees=&labels=bug&projects=&template=bug_report.md&title=)|
@@ -16,6 +16,3 @@ Draws the shortest path to a chosen destination on the map (right click a spot o
 
 ## Features, examples and options
 Read the [plugin wiki](../../wiki) for info about features, examples and plugin options.
-
-## Discord server
-Join the [Discord server](https://discord.gg/uX47xg8u3M) if you want to talk about the plugin with other people.
