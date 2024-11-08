@@ -339,6 +339,7 @@ public class PathfinderTest {
         when(client.getBoostedSkillLevel(any(Skill.class))).thenReturn(skillLevel);
         when(config.useTeleportationItems()).thenReturn(useTeleportationItems);
         doReturn(true).when(pathfinderConfig).varbitChecks(any(Transport.class));
+        doReturn(true).when(pathfinderConfig).varPlayerChecks(any(Transport.class));
         doReturn(questState).when(pathfinderConfig).getQuestState(any(Quest.class));
 
         pathfinderConfig.refresh();

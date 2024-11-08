@@ -68,6 +68,10 @@ public class Transport {
     @Getter
     private final Set<TransportVarbit> varbits = new HashSet<>();
 
+    /** Any varplayers to check for the transport to be valid. All must pass for a transport to be valid */
+    @Getter
+    private final Set<TransportVarPlayer> varPlayers = new HashSet<>();
+
     /** Creates a new transport from an origin-only transport
      * and a destination-only transport, and merges requirements */
     Transport(Transport origin, Transport destination) {
@@ -224,6 +228,23 @@ public class Transport {
                 }
             } catch (NumberFormatException e) {
                 log.error("Invalid varbit id and value", e);
+            }
+        }
+
+        if ((value = fieldMap.get("VarPlayers")) != null) {
+            try {
+                for (String varPlayerCheck : value.split(DELIM_MULTI)) {
+                    if (varPlayerCheck.isEmpty()) {
+                        continue;
+                    }
+                    String[] varPlayerParts = varPlayerCheck.split(DELIM_STATE);
+                    assert varPlayerParts.length == 2 : "Invalid VarPlayer id and value: '" + varPlayerCheck + "'";
+                    int varPlayerId = Integer.parseInt(varPlayerParts[0]);
+                    int varPlayerValue = Integer.parseInt(varPlayerParts[1]);
+                    varPlayers.add(new TransportVarPlayer(varPlayerId, varPlayerValue));
+                }
+            } catch (NumberFormatException e) {
+                log.error("Invalid VarPlayer id and value", e);
             }
         }
 

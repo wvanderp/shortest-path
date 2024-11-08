@@ -15,9 +15,11 @@ import net.runelite.api.GameState;
 import net.runelite.api.InventoryID;
 import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
+import net.runelite.api.ItemID;
 import net.runelite.api.Quest;
 import net.runelite.api.QuestState;
 import net.runelite.api.Skill;
+import net.runelite.api.Varbits;
 import net.runelite.api.coords.WorldArea;
 import net.runelite.api.coords.WorldPoint;
 import shortestpath.TeleportationItem;
@@ -27,6 +29,7 @@ import shortestpath.PrimitiveIntHashMap;
 import shortestpath.Transport;
 import shortestpath.TransportType;
 import shortestpath.TransportVarbit;
+import shortestpath.TransportVarPlayer;
 import shortestpath.WorldPointUtil;
 import static shortestpath.TransportType.AGILITY_SHORTCUT;
 import static shortestpath.TransportType.GRAPPLE_SHORTCUT;
@@ -52,6 +55,14 @@ public class PathfinderConfig {
     private static final WorldArea WILDERNESS_UNDERGROUND = new WorldArea(2944, 9918, 320, 442, 0);
     private static final WorldArea WILDERNESS_UNDERGROUND_LEVEL_20 = new WorldArea(2944, 10075, 320, 442, 0);
     private static final WorldArea WILDERNESS_UNDERGROUND_LEVEL_30 = new WorldArea(2944, 10155, 320, 442, 0);
+    private static final List<Integer> RUNE_POUCHES = Arrays.asList(
+        ItemID.RUNE_POUCH, ItemID.RUNE_POUCH_L,
+        ItemID.DIVINE_RUNE_POUCH, ItemID.DIVINE_RUNE_POUCH_L
+    );
+    private static final int[] RUNE_POUCH_RUNE_VARBITS = {
+		Varbits.RUNE_POUCH_RUNE1, Varbits.RUNE_POUCH_RUNE2, Varbits.RUNE_POUCH_RUNE3, Varbits.RUNE_POUCH_RUNE4,
+		Varbits.RUNE_POUCH_RUNE5, Varbits.RUNE_POUCH_RUNE6
+	};
 
     private final SplitFlagMap mapData;
     private final ThreadLocal<CollisionMap> map;
@@ -91,6 +102,7 @@ public class PathfinderConfig {
     private final int[] boostedLevels = new int[Skill.values().length];
     private Map<Quest, QuestState> questStates = new HashMap<>();
     private Map<Integer, Integer> varbitValues = new HashMap<>();
+    private Map<Integer, Integer> varPlayerValues = new HashMap<>();
 
     public PathfinderConfig(SplitFlagMap mapData, Map<WorldPoint, Set<Transport>> transports,
                             Client client, ShortestPathConfig config) {
@@ -177,7 +189,10 @@ public class PathfinderConfig {
                 }
 
                 for (TransportVarbit varbitCheck : transport.getVarbits()) {
-                    varbitValues.put(varbitCheck.getVarbitId(), client.getVarbitValue(varbitCheck.getVarbitId()));
+                    varbitValues.put(varbitCheck.getId(), client.getVarbitValue(varbitCheck.getId()));
+                }
+                for (TransportVarPlayer varPlayerRequirement : transport.getVarPlayers()) {
+                    varPlayerValues.put(varPlayerRequirement.getId(), client.getVarpValue(varPlayerRequirement.getId()));
                 }
 
                 if (point == null && hasRequiredItems(transport) && useTransport(transport)) {
@@ -233,8 +248,17 @@ public class PathfinderConfig {
     }
 
     public boolean varbitChecks(Transport transport) {
-        for (TransportVarbit varbitCheck : transport.getVarbits()) {
-            if (!varbitValues.get(varbitCheck.getVarbitId()).equals(varbitCheck.getValue())) {
+        for (TransportVarbit varbitRequirement : transport.getVarbits()) {
+            if (varbitValues.get(varbitRequirement.getId()) < varbitRequirement.getValue()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean varPlayerChecks(Transport transport) {
+        for (TransportVarPlayer varPlayerRequirement : transport.getVarPlayers()) {
+            if (varPlayerValues.get(varPlayerRequirement.getId()) < varPlayerRequirement.getValue()) {
                 return false;
             }
         }
@@ -304,6 +328,10 @@ public class PathfinderConfig {
             return false;
         }
 
+        if (!varPlayerChecks(transport)) {
+            return false;
+        }
+
         return true;
     }
 
@@ -339,6 +367,14 @@ public class PathfinderConfig {
             .map(Item::getId)
             .filter(itemId -> itemId != -1)
             .collect(Collectors.toList());
+        if (RUNE_POUCHES.stream().anyMatch(runePouch -> inventoryItems.contains(runePouch))) {
+            for (int i = 0; i < RUNE_POUCH_RUNE_VARBITS.length; i++) {
+                int runeItemId = client.getVarbitValue(RUNE_POUCH_RUNE_VARBITS[i]);
+                if (runeItemId > 0) {
+                    inventoryItems.add(runeItemId);
+                }
+            }
+        }
         // TODO: this does not check quantity
         return transport.getItemIdRequirements().stream().anyMatch(requirements -> requirements.stream().allMatch(inventoryItems::contains));
     }

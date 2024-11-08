@@ -3,11 +3,11 @@ package shortestpath;
 import lombok.Getter;
 
 @Getter
-public class TransportVarbit {
+public class TransportVarPlayer {
     final int id;
     final int value;
 
-    public TransportVarbit(int id, int value) {
+    public TransportVarPlayer(int id, int value) {
         this.id = id;
         this.value = value;
     }
