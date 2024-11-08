@@ -216,12 +216,12 @@ public class Transport {
 
         if ((value = fieldMap.get("Varbits")) != null) {
             try {
-                for (String varbitCheck : value.split(DELIM_MULTI)) {
-                    if (varbitCheck.isEmpty()) {
+                for (String varbitRequirement : value.split(DELIM_MULTI)) {
+                    if (varbitRequirement.isEmpty()) {
                         continue;
                     }
-                    String[] varbitParts = varbitCheck.split(DELIM_STATE);
-                    assert varbitParts.length == 2 : "Invalid varbit id and value: '" + varbitCheck + "'";
+                    String[] varbitParts = varbitRequirement.split(DELIM_STATE);
+                    assert varbitParts.length == 2 : "Invalid varbit id and value: '" + varbitRequirement + "'";
                     int varbitId = Integer.parseInt(varbitParts[0]);
                     int varbitValue = Integer.parseInt(varbitParts[1]);
                     varbits.add(new TransportVarbit(varbitId, varbitValue));
@@ -233,12 +233,12 @@ public class Transport {
 
         if ((value = fieldMap.get("VarPlayers")) != null) {
             try {
-                for (String varPlayerCheck : value.split(DELIM_MULTI)) {
-                    if (varPlayerCheck.isEmpty()) {
+                for (String varPlayerRequirement : value.split(DELIM_MULTI)) {
+                    if (varPlayerRequirement.isEmpty()) {
                         continue;
                     }
-                    String[] varPlayerParts = varPlayerCheck.split(DELIM_STATE);
-                    assert varPlayerParts.length == 2 : "Invalid VarPlayer id and value: '" + varPlayerCheck + "'";
+                    String[] varPlayerParts = varPlayerRequirement.split(DELIM_STATE);
+                    assert varPlayerParts.length == 2 : "Invalid VarPlayer id and value: '" + varPlayerRequirement + "'";
                     int varPlayerId = Integer.parseInt(varPlayerParts[0]);
                     int varPlayerValue = Integer.parseInt(varPlayerParts[1]);
                     varPlayers.add(new TransportVarPlayer(varPlayerId, varPlayerValue));

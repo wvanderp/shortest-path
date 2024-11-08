@@ -60,8 +60,8 @@ public class PathfinderConfig {
         ItemID.DIVINE_RUNE_POUCH, ItemID.DIVINE_RUNE_POUCH_L
     );
     private static final int[] RUNE_POUCH_RUNE_VARBITS = {
-		Varbits.RUNE_POUCH_RUNE1, Varbits.RUNE_POUCH_RUNE2, Varbits.RUNE_POUCH_RUNE3, Varbits.RUNE_POUCH_RUNE4,
-		Varbits.RUNE_POUCH_RUNE5, Varbits.RUNE_POUCH_RUNE6
+        Varbits.RUNE_POUCH_RUNE1, Varbits.RUNE_POUCH_RUNE2, Varbits.RUNE_POUCH_RUNE3, Varbits.RUNE_POUCH_RUNE4,
+        Varbits.RUNE_POUCH_RUNE5, Varbits.RUNE_POUCH_RUNE6
 	};
 
     private final SplitFlagMap mapData;
@@ -188,8 +188,8 @@ public class PathfinderConfig {
                     }
                 }
 
-                for (TransportVarbit varbitCheck : transport.getVarbits()) {
-                    varbitValues.put(varbitCheck.getId(), client.getVarbitValue(varbitCheck.getId()));
+                for (TransportVarbit varbitRequirement : transport.getVarbits()) {
+                    varbitValues.put(varbitRequirement.getId(), client.getVarbitValue(varbitRequirement.getId()));
                 }
                 for (TransportVarPlayer varPlayerRequirement : transport.getVarPlayers()) {
                     varPlayerValues.put(varPlayerRequirement.getId(), client.getVarpValue(varPlayerRequirement.getId()));
