@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 import lombok.Getter;
 import net.runelite.api.Client;
 import net.runelite.api.Constants;
+import net.runelite.api.EnumComposition;
+import net.runelite.api.EnumID;
 import net.runelite.api.GameState;
 import net.runelite.api.InventoryID;
 import net.runelite.api.Item;
@@ -368,10 +370,11 @@ public class PathfinderConfig {
             .filter(itemId -> itemId != -1)
             .collect(Collectors.toList());
         if (RUNE_POUCHES.stream().anyMatch(runePouch -> inventoryItems.contains(runePouch))) {
+            EnumComposition runePouchEnum = client.getEnum(EnumID.RUNEPOUCH_RUNE);
             for (int i = 0; i < RUNE_POUCH_RUNE_VARBITS.length; i++) {
-                int runeItemId = client.getVarbitValue(RUNE_POUCH_RUNE_VARBITS[i]);
-                if (runeItemId > 0) {
-                    inventoryItems.add(runeItemId);
+                int runeEnumId = client.getVarbitValue(RUNE_POUCH_RUNE_VARBITS[i]);
+                if (runeEnumId > 0) {
+                    inventoryItems.add(runePouchEnum.getIntValue(runeEnumId));
                 }
             }
         }
