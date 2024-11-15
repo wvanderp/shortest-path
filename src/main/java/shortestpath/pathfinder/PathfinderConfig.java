@@ -251,7 +251,7 @@ public class PathfinderConfig {
 
     public boolean varbitChecks(Transport transport) {
         for (TransportVarbit varbitRequirement : transport.getVarbits()) {
-            if (varbitValues.get(varbitRequirement.getId()) < varbitRequirement.getValue()) {
+            if (!varbitRequirement.check(varbitValues)) {
                 return false;
             }
         }
@@ -260,7 +260,7 @@ public class PathfinderConfig {
 
     public boolean varPlayerChecks(Transport transport) {
         for (TransportVarPlayer varPlayerRequirement : transport.getVarPlayers()) {
-            if (varPlayerValues.get(varPlayerRequirement.getId()) < varPlayerRequirement.getValue()) {
+            if (!varPlayerRequirement.check(varPlayerValues)) {
                 return false;
             }
         }

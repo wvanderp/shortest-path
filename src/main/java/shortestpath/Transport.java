@@ -220,11 +220,17 @@ public class Transport {
                     if (varbitRequirement.isEmpty()) {
                         continue;
                     }
-                    String[] varbitParts = varbitRequirement.split(DELIM_STATE);
+                    String[] varbitParts = null;
+                    for (TransportVarCheck check : TransportVarCheck.values()) {
+                        varbitParts = varbitRequirement.split(check.getCode());
+                        if (varbitParts.length == 2) {
+                            int varbitId = Integer.parseInt(varbitParts[0]);
+                            int varbitValue = Integer.parseInt(varbitParts[1]);
+                            varbits.add(new TransportVarbit(varbitId, varbitValue, check));
+                            break;
+                        }
+                    }
                     assert varbitParts.length == 2 : "Invalid varbit id and value: '" + varbitRequirement + "'";
-                    int varbitId = Integer.parseInt(varbitParts[0]);
-                    int varbitValue = Integer.parseInt(varbitParts[1]);
-                    varbits.add(new TransportVarbit(varbitId, varbitValue));
                 }
             } catch (NumberFormatException e) {
                 log.error("Invalid varbit id and value", e);
@@ -237,11 +243,17 @@ public class Transport {
                     if (varPlayerRequirement.isEmpty()) {
                         continue;
                     }
-                    String[] varPlayerParts = varPlayerRequirement.split(DELIM_STATE);
+                    String[] varPlayerParts = null;
+                    for (TransportVarCheck check : TransportVarCheck.values()) {
+                        varPlayerParts = varPlayerRequirement.split(check.getCode());
+                        if (varPlayerParts.length == 2) {
+                            int varPlayerId = Integer.parseInt(varPlayerParts[0]);
+                            int varPlayerValue = Integer.parseInt(varPlayerParts[1]);
+                            varPlayers.add(new TransportVarPlayer(varPlayerId, varPlayerValue, check));
+                            break;
+                        }
+                    }
                     assert varPlayerParts.length == 2 : "Invalid VarPlayer id and value: '" + varPlayerRequirement + "'";
-                    int varPlayerId = Integer.parseInt(varPlayerParts[0]);
-                    int varPlayerValue = Integer.parseInt(varPlayerParts[1]);
-                    varPlayers.add(new TransportVarPlayer(varPlayerId, varPlayerValue));
                 }
             } catch (NumberFormatException e) {
                 log.error("Invalid VarPlayer id and value", e);

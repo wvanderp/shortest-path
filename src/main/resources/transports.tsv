@@ -328,10 +328,6 @@
 2908 3336 1	2908 3336 2	Climb-up Staircase 11889					1
 2908 3336 2	2908 3336 1	Climb-down Staircase 11890					1
 							
-# Killerwatt Plane							
-3110 3363 2	2677 5214 2	Enter Interdimensional rift 11355				32=3	1
-3111 3363 2	2677 5214 2	Enter Interdimensional rift 11355				32=3	1
-							
 # Ferox Enclave							
 3140 3637 0	3137 3637 1	Climb Stairs 39643					1
 3137 3637 1	3140 3637 0	Climb Stairs 39650					1
@@ -1336,10 +1332,10 @@
 2557 9844 0	2557 3444 0	Climb-up Ladder 17387					2
 							
 # Tree Gnome Village Dungeon (during Waterfall quest)							
-2533 3156 0	2533 9556 0	Climb-down Ladder 5250				65=3	
-2534 3155 0	2534 9555 0	Climb-down Ladder 5250				65=3	
-2532 3155 0	2532 9555 0	Climb-down Ladder 5250				65=3	
-2533 9556 0	2533 3156 0	Climb-up Ladder 17387				65=3	
+2533 3156 0	2533 9556 0	Climb-down Ladder 5250				65>2	
+2534 3155 0	2534 9555 0	Climb-down Ladder 5250				65>2	
+2532 3155 0	2532 9555 0	Climb-down Ladder 5250				65>2	
+2533 9556 0	2533 3156 0	Climb-up Ladder 17387				65>2	
 							
 # Tree Gnome Village Dungeon (after Waterfall quest)							
 2533 3156 0	2597 4436 0	Climb-down Ladder 5250				65=10	
@@ -3227,8 +3223,8 @@
 3326 2858 0	3319 2796 0	Enter Rock 6621					
 							
 # Necropolis							
-3347 2759 0	3349 2759 0	Climb-over Rubble 44003			13841=11		4
-3349 2759 0	3347 2759 0	Climb-over Rubble 44003			13841=11		4
+3347 2759 0	3349 2759 0	Climb-over Rubble 44003			13841>10		4
+3349 2759 0	3347 2759 0	Climb-over Rubble 44003			13841>10		4
 							
 # Pyramid							
 3233 2900 0	3233 2898 0	Open Pyramid entrance 6545					
@@ -3840,8 +3836,8 @@
 2666 3694 1	2666 3694 0	Climb-down Ladder 4189					2
 							
 # Mountain Camp							
-2761 3657 0	2761 3660 0	Climb-over Rockslide 5847			260=20		4
-2761 3660 0	2761 3657 0	Climb-over Rockslide 5847			260=20		4
+2761 3657 0	2761 3660 0	Climb-over Rockslide 5847			260>19		4
+2761 3660 0	2761 3657 0	Climb-over Rockslide 5847			260>19		4
 							
 # Isle of Stone							
 2465 4010 0	2461 10417 0	Enter Cave 37433					
@@ -4037,11 +4033,11 @@
 2857 3954 0	2857 3957 0	Pass Fallen Tree 33192					
 2852 3936 0	2850 3936 0	Cross Little boulder 33312					
 2850 3936 0	2852 3936 0	Cross Little boulder 33312					
-2858 3968 0	2854 3941 0	Enter Cave entrance 33194			6528=75		
+2858 3968 0	2854 3941 0	Enter Cave entrance 33194			6528>74		
 2855 3941 0	2859 3968 0	Descend Hole 33227					
-2859 3968 0	2854 3941 0	Enter Cave entrance 33194			6528=75		
+2859 3968 0	2854 3941 0	Enter Cave entrance 33194			6528>74		
 2854 3941 0	2859 3968 0	Descend Hole 33227					
-2860 3968 0	2854 3941 0	Enter Cave entrance 33194			6528=75		
+2860 3968 0	2854 3941 0	Enter Cave entrance 33194			6528>74		
 2853 3941 0	2859 3968 0	Descend Hole 33227					
 2856 3941 0	2859 3968 0	Descend Hole 33227					
 2852 3941 0	2859 3968 0	Descend Hole 33227					
@@ -4051,8 +4047,8 @@
 2846 10351 0	2869 3941 0	Climb Steps 33261					
 2855 10334 0	2845 3960 0	Enter Smelly hole 33262					
 2856 10335 0	2845 3960 0	Enter Smelly hole 33262					
-2865 3938 0	2866 3938 0	Squeeze-through Broken fence 46817			6528=200		
-2866 3938 0	2865 3938 0	Squeeze-through Broken fence 46817			6528=200		
+2865 3938 0	2866 3938 0	Squeeze-through Broken fence 46817			6528>199		
+2866 3938 0	2865 3938 0	Squeeze-through Broken fence 46817			6528>199		
 							
 # Hunter Area							
 2716 3798 0	2716 3802 1	Ascend Steps 19690					
@@ -4388,16 +4384,16 @@
 # Karamja							
 2910 3049 0	2906 3049 0	Cross A wooden log 23644					5
 2906 3049 0	2910 3049 0	Cross A wooden log 23644					5
-2879 2954 0	2876 2952 0	Climb over Broken cart 28931				116=15	2
-2880 2953 0	2876 2952 0	Climb over Broken cart 28931				116=15	2
-2880 2952 0	2876 2952 0	Climb over Broken cart 28931				116=15	2
-2880 2951 0	2876 2952 0	Climb over Broken cart 28931				116=15	2
-2879 2950 0	2876 2952 0	Climb over Broken cart 28931				116=15	2
-2877 2954 0	2880 2952 0	Climb over Broken cart 28931				116=15	2
-2876 2953 0	2880 2952 0	Climb over Broken cart 28931				116=15	2
-2876 2952 0	2880 2952 0	Climb over Broken cart 28931				116=15	2
-2876 2951 0	2880 2952 0	Climb over Broken cart 28931				116=15	2
-2877 2950 0	2880 2952 0	Climb over Broken cart 28931				116=15	2
+2879 2954 0	2876 2952 0	Climb over Broken cart 28931				116>14	2
+2880 2953 0	2876 2952 0	Climb over Broken cart 28931				116>14	2
+2880 2952 0	2876 2952 0	Climb over Broken cart 28931				116>14	2
+2880 2951 0	2876 2952 0	Climb over Broken cart 28931				116>14	2
+2879 2950 0	2876 2952 0	Climb over Broken cart 28931				116>14	2
+2877 2954 0	2880 2952 0	Climb over Broken cart 28931				116>14	2
+2876 2953 0	2880 2952 0	Climb over Broken cart 28931				116>14	2
+2876 2952 0	2880 2952 0	Climb over Broken cart 28931				116>14	2
+2876 2951 0	2880 2952 0	Climb over Broken cart 28931				116>14	2
+2877 2950 0	2880 2952 0	Climb over Broken cart 28931				116>14	2
 2777 3214 0	2834 2951 0	Board Travel cart 2230		varbit:4566=0?995=200		116=17	5
 2778 3214 0	2834 2951 0	Board Travel cart 2230				116=17	5
 2776 3213 0	2834 2951 0	Board Travel cart 2230				116=17	5
@@ -4418,7 +4414,7 @@
 2833 2951 0	2776 3214 0	Pay-fare Travel cart 2256				116=17	5
 2834 2953 0	2776 3214 0	Pay-fare Travel cart 2256				116=17	5
 2834 2952 0	2776 3214 0	Pay-fare Travel cart 2256				116=17	5
-2836 9599 0	2836 9600 0	Open Wall 2606				177=16646212	2
+2836 9599 0	2836 9600 0	Open Wall 2606				177>16646211	2
 2836 9600 0	2836 9599 0	Open Wall 2606					2
 2832 9657 0	2834 3258 0	Climb Climbing rope 25213					1
 2833 9658 0	2834 3258 0	Climb Climbing rope 25213					1
