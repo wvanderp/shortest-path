@@ -68,12 +68,12 @@ public class PathfinderConfig {
 
     private final SplitFlagMap mapData;
     private final ThreadLocal<CollisionMap> map;
-    /** All transports by origin {@link WorldPoint}. The null key is used for transports centered on the player. */
-    private final Map<WorldPoint, Set<Transport>> allTransports;
+    /** All transports by origin. The WorldPointUtil.UNDEFINED key is used for transports centered on the player. */
+    private final Map<Integer, Set<Transport>> allTransports;
     private final Set<Transport> usableTeleports;
 
     @Getter
-    private Map<WorldPoint, Set<Transport>> transports;
+    private Map<Integer, Set<Transport>> transports;
     // Copy of transports with packed positions for the hotpath; lists are not copied and are the same reference in both maps
     @Getter
     private PrimitiveIntHashMap<Set<Transport>> transportsPacked;
@@ -106,7 +106,7 @@ public class PathfinderConfig {
     private Map<Integer, Integer> varbitValues = new HashMap<>();
     private Map<Integer, Integer> varPlayerValues = new HashMap<>();
 
-    public PathfinderConfig(SplitFlagMap mapData, Map<WorldPoint, Set<Transport>> transports,
+    public PathfinderConfig(SplitFlagMap mapData, Map<Integer, Set<Transport>> transports,
                             Client client, ShortestPathConfig config) {
         this.mapData = mapData;
         this.map = ThreadLocal.withInitial(() -> new CollisionMap(this.mapData));
@@ -162,7 +162,7 @@ public class PathfinderConfig {
         }
 
         if (!usableWildyTeleports.isEmpty()) {
-            transports.put(WorldPointUtil.unpackWorldPoint(packedLocation), usableWildyTeleports);
+            transports.put(packedLocation, usableWildyTeleports);
             transportsPacked.put(packedLocation, usableWildyTeleports);
         }
     }
@@ -179,8 +179,8 @@ public class PathfinderConfig {
         transports.clear();
         transportsPacked.clear();
         usableTeleports.clear();
-        for (Map.Entry<WorldPoint, Set<Transport>> entry : allTransports.entrySet()) {
-            WorldPoint point = entry.getKey();
+        for (Map.Entry<Integer, Set<Transport>> entry : allTransports.entrySet()) {
+            int point = entry.getKey();
             Set<Transport> usableTransports = new HashSet<>(entry.getValue().size());
             for (Transport transport : entry.getValue()) {
                 for (Quest quest : transport.getQuests()) {
@@ -197,16 +197,16 @@ public class PathfinderConfig {
                     varPlayerValues.put(varPlayerRequirement.getId(), client.getVarpValue(varPlayerRequirement.getId()));
                 }
 
-                if (point == null && hasRequiredItems(transport) && useTransport(transport)) {
+                if (point == WorldPointUtil.UNDEFINED && hasRequiredItems(transport) && useTransport(transport)) {
                     usableTeleports.add(transport);
                 } else if (useTransport(transport)) {
                     usableTransports.add(transport);
                 }
             }
 
-            if (point != null && !usableTransports.isEmpty()) {
+            if (point != WorldPointUtil.UNDEFINED && !usableTransports.isEmpty()) {
                 transports.put(point, usableTransports);
-                transportsPacked.put(WorldPointUtil.packWorldPoint(point), usableTransports);
+                transportsPacked.put(point, usableTransports);
             }
         }
     }

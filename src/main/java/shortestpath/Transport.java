@@ -10,7 +10,6 @@ import java.util.Set;
 import lombok.Getter;
 import net.runelite.api.Quest;
 import net.runelite.api.Skill;
-import net.runelite.api.coords.WorldPoint;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -18,16 +17,18 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class Transport {
+    public static final int UNDEFINED_ORIGIN = WorldPointUtil.UNDEFINED;
+    public static final int UNDEFINED_DESTINATION = WorldPointUtil.UNDEFINED;
     /** A location placeholder different from null to use for permutation transports */
-    private static final WorldPoint LOCATION_PERMUTATION = new WorldPoint(-1, -1, -1);
+    private static final int LOCATION_PERMUTATION = WorldPointUtil.packWorldPoint(-1, -1, 1);
 
     /** The starting point of this transport */
     @Getter
-    private WorldPoint origin = null;
+    private int origin = UNDEFINED_ORIGIN;
 
     /** The ending point of this transport */
     @Getter
-    private WorldPoint destination = null;
+    private int destination = UNDEFINED_DESTINATION;
 
     /** The skill levels required to use this transport */
     @Getter
@@ -121,7 +122,7 @@ public class Transport {
         // Otherwise it is a transport that needs to be expanded into all permutations (e.g. fairy ring)
         if ((value = fieldMap.get("Origin")) != null) {
             String[] originArray = value.split(DELIM);
-            origin = originArray.length == 3 ? new WorldPoint(
+            origin = originArray.length == 3 ? WorldPointUtil.packWorldPoint(
                 Integer.parseInt(originArray[0]),
                 Integer.parseInt(originArray[1]),
                 Integer.parseInt(originArray[2])) : LOCATION_PERMUTATION;
@@ -129,7 +130,7 @@ public class Transport {
 
         if ((value = fieldMap.get("Destination")) != null) {
             String[] destinationArray = value.split(DELIM);
-            destination = destinationArray.length == 3 ? new WorldPoint(
+            destination = destinationArray.length == 3 ? WorldPointUtil.packWorldPoint(
                 Integer.parseInt(destinationArray[0]),
                 Integer.parseInt(destinationArray[1]),
                 Integer.parseInt(destinationArray[2])) : LOCATION_PERMUTATION;
@@ -291,11 +292,11 @@ public class Transport {
         return quests;
     }
 
-    private static void addTransports(Map<WorldPoint, Set<Transport>> transports, String path, TransportType transportType) {
+    private static void addTransports(Map<Integer, Set<Transport>> transports, String path, TransportType transportType) {
         addTransports(transports, path, transportType, 0);
     }
 
-    private static void addTransports(Map<WorldPoint, Set<Transport>> transports, String path, TransportType transportType, int radiusThreshold) {
+    private static void addTransports(Map<Integer, Set<Transport>> transports, String path, TransportType transportType, int radiusThreshold) {
         final String DELIM_COLUMN = "\t";
         final String PREFIX_COMMENT = "#";
 
@@ -353,28 +354,28 @@ public class Transport {
             Set<Transport> transportOrigins = new HashSet<>();
             Set<Transport> transportDestinations = new HashSet<>();
             for (Transport transport : newTransports) {
-                WorldPoint origin = transport.getOrigin();
-                WorldPoint destination = transport.getDestination();
+                int origin = transport.getOrigin();
+                int destination = transport.getDestination();
                 // Logic to determine ordinary transport vs teleport vs permutation (e.g. fairy ring)
-                if ((origin == null && destination == null)
-                    || (LOCATION_PERMUTATION.equals(origin) && LOCATION_PERMUTATION.equals(destination))) {
+                if ((origin == UNDEFINED_ORIGIN && destination == UNDEFINED_DESTINATION)
+                    || (origin == LOCATION_PERMUTATION && destination == LOCATION_PERMUTATION)) {
                     continue;
-                } else if (!LOCATION_PERMUTATION.equals(origin) && origin != null
-                    && LOCATION_PERMUTATION.equals(destination)) {
+                } else if (origin != LOCATION_PERMUTATION && origin != UNDEFINED_ORIGIN
+                    && destination == LOCATION_PERMUTATION) {
                     transportOrigins.add(transport);
-                } else if (LOCATION_PERMUTATION.equals(origin)
-                    && !LOCATION_PERMUTATION.equals(destination) && destination != null) {
+                } else if (origin == LOCATION_PERMUTATION
+                    && destination != LOCATION_PERMUTATION && destination != UNDEFINED_DESTINATION) {
                     transportDestinations.add(transport);
                 }
-                if (!LOCATION_PERMUTATION.equals(origin)
-                    && destination != null && !LOCATION_PERMUTATION.equals(destination)
-                    && (origin == null || !origin.equals(destination))) {
+                if (origin != LOCATION_PERMUTATION
+                    && destination != UNDEFINED_DESTINATION && destination != LOCATION_PERMUTATION
+                    && (origin == UNDEFINED_ORIGIN || origin != destination)) {
                     transports.computeIfAbsent(origin, k -> new HashSet<>()).add(transport);
                 }
             }
             for (Transport origin : transportOrigins) {
                 for (Transport destination : transportDestinations) {
-                    if (origin.getOrigin().distanceTo2D(destination.getDestination()) > radiusThreshold) {
+                    if (WorldPointUtil.distanceBetween2D(origin.getOrigin(), destination.getDestination()) > radiusThreshold) {
                         transports.computeIfAbsent(origin.getOrigin(), k -> new HashSet<>())
                             .add(new Transport(origin, destination));
                     }
@@ -385,8 +386,8 @@ public class Transport {
         }
     }
 
-    public static HashMap<WorldPoint, Set<Transport>> loadAllFromResources() {
-        HashMap<WorldPoint, Set<Transport>> transports = new HashMap<>();
+    public static HashMap<Integer, Set<Transport>> loadAllFromResources() {
+        HashMap<Integer, Set<Transport>> transports = new HashMap<>();
         addTransports(transports, "/transports.tsv", TransportType.TRANSPORT);
         addTransports(transports, "/agility_shortcuts.tsv", TransportType.AGILITY_SHORTCUT);
         addTransports(transports, "/boats.tsv", TransportType.BOAT);

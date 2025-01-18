@@ -9,10 +9,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import javax.annotation.Nullable;
 import net.runelite.api.Client;
 import net.runelite.api.Point;
-import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.widgets.ComponentID;
 import net.runelite.api.widgets.InterfaceID;
 import net.runelite.client.ui.FontManager;
@@ -48,10 +46,10 @@ public class PathMapTooltipOverlay extends Overlay {
         }
 
         if (plugin.getPathfinder() != null) {
-            List<WorldPoint> path = plugin.getPathfinder().getPath();
+            List<Integer> path = plugin.getPathfinder().getPath();
             Point cursorPos = client.getMouseCanvasPosition();
             for (int i = 0; i < path.size(); i++) {
-                WorldPoint nextPoint = null;
+                int nextPoint = WorldPointUtil.UNDEFINED;
                 if (path.size() > i + 1) {
                     nextPoint = path.get(i + 1);
                 }
@@ -64,9 +62,9 @@ public class PathMapTooltipOverlay extends Overlay {
         return null;
     }
 
-    private boolean drawTooltip(Graphics2D graphics, Point cursorPos, WorldPoint point, @Nullable WorldPoint nextPoint, int n) {
+    private boolean drawTooltip(Graphics2D graphics, Point cursorPos, int point, int nextPoint, int n) {
         Point start = plugin.mapWorldPointToGraphicsPoint(point);
-        Point end = plugin.mapWorldPointToGraphicsPoint(point.dx(1).dy(-1));
+        Point end = plugin.mapWorldPointToGraphicsPoint(WorldPointUtil.dxdy(point, 1, -1));
 
         if (start == null || end == null) {
             return false;
@@ -80,9 +78,9 @@ public class PathMapTooltipOverlay extends Overlay {
         }
 
         List<String> rows = new ArrayList<>(Arrays.asList("Shortest path:", "Step " + n + " of " + plugin.getPathfinder().getPath().size()));
-        if (nextPoint != null) {
+        if (nextPoint != WorldPointUtil.UNDEFINED) {
             for (Transport transport : plugin.getTransports().getOrDefault(point, new HashSet<>())) {
-                if (nextPoint.equals(transport.getDestination())
+                if (nextPoint == transport.getDestination()
                     && transport.getDisplayInfo() != null && !transport.getDisplayInfo().isEmpty()) {
                     rows.add(transport.getDisplayInfo());
                     break;

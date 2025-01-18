@@ -99,4 +99,10 @@ public class WorldPointTests {
         Assert.assertEquals(50529, distanceBetween(packedPointB, packedPointA, 2));
         Assert.assertEquals(Integer.MAX_VALUE, distanceBetween(packedPointB, packedPointC, 2));
     }
+
+    @Test
+    public void testMaxWorldPoint() {
+        Assert.assertEquals(packWorldPoint(-1, -1, -1), -1);
+        Assert.assertEquals(packWorldPoint(-1, -1, 1), 2147483647);
+    }
 }

@@ -11,21 +11,16 @@ import java.util.HashSet;
 import java.util.List;
 import net.runelite.api.Client;
 import net.runelite.api.Point;
-import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.widgets.ComponentID;
 import net.runelite.api.widgets.Widget;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayPosition;
-import net.runelite.client.ui.overlay.worldmap.WorldMapOverlay;
 import shortestpath.pathfinder.CollisionMap;
 
 public class PathMapOverlay extends Overlay {
     private final Client client;
     private final ShortestPathPlugin plugin;
-
-    @Inject
-    private WorldMapOverlay worldMapOverlay;
 
     @Inject
     private PathMapOverlay(Client client, ShortestPathPlugin plugin) {
@@ -58,7 +53,7 @@ public class PathMapOverlay extends Overlay {
             for (int x = extent.x; x < (extent.x + extent.width + 1); x++) {
                 for (int y = extent.y - extent.height; y < (extent.y + 1); y++) {
                     if (map.isBlocked(x, y, z)) {
-                        drawOnMap(graphics, new WorldPoint(x, y, z), false);
+                        drawOnMap(graphics, WorldPointUtil.packWorldPoint(x, y, z), false);
                     }
                 }
             }
@@ -66,12 +61,12 @@ public class PathMapOverlay extends Overlay {
 
         if (plugin.drawTransports) {
             graphics.setColor(Color.WHITE);
-            for (WorldPoint a : plugin.getTransports().keySet()) {
-                if (a == null) {
+            for (int a : plugin.getTransports().keySet()) {
+                if (a == Transport.UNDEFINED_ORIGIN) {
                     continue; // skip teleports
                 }
 
-                Point mapA = worldMapOverlay.mapWorldPointToGraphicsPoint(a);
+                Point mapA = plugin.mapWorldPointToGraphicsPoint(a);
                 if (mapA == null || !worldMapClipArea.contains(mapA.getX(), mapA.getY())) {
                     continue;
                 }
@@ -83,7 +78,7 @@ public class PathMapOverlay extends Overlay {
                         continue; // skip teleports
                     }
 
-                    Point mapB = worldMapOverlay.mapWorldPointToGraphicsPoint(b.getDestination());
+                    Point mapB = plugin.mapWorldPointToGraphicsPoint(b.getDestination());
                     if (mapB == null || !worldMapClipArea.contains(mapB.getX(), mapB.getY())) {
                         continue;
                     }
@@ -95,13 +90,13 @@ public class PathMapOverlay extends Overlay {
 
         if (plugin.getPathfinder() != null) {
             Color colour = plugin.getPathfinder().isDone() ? plugin.colourPath : plugin.colourPathCalculating;
-            List<WorldPoint> path = plugin.getPathfinder().getPath();
+            List<Integer> path = plugin.getPathfinder().getPath();
             for (int i = 0; i < path.size(); i++) {
                 graphics.setColor(colour);
-                WorldPoint point = path.get(i);
-                WorldPoint last = (i > 0) ? path.get(i - 1) : point;
-                if (point.distanceTo(last) > 1) {
-                    drawOnMap(graphics, last, point, true);
+                int point = path.get(i);
+                int lastPoint = (i > 0) ? path.get(i - 1) : point;
+                if (WorldPointUtil.distanceBetween(point, lastPoint) > 1) {
+                    drawOnMap(graphics, lastPoint, point, true);
                 }
                 drawOnMap(graphics, point, true);
             }
@@ -110,13 +105,13 @@ public class PathMapOverlay extends Overlay {
         return null;
     }
 
-    private void drawOnMap(Graphics2D graphics, WorldPoint point, boolean checkHover) {
-        drawOnMap(graphics, point, point.dx(1).dy(-1), checkHover);
+    private void drawOnMap(Graphics2D graphics, int point, boolean checkHover) {
+        drawOnMap(graphics, point, WorldPointUtil.dxdy(point, 1, -1), checkHover);
     }
 
-    private void drawOnMap(Graphics2D graphics, WorldPoint point, WorldPoint offset, boolean checkHover) {
+    private void drawOnMap(Graphics2D graphics, int point, int offsetPoint, boolean checkHover) {
         Point start = plugin.mapWorldPointToGraphicsPoint(point);
-        Point end = plugin.mapWorldPointToGraphicsPoint(offset);
+        Point end = plugin.mapWorldPointToGraphicsPoint(offsetPoint);
 
         if (start == null || end == null) {
             return;
@@ -129,7 +124,7 @@ public class PathMapOverlay extends Overlay {
         x -= width / 2;
         y -= height / 2;
 
-        if (point.distanceTo(offset) > 1) {
+        if (WorldPointUtil.distanceBetween(point, offsetPoint) > 1) {
             graphics.setStroke(new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0));
             graphics.drawLine(start.getX(), start.getY(), end.getX(), end.getY());
         } else {
@@ -161,9 +156,13 @@ public class PathMapOverlay extends Overlay {
     }
 
     private Rectangle getWorldMapExtent(Rectangle baseRectangle) {
-        WorldPoint topLeft = plugin.calculateMapPoint(new Point(baseRectangle.x, baseRectangle.y));
-        WorldPoint bottomRight = plugin.calculateMapPoint(
+        int topLeft = plugin.calculateMapPoint(new Point(baseRectangle.x, baseRectangle.y));
+        int bottomRight = plugin.calculateMapPoint(
             new Point(baseRectangle.x + baseRectangle.width, baseRectangle.y + baseRectangle.height));
-        return new Rectangle(topLeft.getX(), topLeft.getY(), bottomRight.getX() - topLeft.getX(), topLeft.getY() - bottomRight.getY());
+        int topLeftX = WorldPointUtil.unpackWorldX(topLeft);
+        int topLeftY = WorldPointUtil.unpackWorldY(topLeft);
+        int bottomRightX = WorldPointUtil.unpackWorldX(bottomRight);
+        int bottomRightY = WorldPointUtil.unpackWorldY(bottomRight);
+        return new Rectangle(topLeftX, topLeftY, bottomRightX - topLeftX, topLeftY - bottomRightY);
     }
 }

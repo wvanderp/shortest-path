@@ -31,7 +31,6 @@ import net.runelite.api.Player;
 import net.runelite.api.Point;
 import net.runelite.api.SpriteID;
 import net.runelite.api.Varbits;
-import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.MenuEntryAdded;
@@ -130,7 +129,7 @@ public class ShortestPathPlugin extends Plugin {
 
     private Point lastMenuOpenedPoint;
     private WorldMapPoint marker;
-    private WorldPoint lastLocation = new WorldPoint(0, 0, 0);
+    private int lastLocation = WorldPointUtil.packWorldPoint(0, 0, 0);
     private Shape minimapClipFixed;
     private Shape minimapClipResizeable;
     private BufferedImage minimapSpriteFixed;
@@ -160,7 +159,7 @@ public class ShortestPathPlugin extends Plugin {
     @Override
     protected void startUp() {
         SplitFlagMap map = SplitFlagMap.fromResources();
-        Map<WorldPoint, Set<Transport>> transports = Transport.loadAllFromResources();
+        Map<Integer, Set<Transport>> transports = Transport.loadAllFromResources();
 
         cacheConfigValues();
 
@@ -193,7 +192,7 @@ public class ShortestPathPlugin extends Plugin {
         }
     }
 
-    public void restartPathfinding(WorldPoint start, WorldPoint end) {
+    public void restartPathfinding(int start, int end) {
         synchronized (pathfinderMutex) {
             if (pathfinder != null) {
                 pathfinder.cancel();
@@ -215,14 +214,14 @@ public class ShortestPathPlugin extends Plugin {
         });
     }
 
-    public boolean isNearPath(WorldPoint location) {
+    public boolean isNearPath(int location) {
         if (pathfinder == null || pathfinder.getPath() == null || pathfinder.getPath().isEmpty() ||
-            config.recalculateDistance() < 0 || lastLocation.equals(lastLocation = location)) {
+            config.recalculateDistance() < 0 || lastLocation == (lastLocation = location)) {
             return true;
         }
 
-        for (WorldPoint point : pathfinder.getPath()) {
-            if (location.distanceTo2D(point) < config.recalculateDistance()) {
+        for (int point : pathfinder.getPath()) {
+            if (WorldPointUtil.distanceBetween(location, point) < config.recalculateDistance()) {
                 return true;
             }
         }
@@ -287,15 +286,15 @@ public class ShortestPathPlugin extends Plugin {
             Object objStart = data.getOrDefault(PLUGIN_MESSAGE_START, null);
             Object objTarget = data.getOrDefault(PLUGIN_MESSAGE_TARGET, null);
             Object objConfigOverride = data.getOrDefault(PLUGIN_MESSAGE_CONFIG_OVERRIDE, null);
-            WorldPoint start = (objStart instanceof WorldPoint) ? ((WorldPoint) objStart) : null;
-            WorldPoint target = (objTarget instanceof WorldPoint) ? ((WorldPoint) objTarget) : null;
+            int start = (objStart instanceof Integer) ? ((int) objStart) : WorldPointUtil.UNDEFINED;
+            int target = (objTarget instanceof Integer) ? ((int) objTarget) : WorldPointUtil.UNDEFINED;
             @SuppressWarnings("unchecked")
             Map<String, Object> configOverride = (objConfigOverride instanceof Map) ? ((Map<String, Object>) objConfigOverride) : null;
-            if (target == null || (start == null && client.getLocalPlayer() == null)) {
+            if (target == WorldPointUtil.UNDEFINED || (start == WorldPointUtil.UNDEFINED && client.getLocalPlayer() == null)) {
                 return;
             }
-            if (start == null) {
-                start = client.getLocalPlayer().getWorldLocation();
+            if (start == WorldPointUtil.UNDEFINED) {
+                start = WorldPointUtil.packWorldPoint(client.getLocalPlayer().getWorldLocation());
             }
             if (objConfigOverride != null) {
                 this.configOverride.clear();
@@ -307,7 +306,7 @@ public class ShortestPathPlugin extends Plugin {
         } else if (PLUGIN_MESSAGE_CLEAR.equals(action)) {
             this.configOverride.clear();
             cacheConfigValues();
-            setTarget(null);
+            setTarget(WorldPointUtil.UNDEFINED);
         }
     }
 
@@ -329,16 +328,15 @@ public class ShortestPathPlugin extends Plugin {
             return;
         }
 
-        WorldPoint currentLocation = client.isInInstancedRegion() ?
-            WorldPoint.fromLocalInstance(client, localPlayer.getLocalLocation()) : localPlayer.getWorldLocation();
-        if (currentLocation.distanceTo(pathfinder.getTarget()) < config.reachedDistance()) {
-            setTarget(null);
+        int currentLocation = WorldPointUtil.fromLocalInstance(client, localPlayer.getLocalLocation());
+        if (WorldPointUtil.distanceBetween(currentLocation, pathfinder.getTarget()) < config.reachedDistance()) {
+            setTarget(WorldPointUtil.UNDEFINED);
             return;
         }
 
         if (!startPointSet && !isNearPath(currentLocation)) {
             if (config.cancelInstead()) {
-                setTarget(null);
+                setTarget(WorldPointUtil.UNDEFINED);
                 return;
             }
             restartPathfinding(currentLocation, pathfinder.getTarget());
@@ -351,13 +349,13 @@ public class ShortestPathPlugin extends Plugin {
             && event.getType() == MenuAction.WALK.getId()) {
             addMenuEntry(event, SET, TARGET, 1);
             if (pathfinder != null) {
-                if (pathfinder.getTarget() != null) {
+                if (pathfinder.getTarget() != WorldPointUtil.UNDEFINED) {
                     addMenuEntry(event, SET, START, 1);
                 }
-                WorldPoint selectedTile = getSelectedWorldPoint();
+                int selectedTile = getSelectedWorldPoint();
                 if (pathfinder.getPath() != null) {
-                    for (WorldPoint tile : pathfinder.getPath()) {
-                        if (tile.equals(selectedTile)) {
+                    for (int tile : pathfinder.getPath()) {
+                        if (tile == selectedTile) {
                             addMenuEntry(event, CLEAR, PATH, 1);
                             break;
                         }
@@ -374,7 +372,7 @@ public class ShortestPathPlugin extends Plugin {
                 client.getMouseCanvasPosition().getY())) {
             addMenuEntry(event, SET, TARGET, 0);
             if (pathfinder != null) {
-                if (pathfinder.getTarget() != null) {
+                if (pathfinder.getTarget() != WorldPointUtil.UNDEFINED) {
                     addMenuEntry(event, SET, START, 0);
                     addMenuEntry(event, CLEAR, PATH, 0);
                 }
@@ -397,7 +395,7 @@ public class ShortestPathPlugin extends Plugin {
         }
     }
 
-    public Map<WorldPoint, Set<Transport>> getTransports() {
+    public Map<Integer, Set<Transport>> getTransports() {
         return pathfinderConfig.getTransports();
     }
 
@@ -504,25 +502,23 @@ public class ShortestPathPlugin extends Plugin {
         }
 
         if (entry.getOption().equals(CLEAR) && entry.getTarget().equals(PATH)) {
-            setTarget(null);
+            setTarget(WorldPointUtil.UNDEFINED);
         }
     }
 
-    private WorldPoint getSelectedWorldPoint() {
+    private int getSelectedWorldPoint() {
         if (client.getWidget(ComponentID.WORLD_MAP_MAPVIEW) == null) {
             if (client.getSelectedSceneTile() != null) {
-                return client.isInInstancedRegion()
-                    ? WorldPoint.fromLocalInstance(client, client.getSelectedSceneTile().getLocalLocation())
-                    : client.getSelectedSceneTile().getWorldLocation();
+                return WorldPointUtil.fromLocalInstance(client, client.getSelectedSceneTile().getLocalLocation());
             }
         } else {
             return calculateMapPoint(client.isMenuOpen() ? lastMenuOpenedPoint : client.getMouseCanvasPosition());
         }
-        return null;
+        return WorldPointUtil.UNDEFINED;
     }
 
-    private void setTarget(WorldPoint target) {
-        if (target == null) {
+    private void setTarget(int target) {
+        if (target == WorldPointUtil.UNDEFINED) {
             synchronized (pathfinderMutex) {
                 if (pathfinder != null) {
                     pathfinder.cancel();
@@ -539,15 +535,13 @@ public class ShortestPathPlugin extends Plugin {
                 return;
             }
             worldMapPointManager.removeIf(x -> x == marker);
-            marker = new WorldMapPoint(target, MARKER_IMAGE);
+            marker = new WorldMapPoint(WorldPointUtil.unpackWorldPoint(target), MARKER_IMAGE);
             marker.setName("Target");
             marker.setTarget(marker.getWorldPoint());
             marker.setJumpOnClick(true);
             worldMapPointManager.add(marker);
 
-            WorldPoint start = client.isInInstancedRegion()
-                ? WorldPoint.fromLocalInstance(client, localPlayer.getLocalLocation())
-                : localPlayer.getWorldLocation();
+            int start = WorldPointUtil.fromLocalInstance(client, localPlayer.getLocalLocation());
             lastLocation = start;
             if (startPointSet && pathfinder != null) {
                 start = pathfinder.getStart();
@@ -556,7 +550,7 @@ public class ShortestPathPlugin extends Plugin {
         }
     }
 
-    private void setStart(WorldPoint start) {
+    private void setStart(int start) {
         if (pathfinder == null) {
             return;
         }
@@ -564,23 +558,23 @@ public class ShortestPathPlugin extends Plugin {
         restartPathfinding(start, pathfinder.getTarget());
     }
 
-    public WorldPoint calculateMapPoint(Point point) {
+    public int calculateMapPoint(Point point) {
         WorldMap worldMap = client.getWorldMap();
         float zoom = worldMap.getWorldMapZoom();
-        final WorldPoint mapPoint = new WorldPoint(worldMap.getWorldMapPosition().getX(), worldMap.getWorldMapPosition().getY(), 0);
+        final int mapPoint = WorldPointUtil.packWorldPoint(worldMap.getWorldMapPosition().getX(), worldMap.getWorldMapPosition().getY(), 0);
         final Point middle = mapWorldPointToGraphicsPoint(mapPoint);
 
         if (point == null || middle == null) {
-            return null;
+            return WorldPointUtil.UNDEFINED;
         }
 
         final int dx = (int) ((point.getX() - middle.getX()) / zoom);
         final int dy = (int) ((-(point.getY() - middle.getY())) / zoom);
 
-        return mapPoint.dx(dx).dy(dy);
+        return WorldPointUtil.dxdy(mapPoint, dx, dy);
     }
 
-    public Point mapWorldPointToGraphicsPoint(WorldPoint worldPoint) {
+    public Point mapWorldPointToGraphicsPoint(int packedWorldPoint) {
         WorldMap worldMap = client.getWorldMap();
 
         float pixelsPerTile = worldMap.getWorldMapZoom();
@@ -595,8 +589,8 @@ public class ShortestPathPlugin extends Plugin {
             Point worldMapPosition = worldMap.getWorldMapPosition();
 
             int yTileMax = worldMapPosition.getY() - heightInTiles / 2;
-            int yTileOffset = (yTileMax - worldPoint.getY() - 1) * -1;
-            int xTileOffset = worldPoint.getX() + widthInTiles / 2 - worldMapPosition.getX();
+            int yTileOffset = (yTileMax - WorldPointUtil.unpackWorldY(packedWorldPoint) - 1) * -1;
+            int xTileOffset = WorldPointUtil.unpackWorldX(packedWorldPoint) + widthInTiles / 2 - worldMapPosition.getX();
 
             int xGraphDiff = ((int) (xTileOffset * pixelsPerTile));
             int yGraphDiff = (int) (yTileOffset * pixelsPerTile);

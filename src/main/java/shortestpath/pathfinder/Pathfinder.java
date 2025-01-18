@@ -6,9 +6,7 @@ import java.util.Deque;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
-
 import lombok.Getter;
-import net.runelite.api.coords.WorldPoint;
 import shortestpath.WorldPointUtil;
 
 public class Pathfinder implements Runnable {
@@ -17,11 +15,9 @@ public class Pathfinder implements Runnable {
     private volatile boolean cancelled = false;
 
     @Getter
-    private final WorldPoint start;
+    private final int start;
     @Getter
-    private final WorldPoint target;
-
-    private final int targetPacked;
+    private final int target;
 
     private final PathfinderConfig config;
     private final CollisionMap map;
@@ -34,7 +30,7 @@ public class Pathfinder implements Runnable {
     private final VisitedTiles visited;
 
     @SuppressWarnings("unchecked") // Casting EMPTY_LIST is safe here
-    private List<WorldPoint> path = (List<WorldPoint>)Collections.EMPTY_LIST;
+    private List<Integer> path = (List<Integer>)Collections.EMPTY_LIST;
     private boolean pathNeedsUpdate = false;
     private Node bestLastNode;
     /**
@@ -46,14 +42,13 @@ public class Pathfinder implements Runnable {
      */
     private int wildernessLevel;
 
-    public Pathfinder(PathfinderConfig config, WorldPoint start, WorldPoint target) {
+    public Pathfinder(PathfinderConfig config, int start, int target) {
         stats = new PathfinderStats();
         this.config = config;
         this.map = config.getMap();
         this.start = start;
         this.target = target;
         visited = new VisitedTiles(map);
-        targetPacked = WorldPointUtil.packWorldPoint(target);
         targetInWilderness = PathfinderConfig.isInWilderness(target);
         wildernessLevel = 31;
     }
@@ -75,7 +70,7 @@ public class Pathfinder implements Runnable {
         return null;
     }
 
-    public List<WorldPoint> getPath() {
+    public List<Integer> getPath() {
         Node lastNode = bestLastNode; // For thread safety, read bestLastNode once
         if (lastNode == null) {
             return path;
@@ -93,7 +88,7 @@ public class Pathfinder implements Runnable {
         List<Node> nodes = map.getNeighbors(node, visited, config);
         for (int i = 0; i < nodes.size(); ++i) {
             Node neighbor = nodes.get(i);
-            if (neighbor.packedPosition == targetPacked) {
+            if (neighbor.packedPosition == target) {
                 return neighbor;
             }
 
@@ -157,14 +152,14 @@ public class Pathfinder implements Runnable {
                 }
             }
 
-            if (node.packedPosition == targetPacked) {
+            if (node.packedPosition == target) {
                 bestLastNode = node;
                 pathNeedsUpdate = true;
                 break;
             }
 
-            int distance = WorldPointUtil.distanceBetween(node.packedPosition, targetPacked);
-            long heuristic = distance + (long) WorldPointUtil.distanceBetween(node.packedPosition, targetPacked, 2);
+            int distance = WorldPointUtil.distanceBetween(node.packedPosition, target);
+            long heuristic = distance + (long) WorldPointUtil.distanceBetween(node.packedPosition, target, 2);
             if (heuristic < bestHeuristic || (heuristic <= bestHeuristic && distance < bestDistance)) {
                 bestLastNode = node;
                 pathNeedsUpdate = true;

@@ -10,7 +10,6 @@ import net.runelite.api.Client;
 import net.runelite.api.Perspective;
 import net.runelite.api.Point;
 import net.runelite.api.coords.LocalPoint;
-import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayPosition;
@@ -37,10 +36,10 @@ public class PathMinimapOverlay extends Overlay {
         graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
         graphics.setClip(plugin.getMinimapClipArea());
 
-        List<WorldPoint> pathPoints = plugin.getPathfinder().getPath();
+        List<Integer> pathPoints = plugin.getPathfinder().getPath();
         Color pathColor = plugin.getPathfinder().isDone() ? plugin.colourPath : plugin.colourPathCalculating;
-        for (WorldPoint pathPoint : pathPoints) {
-            if (pathPoint.getPlane() != client.getPlane()) {
+        for (int pathPoint : pathPoints) {
+            if (WorldPointUtil.unpackWorldPlane(pathPoint) != client.getPlane()) {
                 continue;
             }
 
@@ -50,9 +49,9 @@ public class PathMinimapOverlay extends Overlay {
         return null;
     }
 
-    private void drawOnMinimap(Graphics2D graphics, WorldPoint location, Color color) {
-        for (WorldPoint point : WorldPoint.toLocalInstance(client, location)) {
-            LocalPoint lp = LocalPoint.fromWorld(client, point);
+    private void drawOnMinimap(Graphics2D graphics, int location, Color color) {
+        for (int point : WorldPointUtil.toLocalInstance(client, location)) {
+            LocalPoint lp = WorldPointUtil.toLocalPoint(client, point);
 
             if (lp == null) {
                 continue;

@@ -11,7 +11,6 @@ import net.runelite.api.ItemID;
 import net.runelite.api.Quest;
 import net.runelite.api.QuestState;
 import net.runelite.api.Skill;
-import net.runelite.api.coords.WorldPoint;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +20,7 @@ import shortestpath.TeleportationItem;
 import shortestpath.ShortestPathConfig;
 import shortestpath.Transport;
 import shortestpath.TransportType;
+import shortestpath.WorldPointUtil;
 import shortestpath.pathfinder.Pathfinder;
 import shortestpath.pathfinder.PathfinderConfig;
 import shortestpath.pathfinder.SplitFlagMap;
@@ -34,7 +34,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class PathfinderTest {
     private static final SplitFlagMap map = SplitFlagMap.fromResources();
-    private static final Map<WorldPoint, Set<Transport>> transports = Transport.loadAllFromResources();
+    private static final Map<Integer, Set<Transport>> transports = Transport.loadAllFromResources();
 
     private PathfinderConfig pathfinderConfig;
 
@@ -146,15 +146,17 @@ public class PathfinderTest {
         // 5 tiles is using the stepping stones
         // ~40 tiles is using the combat bracelet teleport to Champions Guild
         // >100 tiles is walking around the river via Barbarian Village
-        testTransportLength(6, new WorldPoint(3149, 3363, 0), new WorldPoint(3154, 3363, 0));
+        testTransportLength(6,
+            WorldPointUtil.packWorldPoint(3149, 3363, 0),
+            WorldPointUtil.packWorldPoint(3154, 3363, 0));
     }
 
     @Test
     public void testChronicle() {
         // South of river south of Champions Guild to Chronicle teleport destination
         testTransportLength(2,
-            new WorldPoint(3199, 3336, 0),
-            new WorldPoint(3200, 3355, 0),
+            WorldPointUtil.packWorldPoint(3199, 3336, 0),
+            WorldPointUtil.packWorldPoint(3200, 3355, 0),
             TeleportationItem.ALL);
     }
 
@@ -165,8 +167,8 @@ public class PathfinderTest {
 
         // With magic level 1 and no item requirements
         testTransportLength(4,
-            new WorldPoint(3216, 3424, 0),
-            new WorldPoint(3213, 3424, 0),
+            WorldPointUtil.packWorldPoint(3216, 3424, 0),
+            WorldPointUtil.packWorldPoint(3213, 3424, 0),
             TeleportationItem.NONE,
             1);
 
@@ -176,8 +178,8 @@ public class PathfinderTest {
             new Item(ItemID.AIR_RUNE, 3),
             new Item(ItemID.FIRE_RUNE, 1));
         testTransportLength(2,
-            new WorldPoint(3216, 3424, 0),
-            new WorldPoint(3213, 3424, 0),
+            WorldPointUtil.packWorldPoint(3216, 3424, 0),
+            WorldPointUtil.packWorldPoint(3213, 3424, 0),
             TeleportationItem.INVENTORY,
             99);
     }
@@ -187,12 +189,12 @@ public class PathfinderTest {
         // Shortest path from east to west Keldagrim is via the first floor
         // of the Keldagrim Palace, and not via the bridge to the north
         testTransportLength(64,
-            new WorldPoint(2894, 10199, 0), // east
-            new WorldPoint(2864, 10199, 0)); // west
+            WorldPointUtil.packWorldPoint(2894, 10199, 0), // east
+            WorldPointUtil.packWorldPoint(2864, 10199, 0)); // west
 
         testTransportLength(64,
-            new WorldPoint(2864, 10199, 0), // west
-            new WorldPoint(2894, 10199, 0)); // east
+            WorldPointUtil.packWorldPoint(2864, 10199, 0), // west
+            WorldPointUtil.packWorldPoint(2894, 10199, 0)); // east
     }
 
     @Test
@@ -200,53 +202,53 @@ public class PathfinderTest {
         when(config.useCharterShips()).thenReturn(true);
 
         testTransportMinimumLength(3,
-            new WorldPoint(1455, 2968, 0), // Aldarin
-            new WorldPoint(1514, 2971, 0)); // Sunset Coast
+            WorldPointUtil.packWorldPoint(1455, 2968, 0), // Aldarin
+            WorldPointUtil.packWorldPoint(1514, 2971, 0)); // Sunset Coast
         testTransportMinimumLength(3,
-            new WorldPoint(1514, 2971, 0), // Sunset Coast
-            new WorldPoint(1455, 2968, 0)); // Aldarin
+            WorldPointUtil.packWorldPoint(1514, 2971, 0), // Sunset Coast
+            WorldPointUtil.packWorldPoint(1455, 2968, 0)); // Aldarin
 
         testTransportMinimumLength(3,
-            new WorldPoint(3702, 3503, 0), // Port Phasmatys
-            new WorldPoint(3671, 2931, 0)); // Mos Le'Harmless
+            WorldPointUtil.packWorldPoint(3702, 3503, 0), // Port Phasmatys
+            WorldPointUtil.packWorldPoint(3671, 2931, 0)); // Mos Le'Harmless
         testTransportMinimumLength(3,
-            new WorldPoint(3671, 2931, 0), // Mos Le'Harmless
-            new WorldPoint(3702, 3503, 0)); // Port Phasmatys
+            WorldPointUtil.packWorldPoint(3671, 2931, 0), // Mos Le'Harmless
+            WorldPointUtil.packWorldPoint(3702, 3503, 0)); // Port Phasmatys
 
         testTransportMinimumLength(3,
-            new WorldPoint(1808, 3679, 0), // Port Piscarilius
-            new WorldPoint(1496, 3403, 0)); // Land's End
+            WorldPointUtil.packWorldPoint(1808, 3679, 0), // Port Piscarilius
+            WorldPointUtil.packWorldPoint(1496, 3403, 0)); // Land's End
         testTransportMinimumLength(3,
-            new WorldPoint(1496, 3403, 0), // Land's End
-            new WorldPoint(1808, 3679, 0)); // Port Piscarilius
+            WorldPointUtil.packWorldPoint(1496, 3403, 0), // Land's End
+            WorldPointUtil.packWorldPoint(1808, 3679, 0)); // Port Piscarilius
 
         testTransportMinimumLength(3,
-            new WorldPoint(3038, 3192, 0), // Port Sarim
-            new WorldPoint(1496, 3403, 0)); // Land's End
+            WorldPointUtil.packWorldPoint(3038, 3192, 0), // Port Sarim
+            WorldPointUtil.packWorldPoint(1496, 3403, 0)); // Land's End
         testTransportMinimumLength(3,
-            new WorldPoint(1496, 3403, 0), // Land's End
-            new WorldPoint(3038, 3192, 0)); // Port Sarim
+            WorldPointUtil.packWorldPoint(1496, 3403, 0), // Land's End
+            WorldPointUtil.packWorldPoint(3038, 3192, 0)); // Port Sarim
 
         testTransportMinimumLength(3,
-            new WorldPoint(3038, 3192, 0), // Port Sarim
-            new WorldPoint(2954, 3158, 0)); // Musa Point
+            WorldPointUtil.packWorldPoint(3038, 3192, 0), // Port Sarim
+            WorldPointUtil.packWorldPoint(2954, 3158, 0)); // Musa Point
         testTransportMinimumLength(3,
-            new WorldPoint(2954, 3158, 0), // Musa Point
-            new WorldPoint(3038, 3192, 0)); // Port Sarim
+            WorldPointUtil.packWorldPoint(2954, 3158, 0), // Musa Point
+            WorldPointUtil.packWorldPoint(3038, 3192, 0)); // Port Sarim
 
         testTransportMinimumLength(3,
-            new WorldPoint(3038, 3192, 0), // Port Sarim
-            new WorldPoint(1808, 3679, 0)); // Port Piscarilius
+            WorldPointUtil.packWorldPoint(3038, 3192, 0), // Port Sarim
+            WorldPointUtil.packWorldPoint(1808, 3679, 0)); // Port Piscarilius
         testTransportMinimumLength(3,
-            new WorldPoint(1808, 3679, 0), // Port Piscarilius
-            new WorldPoint(3038, 3192, 0)); // Port Sarim
+            WorldPointUtil.packWorldPoint(1808, 3679, 0), // Port Piscarilius
+            WorldPointUtil.packWorldPoint(3038, 3192, 0)); // Port Sarim
     }
 
     @Test
     public void testNumberOfGnomeGliders() {
         // All permutations of gnome glider transports are resolved from origins and destinations
         int actualCount = 0;
-        for (WorldPoint origin : transports.keySet()) {
+        for (int origin : transports.keySet()) {
             for (Transport transport : transports.get(origin)) {
                 if (TransportType.GNOME_GLIDER.equals(transport.getType())) {
                     actualCount++;
@@ -271,7 +273,7 @@ public class PathfinderTest {
     public void testNumberOfQuetzals() {
         // All but 2 permutations of quetzal transports are resolved from origins and destinations
         int actualCount = 0;
-        for (WorldPoint origin : transports.keySet()) {
+        for (int origin : transports.keySet()) {
             for (Transport transport : transports.get(origin)) {
                 if (TransportType.QUETZAL.equals(transport.getType())) {
                     actualCount++;
@@ -304,7 +306,7 @@ public class PathfinderTest {
     public void testNumberOfSpiritTrees() {
         // All permutations of spirit tree transports are resolved from origins and destinations
         int actualCount = 0;
-        for (WorldPoint origin : transports.keySet()) {
+        for (int origin : transports.keySet()) {
             for (Transport transport : transports.get(origin)) {
                 if (TransportType.SPIRIT_TREE.equals(transport.getType())) {
                     actualCount++;
@@ -350,22 +352,26 @@ public class PathfinderTest {
         doReturn(items).when(inventory).getItems();
     }
 
-    private void testTransportLength(int expectedLength, WorldPoint origin, WorldPoint destination) {
+    private void testTransportLength(int expectedLength, int origin, int destination) {
         testTransportLength(expectedLength, origin, destination, TeleportationItem.NONE, 99);
     }
 
-    private void testTransportLength(int expectedLength, WorldPoint origin, WorldPoint destination,
+    private void testTransportLength(int expectedLength, int origin, int destination,
         TeleportationItem useTeleportationItems) {
         testTransportLength(expectedLength, origin, destination, useTeleportationItems, 99);
     }
 
-    private void testTransportLength(int expectedLength, WorldPoint origin, WorldPoint destination,
+    private void testTransportLength(int expectedLength, int origin, int destination,
         TeleportationItem useTeleportationItems, int skillLevel) {
         setupConfig(QuestState.FINISHED, skillLevel, useTeleportationItems);
         assertEquals(expectedLength, calculatePathLength(origin, destination));
         System.out.println("Successfully completed transport length test from " +
-            "(" + origin.getX() + ", " + origin.getY() + ", " + origin.getPlane() + ") to " +
-            "(" + destination.getX() + ", " + destination.getY() + ", " + destination.getPlane() + ")");
+            "(" + WorldPointUtil.unpackWorldX(origin) +
+            ", " + WorldPointUtil.unpackWorldY(origin) +
+            ", " + WorldPointUtil.unpackWorldPlane(origin) + ") to " +
+            "(" + WorldPointUtil.unpackWorldX(destination) +
+            ", " + WorldPointUtil.unpackWorldY(destination) +
+            ", " + WorldPointUtil.unpackWorldPlane(destination) + ")");
     }
 
     private void testTransportLength(int expectedLength, TransportType transportType) {
@@ -377,7 +383,7 @@ public class PathfinderTest {
         setupConfig(questState, skillLevel, useTeleportationItems);
 
         int counter = 0;
-        for (WorldPoint origin : transports.keySet()) {
+        for (int origin : transports.keySet()) {
             for (Transport transport : transports.get(origin)) {
                 if (transportType.equals(transport.getType())) {
                     counter++;
@@ -390,20 +396,24 @@ public class PathfinderTest {
         System.out.println(String.format("Successfully completed %d " + transportType + " transport length tests", counter));
     }
 
-    private void testTransportMinimumLength(int minimumLength, WorldPoint origin, WorldPoint destination) {
+    private void testTransportMinimumLength(int minimumLength, int origin, int destination) {
         setupConfig(QuestState.FINISHED, 99, TeleportationItem.ALL);
         int actualLength = calculatePathLength(origin, destination);
         assertTrue("An impossible transport was used with length " + actualLength, actualLength >= minimumLength);
         System.out.println("Successfully completed transport length test from " +
-            "(" + origin.getX() + ", " + origin.getY() + ", " + origin.getPlane() + ") to " +
-            "(" + destination.getX() + ", " + destination.getY() + ", " + destination.getPlane() + ")");
+            "(" + WorldPointUtil.unpackWorldX(origin) +
+            ", " + WorldPointUtil.unpackWorldY(origin) +
+            ", " + WorldPointUtil.unpackWorldPlane(origin) + ") to " +
+            "(" + WorldPointUtil.unpackWorldX(destination) +
+            ", " + WorldPointUtil.unpackWorldY(destination) +
+            ", " + WorldPointUtil.unpackWorldPlane(destination) + ")");
     }
 
     private int calculateTransportLength(Transport transport) {
         return calculatePathLength(transport.getOrigin(), transport.getDestination());
     }
 
-    private int calculatePathLength(WorldPoint origin, WorldPoint destination) {
+    private int calculatePathLength(int origin, int destination) {
         Pathfinder pathfinder = new Pathfinder(pathfinderConfig, origin, destination);
         pathfinder.run();
         return pathfinder.getPath().size();

@@ -1,8 +1,6 @@
 package shortestpath.pathfinder;
 
-import net.runelite.api.coords.WorldPoint;
 import shortestpath.WorldPointUtil;
-
 import static net.runelite.api.Constants.REGION_SIZE;
 
 public class VisitedTiles {
@@ -19,10 +17,6 @@ public class VisitedTiles {
 
         visitedRegions = new VisitedRegion[widthInclusive * heightInclusive];
         visitedRegionPlanes = map.getPlanes();
-    }
-
-    public boolean get(WorldPoint point) {
-        return get(point.getX(), point.getY(), point.getPlane());
     }
 
     public boolean get(int packedPoint) {
@@ -78,6 +72,14 @@ public class VisitedTiles {
 
     private int getRegionIndex(int regionX, int regionY) {
         return (regionX - regionExtents.minX) + (regionY - regionExtents.minY) * widthInclusive;
+    }
+
+    public int getRegionX(int regionIndex) {
+        return (regionIndex % widthInclusive + regionExtents.minX) * REGION_SIZE;
+    }
+
+    public int getRegionY(int regionIndex) {
+        return (regionIndex / widthInclusive + regionExtents.minY) * REGION_SIZE;
     }
 
     private static class VisitedRegion {
