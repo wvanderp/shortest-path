@@ -42,16 +42,21 @@ public class PathMapOverlay extends Overlay {
             return null;
         }
 
-        Area worldMapClipArea = getWorldMapClipArea(client.getWidget(ComponentID.WORLD_MAP_MAPVIEW).getBounds());
+        Rectangle worldMapRectangle = client.getWidget(ComponentID.WORLD_MAP_MAPVIEW).getBounds();
+        Area worldMapClipArea = getWorldMapClipArea(worldMapRectangle);
         graphics.setClip(worldMapClipArea);
 
         if (plugin.drawCollisionMap) {
             graphics.setColor(plugin.colourCollisionMap);
-            Rectangle extent = getWorldMapExtent(client.getWidget(ComponentID.WORLD_MAP_MAPVIEW).getBounds());
+            int mapWorldPoint = plugin.calculateMapPoint(worldMapRectangle.x, worldMapRectangle.y);
+            int extentX = WorldPointUtil.unpackWorldX(mapWorldPoint);
+            int extentY = WorldPointUtil.unpackWorldY(mapWorldPoint);
+            int extentWidth = getWorldMapExtentWidth(worldMapRectangle);
+            int extentHeight = getWorldMapExtentHeight(worldMapRectangle);
             final CollisionMap map = plugin.getMap();
             final int z = client.getPlane();
-            for (int x = extent.x; x < (extent.x + extent.width + 1); x++) {
-                for (int y = extent.y - extent.height; y < (extent.y + 1); y++) {
+            for (int x = extentX; x < (extentX + extentWidth + 1); x++) {
+                for (int y = extentY - extentHeight; y < (extentY + 1); y++) {
                     if (map.isBlocked(x, y, z)) {
                         drawOnMap(graphics, WorldPointUtil.packWorldPoint(x, y, z), false);
                     }
@@ -66,8 +71,9 @@ public class PathMapOverlay extends Overlay {
                     continue; // skip teleports
                 }
 
-                Point mapA = plugin.mapWorldPointToGraphicsPoint(a);
-                if (mapA == null || !worldMapClipArea.contains(mapA.getX(), mapA.getY())) {
+                int mapAX = plugin.mapWorldPointToGraphicsPointX(a);
+                int mapAY = plugin.mapWorldPointToGraphicsPointY(a);
+                if (!worldMapClipArea.contains(mapAX, mapAY)) {
                     continue;
                 }
 
@@ -78,12 +84,13 @@ public class PathMapOverlay extends Overlay {
                         continue; // skip teleports
                     }
 
-                    Point mapB = plugin.mapWorldPointToGraphicsPoint(b.getDestination());
-                    if (mapB == null || !worldMapClipArea.contains(mapB.getX(), mapB.getY())) {
+                    int mapBX = plugin.mapWorldPointToGraphicsPointX(b.getDestination());
+                    int mapBY = plugin.mapWorldPointToGraphicsPointY(b.getDestination());
+                    if (!worldMapClipArea.contains(mapBX, mapBY)) {
                         continue;
                     }
 
-                    graphics.drawLine(mapA.getX(), mapA.getY(), mapB.getX(), mapB.getY());
+                    graphics.drawLine(mapAX, mapAY, mapBX, mapBY);
                 }
             }
         }
@@ -110,28 +117,31 @@ public class PathMapOverlay extends Overlay {
     }
 
     private void drawOnMap(Graphics2D graphics, int point, int offsetPoint, boolean checkHover) {
-        Point start = plugin.mapWorldPointToGraphicsPoint(point);
-        Point end = plugin.mapWorldPointToGraphicsPoint(offsetPoint);
+        int startX = plugin.mapWorldPointToGraphicsPointX(point);
+        int startY = plugin.mapWorldPointToGraphicsPointY(point);
+        int endX = plugin.mapWorldPointToGraphicsPointX(offsetPoint);
+        int endY = plugin.mapWorldPointToGraphicsPointY(offsetPoint);
 
-        if (start == null || end == null) {
+        if (startX == Integer.MIN_VALUE || startY == Integer.MIN_VALUE ||
+            endX == Integer.MIN_VALUE || endY == Integer.MIN_VALUE) {
             return;
         }
 
-        int x = start.getX();
-        int y = start.getY();
-        final int width = end.getX() - x;
-        final int height = end.getY() - y;
+        int x = startX;
+        int y = startY;
+        final int width = endX - x;
+        final int height = endY - y;
         x -= width / 2;
         y -= height / 2;
 
         if (WorldPointUtil.distanceBetween(point, offsetPoint) > 1) {
             graphics.setStroke(new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0));
-            graphics.drawLine(start.getX(), start.getY(), end.getX(), end.getY());
+            graphics.drawLine(startX, startY, endX, endY);
         } else {
             Point cursorPos = client.getMouseCanvasPosition();
             if (checkHover &&
-                cursorPos.getX() >= x && cursorPos.getX() <= (end.getX() - width / 2) &&
-                cursorPos.getY() >= y && cursorPos.getY() <= (end.getY() - width / 2)) {
+                cursorPos.getX() >= x && cursorPos.getX() <= (endX - width / 2) &&
+                cursorPos.getY() >= y && cursorPos.getY() <= (endY - width / 2)) {
                 graphics.setColor(graphics.getColor().darker());
             }
             graphics.fillRect(x, y, width, height);
@@ -155,14 +165,27 @@ public class PathMapOverlay extends Overlay {
         return clipArea;
     }
 
-    private Rectangle getWorldMapExtent(Rectangle baseRectangle) {
-        int topLeft = plugin.calculateMapPoint(new Point(baseRectangle.x, baseRectangle.y));
-        int bottomRight = plugin.calculateMapPoint(
-            new Point(baseRectangle.x + baseRectangle.width, baseRectangle.y + baseRectangle.height));
-        int topLeftX = WorldPointUtil.unpackWorldX(topLeft);
-        int topLeftY = WorldPointUtil.unpackWorldY(topLeft);
-        int bottomRightX = WorldPointUtil.unpackWorldX(bottomRight);
-        int bottomRightY = WorldPointUtil.unpackWorldY(bottomRight);
-        return new Rectangle(topLeftX, topLeftY, bottomRightX - topLeftX, topLeftY - bottomRightY);
+    private int getWorldMapExtentWidth(Rectangle baseRectangle) {
+        return (
+            WorldPointUtil.unpackWorldX(
+                plugin.calculateMapPoint(
+                    baseRectangle.x + baseRectangle.width,
+                    baseRectangle.y + baseRectangle.height)) -
+            WorldPointUtil.unpackWorldX(
+                plugin.calculateMapPoint(
+                    baseRectangle.x,
+                    baseRectangle.y)));
+    }
+
+    private int getWorldMapExtentHeight(Rectangle baseRectangle) {
+        return (
+            WorldPointUtil.unpackWorldY(
+                plugin.calculateMapPoint(
+                    baseRectangle.x,
+                    baseRectangle.y)) -
+            WorldPointUtil.unpackWorldY(
+                plugin.calculateMapPoint(
+                    baseRectangle.x + baseRectangle.width,
+                    baseRectangle.y + baseRectangle.height)));
     }
 }

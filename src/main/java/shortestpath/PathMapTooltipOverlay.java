@@ -63,17 +63,21 @@ public class PathMapTooltipOverlay extends Overlay {
     }
 
     private boolean drawTooltip(Graphics2D graphics, Point cursorPos, int point, int nextPoint, int n) {
-        Point start = plugin.mapWorldPointToGraphicsPoint(point);
-        Point end = plugin.mapWorldPointToGraphicsPoint(WorldPointUtil.dxdy(point, 1, -1));
+        int offsetPoint = WorldPointUtil.dxdy(point, 1, -1);
+        int startX = plugin.mapWorldPointToGraphicsPointX(point);
+        int startY = plugin.mapWorldPointToGraphicsPointY(point);
+        int endX = plugin.mapWorldPointToGraphicsPointX(offsetPoint);
+        int endY = plugin.mapWorldPointToGraphicsPointY(offsetPoint);
 
-        if (start == null || end == null) {
+        if (startX == Integer.MIN_VALUE || startY == Integer.MIN_VALUE ||
+            endX == Integer.MIN_VALUE || endY == Integer.MIN_VALUE) {
             return false;
         }
 
-        int width = end.getX() - start.getX();
+        int width = endX - startX;
 
-        if (cursorPos.getX() < (start.getX() - width / 2) || cursorPos.getX() > (end.getX() - width / 2) ||
-            cursorPos.getY() < (start.getY() - width / 2) || cursorPos.getY() > (end.getY() - width / 2)) {
+        if (cursorPos.getX() < (startX - width / 2) || cursorPos.getX() > (endX - width / 2) ||
+            cursorPos.getY() < (startY - width / 2) || cursorPos.getY() > (endY - width / 2)) {
             return false;
         }
 
@@ -100,27 +104,24 @@ public class PathMapTooltipOverlay extends Overlay {
         int worldMapRightBoundary = worldMapBounds.width + worldMapBounds.x;
         int worldMapBottomBoundary = worldMapBounds.height + worldMapBounds.y;
 
-        int drawPointX = start.getX() + TOOLTIP_OFFSET_WIDTH;
-        int drawPointY = start.getY();
+        int drawPointX = startX + TOOLTIP_OFFSET_WIDTH;
+        int drawPointY = startY;
         if (drawPointX + clippedWidth > worldMapRightBoundary) {
             drawPointX = worldMapRightBoundary - clippedWidth;
         }
         if (drawPointY + clippedHeight > worldMapBottomBoundary) {
-            drawPointY = start.getY() - clippedHeight;
+            drawPointY = startY - clippedHeight;
         }
         drawPointY += TOOLTIP_OFFSET_HEIGHT;
 
-        Rectangle tooltipRect = new Rectangle(
-            drawPointX - TOOLTIP_PADDING_WIDTH,
-            drawPointY - TOOLTIP_PADDING_HEIGHT,
-            clippedWidth,
-            clippedHeight);
+        int tooltipRectX = drawPointX - TOOLTIP_PADDING_WIDTH;
+        int tooltipRectY = drawPointY - TOOLTIP_PADDING_HEIGHT;
 
         graphics.setColor(JagexColors.TOOLTIP_BACKGROUND);
-        graphics.fillRect(tooltipRect.x, tooltipRect.y, tooltipRect.width, tooltipRect.height);
+        graphics.fillRect(tooltipRectX, tooltipRectY, clippedWidth, clippedHeight);
 
         graphics.setColor(JagexColors.TOOLTIP_BORDER);
-        graphics.drawRect(tooltipRect.x, tooltipRect.y, tooltipRect.width, tooltipRect.height);
+        graphics.drawRect(tooltipRectX, tooltipRectY, clippedWidth, clippedHeight);
 
         graphics.setColor(JagexColors.TOOLTIP_TEXT);
         for (int i = 0; i < rows.size(); i++) {
