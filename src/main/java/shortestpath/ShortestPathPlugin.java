@@ -31,6 +31,7 @@ import net.runelite.api.Player;
 import net.runelite.api.Point;
 import net.runelite.api.SpriteID;
 import net.runelite.api.Varbits;
+import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.MenuEntryAdded;
@@ -286,8 +287,10 @@ public class ShortestPathPlugin extends Plugin {
             Object objStart = data.getOrDefault(PLUGIN_MESSAGE_START, null);
             Object objTarget = data.getOrDefault(PLUGIN_MESSAGE_TARGET, null);
             Object objConfigOverride = data.getOrDefault(PLUGIN_MESSAGE_CONFIG_OVERRIDE, null);
-            int start = (objStart instanceof Integer) ? ((int) objStart) : WorldPointUtil.UNDEFINED;
-            int target = (objTarget instanceof Integer) ? ((int) objTarget) : WorldPointUtil.UNDEFINED;
+            int start = (objStart instanceof WorldPoint) ? WorldPointUtil.packWorldPoint((WorldPoint) objStart)
+                : ((objStart instanceof Integer) ? ((int) objStart) : WorldPointUtil.UNDEFINED);
+            int target = (objTarget instanceof WorldPoint) ? WorldPointUtil.packWorldPoint((WorldPoint) objTarget)
+                : ((objTarget instanceof Integer) ? ((Integer) objTarget) : WorldPointUtil.UNDEFINED);
             @SuppressWarnings("unchecked")
             Map<String, Object> configOverride = (objConfigOverride instanceof Map) ? ((Map<String, Object>) objConfigOverride) : null;
             if (target == WorldPointUtil.UNDEFINED || (start == WorldPointUtil.UNDEFINED && client.getLocalPlayer() == null)) {
