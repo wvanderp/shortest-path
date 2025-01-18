@@ -290,7 +290,7 @@ public class ShortestPathPlugin extends Plugin {
             int start = (objStart instanceof WorldPoint) ? WorldPointUtil.packWorldPoint((WorldPoint) objStart)
                 : ((objStart instanceof Integer) ? ((int) objStart) : WorldPointUtil.UNDEFINED);
             int target = (objTarget instanceof WorldPoint) ? WorldPointUtil.packWorldPoint((WorldPoint) objTarget)
-                : ((objTarget instanceof Integer) ? ((Integer) objTarget) : WorldPointUtil.UNDEFINED);
+                : ((objTarget instanceof Integer) ? ((int) objTarget) : WorldPointUtil.UNDEFINED);
             @SuppressWarnings("unchecked")
             Map<String, Object> configOverride = (objConfigOverride instanceof Map) ? ((Map<String, Object>) objConfigOverride) : null;
             if (target == WorldPointUtil.UNDEFINED || (start == WorldPointUtil.UNDEFINED && client.getLocalPlayer() == null)) {
