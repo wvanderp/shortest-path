@@ -766,6 +766,10 @@ public class ShortestPathPlugin extends Plugin {
             minimapSpriteResizeable = null;
         }
 
+        if (minimapWidget == null || minimapWidget.isHidden()) {
+            return null;
+        }
+
         if (client.isResized()) {
             if (minimapClipResizeable != null) {
                 return minimapClipResizeable;

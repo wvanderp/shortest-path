@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.util.List;
 import net.runelite.api.Client;
 import net.runelite.api.Perspective;
@@ -33,8 +34,13 @@ public class PathMinimapOverlay extends Overlay {
             return null;
         }
 
+        Shape minimapClipArea = plugin.getMinimapClipArea();
+        if (minimapClipArea == null) {
+            return null;
+        } else {
+            graphics.setClip(plugin.getMinimapClipArea());
+        }
         graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-        graphics.setClip(plugin.getMinimapClipArea());
 
         List<Integer> pathPoints = plugin.getPathfinder().getPath();
         Color pathColor = plugin.getPathfinder().isDone() ? plugin.colourPath : plugin.colourPathCalculating;
