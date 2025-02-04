@@ -437,7 +437,7 @@ public class ShortestPathPlugin extends Plugin {
                     }
                 }
             }
-            if (event.getOption().equals(FLASH_ICONS)) {
+            if (event.getOption().equals(FLASH_ICONS) && destinations.containsKey(simplify(event.getTarget()))) {
                 addMenuEntry(event, FIND_CLOSEST, event.getTarget(), 1);
             }
         }
