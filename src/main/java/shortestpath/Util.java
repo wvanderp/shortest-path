@@ -19,4 +19,24 @@ public class Util {
             result.write(buffer, 0, read);
         }
     }
+
+    public static int[] concatenate(int[][] arrays) {
+        int n = 0;
+        for (int i = 0; i < arrays.length; i++) {
+            n += (arrays[i] == null) ? 0 : arrays[i].length;
+        }
+        if (n == 0) {
+            return null;
+        }
+        int[] array = new int[n];
+        int k = 0;
+        for (int i = 0; i < arrays.length; i++) {
+            if (arrays[i] != null) {
+                for (int j = 0; j < arrays[i].length; j++) {
+                    array[k++] = arrays[i][j];
+                }
+            }
+        }
+        return array;
+    }
 }

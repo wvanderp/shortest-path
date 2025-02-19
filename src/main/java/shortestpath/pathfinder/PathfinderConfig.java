@@ -5,9 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.Getter;
 import net.runelite.api.Client;
 import net.runelite.api.Constants;
@@ -29,6 +27,7 @@ import shortestpath.ShortestPathConfig;
 import shortestpath.ShortestPathPlugin;
 import shortestpath.PrimitiveIntHashMap;
 import shortestpath.Transport;
+import shortestpath.TransportItems;
 import shortestpath.TransportType;
 import shortestpath.TransportVarbit;
 import shortestpath.TransportVarPlayer;
@@ -65,12 +64,19 @@ public class PathfinderConfig {
         Varbits.RUNE_POUCH_RUNE1, Varbits.RUNE_POUCH_RUNE2, Varbits.RUNE_POUCH_RUNE3, Varbits.RUNE_POUCH_RUNE4,
         Varbits.RUNE_POUCH_RUNE5, Varbits.RUNE_POUCH_RUNE6
 	};
+    private static final int[] RUNE_POUCH_AMOUNT_VARBITS = {
+        Varbits.RUNE_POUCH_AMOUNT1, Varbits.RUNE_POUCH_AMOUNT2, Varbits.RUNE_POUCH_AMOUNT3, Varbits.RUNE_POUCH_AMOUNT4,
+        Varbits.RUNE_POUCH_AMOUNT5, Varbits.RUNE_POUCH_AMOUNT6
+	};
+    private static final Set<Integer> CURRENCIES = Set.of(
+        ItemID.COINS_995, ItemID.TRADING_STICKS, ItemID.ECTOTOKEN, ItemID.WARRIOR_GUILD_TOKEN);
 
     private final SplitFlagMap mapData;
     private final ThreadLocal<CollisionMap> map;
     /** All transports by origin. The WorldPointUtil.UNDEFINED key is used for transports centered on the player. */
     private final Map<Integer, Set<Transport>> allTransports;
     private final Set<Transport> usableTeleports;
+    private final Map<Integer, Integer> itemsAndQuantities = new HashMap<>(28 + 11 + 4, 1.0f);
 
     @Getter
     private Map<Integer, Set<Transport>> transports;
@@ -101,6 +107,7 @@ public class PathfinderConfig {
         useTeleportationSpells,
         useWildernessObelisks;
     private TeleportationItem useTeleportationItems;
+    private int currencyThreshold;
     private final int[] boostedLevels = new int[Skill.values().length];
     private Map<Quest, QuestState> questStates = new HashMap<>();
     private Map<Integer, Integer> varbitValues = new HashMap<>();
@@ -141,6 +148,7 @@ public class PathfinderConfig {
         useTeleportationPortals = ShortestPathPlugin.override("useTeleportationPortals", config.useTeleportationPortals());
         useTeleportationSpells = ShortestPathPlugin.override("useTeleportationSpells", config.useTeleportationSpells());
         useWildernessObelisks = ShortestPathPlugin.override("useWildernessObelisks", config.useWildernessObelisks());
+        currencyThreshold = ShortestPathPlugin.override("currencyThreshold", config.currencyThreshold());
 
         if (GameState.LOGGED_IN.equals(client.getGameState())) {
             for (int i = 0; i < Skill.values().length; i++) {
@@ -197,10 +205,12 @@ public class PathfinderConfig {
                     varPlayerValues.put(varPlayerRequirement.getId(), client.getVarpValue(varPlayerRequirement.getId()));
                 }
 
-                if (point == WorldPointUtil.UNDEFINED && hasRequiredItems(transport) && useTransport(transport)) {
-                    usableTeleports.add(transport);
-                } else if (useTransport(transport)) {
-                    usableTransports.add(transport);
+                if (useTransport(transport) && hasRequiredItems(transport)) {
+                    if (point == WorldPointUtil.UNDEFINED) {
+                        usableTeleports.add(transport);
+                    } else {
+                        usableTransports.add(transport);
+                    }
                 }
             }
 
@@ -304,7 +314,7 @@ public class PathfinderConfig {
             return false;
         } else if (MINECART.equals(type) && !useMinecarts) {
             return false;
-        } else if (QUETZAL.equals(type) && !useQuetzals) { 
+        } else if (QUETZAL.equals(type) && !useQuetzals) {
             return false;
         } else if (SPIRIT_TREE.equals(type) && !useSpiritTrees) {
             return false;
@@ -371,24 +381,81 @@ public class PathfinderConfig {
             TransportType.TELEPORTATION_ITEM.equals(transport.getType())) {
             return false;
         }
-        List<Integer> inventoryItems = Arrays.stream(new InventoryID[]{InventoryID.INVENTORY, InventoryID.EQUIPMENT})
-            .map(client::getItemContainer)
-            .filter(Objects::nonNull)
-            .map(ItemContainer::getItems)
-            .flatMap(Arrays::stream)
-            .map(Item::getId)
-            .filter(itemId -> itemId != -1)
-            .collect(Collectors.toList());
-        if (RUNE_POUCHES.stream().anyMatch(runePouch -> inventoryItems.contains(runePouch))) {
-            EnumComposition runePouchEnum = client.getEnum(EnumID.RUNEPOUCH_RUNE);
-            for (int i = 0; i < RUNE_POUCH_RUNE_VARBITS.length; i++) {
-                int runeEnumId = client.getVarbitValue(RUNE_POUCH_RUNE_VARBITS[i]);
-                if (runeEnumId > 0) {
-                    inventoryItems.add(runePouchEnum.getIntValue(runeEnumId));
+        itemsAndQuantities.clear();
+        ItemContainer inventory = client.getItemContainer(InventoryID.INVENTORY);
+        ItemContainer equipment = client.getItemContainer(InventoryID.EQUIPMENT);
+        if (inventory != null) {
+            for (Item item : inventory.getItems()) {
+                if (item.getId() >= 0 && item.getQuantity() > 0) {
+                    itemsAndQuantities.put(item.getId(), item.getQuantity());
                 }
             }
         }
-        // TODO: this does not check quantity
-        return transport.getItemIdRequirements().stream().anyMatch(requirements -> requirements.stream().allMatch(inventoryItems::contains));
+        if (equipment != null) {
+            for (Item item : equipment.getItems()) {
+                if (item.getId() >= 0 && item.getQuantity() > 0) {
+                    itemsAndQuantities.put(item.getId(), item.getQuantity());
+                }
+            }
+        }
+        if (RUNE_POUCHES.stream().anyMatch(runePouch -> itemsAndQuantities.containsKey(runePouch))) {
+            EnumComposition runePouchEnum = client.getEnum(EnumID.RUNEPOUCH_RUNE);
+            for (int i = 0; i < RUNE_POUCH_RUNE_VARBITS.length; i++) {
+                int runeEnumId = client.getVarbitValue(RUNE_POUCH_RUNE_VARBITS[i]);
+                int runeId = runeEnumId > 0 ? runePouchEnum.getIntValue(runeEnumId) : 0;
+                int runeAmount = client.getVarbitValue(RUNE_POUCH_AMOUNT_VARBITS[i]);
+                if (runeId > 0 && runeAmount > 0) {
+                    itemsAndQuantities.put(runeId, runeAmount);
+                }
+            }
+        }
+        boolean usingStaff = false;
+        boolean usingOffhand = false;
+        TransportItems transportItems = transport.getItemRequirements();
+        if (transportItems == null) {
+            return true;
+        }
+        for (int i = 0; i < transportItems.getItems().length; i++) {
+            boolean missing = true;
+            if (transportItems.getItems()[i] != null) {
+                for (int itemId : transportItems.getItems()[i]) {
+                    int quantity = itemsAndQuantities.getOrDefault(itemId, 0);
+                    int requiredQuantity = transportItems.getQuantities()[i];
+                    if (requiredQuantity > 0 && quantity >= requiredQuantity || requiredQuantity == 0 && quantity == 0) {
+                        if (CURRENCIES.contains(itemId) && requiredQuantity > currencyThreshold) {
+                            return false;
+                        }
+                        missing = false;
+                        break;
+                    }
+                }
+            }
+            if (missing && !usingStaff && transportItems.getStaves()[i] != null) {
+                for (int itemId : transportItems.getStaves()[i]) {
+                    int quantity = itemsAndQuantities.getOrDefault(itemId, 0);
+                    int requiredQuantity = transportItems.getQuantities()[i];
+                    if (requiredQuantity > 0 && quantity >= 1 || requiredQuantity == 0 && quantity == 0) {
+                        usingStaff = true;
+                        missing = false;
+                        break;
+                    }
+                }
+            }
+            if (missing && !usingOffhand && transportItems.getOffhands()[i] != null) {
+                for (int itemId : transportItems.getOffhands()[i]) {
+                    int quantity = itemsAndQuantities.getOrDefault(itemId, 0);
+                    int requiredQuantity = transportItems.getQuantities()[i];
+                    if (requiredQuantity > 0 && quantity >= 1 || requiredQuantity == 0 && quantity == 0) {
+                        usingOffhand = true;
+                        missing = false;
+                        break;
+                    }
+                }
+            }
+            if (missing) {
+                return false;
+            }
+        }
+        return true;
     }
 }

@@ -8,7 +8,7 @@
 2162 5114 1	3680 3536 0	Talk-to Pirate Pete 602			Rum Deal		9	
 								
 # Port Phasmatys, Dragontooth Island								
-3703 3487 0	3792 3560 0	Travel Ghost captain 3005		4278=25			6	
+3703 3487 0	3792 3560 0	Travel Ghost captain 3005		ECTO_TOKEN=25			6	
 3792 3560 0	3703 3487 0	Travel Ghost captain 3005					6	
 								
 # Mort Myre, Mort'ton								
@@ -17,9 +17,9 @@
 3500 3380 0	3522 3285 0	Board Swamp Boaty 6970					18	
 3501 3378 0	3522 3285 0	Board Swamp Boaty 6970					18	
 3501 3379 0	3522 3285 0	Board Swamp Boaty 6970					18	
-3522 3284 0	3498 3380 0	Quick-board Swamp Boaty 6969		995=10			18	
-3522 3285 0	3498 3380 0	Quick-board Swamp Boaty 6969		995=10			18	
-3522 3286 0	3498 3380 0	Quick-board Swamp Boaty 6969		995=10			18	
+3522 3284 0	3498 3380 0	Quick-board Swamp Boaty 6969		COINS=10			18	
+3522 3285 0	3498 3380 0	Quick-board Swamp Boaty 6969		COINS=10			18	
+3522 3286 0	3498 3380 0	Quick-board Swamp Boaty 6969		COINS=10			18	
 								
 # Rellekka, Waterbirth Island								
 2621 3683 0	2544 3761 0	Waterbirth Island Jarvald 6535			The Fremennik Trials		7	
@@ -122,8 +122,8 @@
 3663 3277 0	3684 3176 0	Board Boat 38089				7255>87	13	3: Icyene Graveyard.
 								
 # Port Phasmatys, Slepe								
-3671 3544 0	3661 3277 0	Travel Row boat 32601		995=10000			5	
-3672 3544 0	3661 3277 0	Travel Row boat 32601		995=10000			5	
-3661 3278 0	3671 3542 0	Travel Row boat 32602		995=10000			5	
-3661 3278 0	3671 3542 0	Travel Row boat 32602		995=10000			5	
-3661 3278 0	3671 3542 0	Travel Row boat 32602		995=10000			5	
+3671 3544 0	3661 3277 0	Travel Row boat 32601		COINS=10000			5	
+3672 3544 0	3661 3277 0	Travel Row boat 32601		COINS=10000			5	
+3661 3278 0	3671 3542 0	Travel Row boat 32602		COINS=10000			5	
+3661 3278 0	3671 3542 0	Travel Row boat 32602		COINS=10000			5	
+3661 3278 0	3671 3542 0	Travel Row boat 32602		COINS=10000			5	

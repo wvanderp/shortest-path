@@ -78,9 +78,7 @@ public class PathMapOverlay extends Overlay {
                 }
 
                 for (Transport b : plugin.getTransports().getOrDefault(a, new HashSet<>())) {
-                    if (b == null
-                        || TransportType.TELEPORTATION_ITEM.equals(b.getType())
-                        || TransportType.TELEPORTATION_SPELL.equals(b.getType())) {
+                    if (b == null || TransportType.isTeleport(b.getType())) {
                         continue; // skip teleports
                     }
 
@@ -109,7 +107,7 @@ public class PathMapOverlay extends Overlay {
                 drawOnMap(graphics, point, true, cursorPos);
             }
             for (int target : plugin.getPathfinder().getTargets()) {
-                if (target != path.get(path.size() - 1)) {
+                if (path.size() > 0 && target != path.get(path.size() - 1)) {
                     graphics.setColor(plugin.colourPathCalculating);
                     drawOnMap(graphics, target, true, cursorPos);
                 }

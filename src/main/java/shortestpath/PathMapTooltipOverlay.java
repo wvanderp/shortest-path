@@ -58,7 +58,7 @@ public class PathMapTooltipOverlay extends Overlay {
                 }
             }
             for (int target : plugin.getPathfinder().getTargets()) {
-                if (target != path.get(path.size() - 1)) {
+                if (path.size() > 0 && target != path.get(path.size() - 1)) {
                     drawTooltip(graphics, cursorPos, target, WorldPointUtil.UNDEFINED, -1);
                 }
             }

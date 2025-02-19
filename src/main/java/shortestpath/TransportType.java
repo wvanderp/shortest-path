@@ -18,4 +18,24 @@ public enum TransportType {
     TELEPORTATION_ITEM,
     TELEPORTATION_SPELL,
     WILDERNESS_OBELISK,
+    ;
+
+    /*
+     * Indicates whether a TransportType is a teleport.
+     * Levers, portals and wilderness obelisks are considered transports
+     * and not teleports because they have a pre-defined origin and no
+     * wilderness level limit.
+     */
+    public static boolean isTeleport(TransportType transportType) {
+        if (transportType == null) {
+            return false;
+        }
+        switch (transportType) {
+            case TELEPORTATION_ITEM:
+            case TELEPORTATION_SPELL:
+                return true;
+            default:
+                return false;
+        }
+    }
 }

@@ -235,7 +235,7 @@ public class ShortestPathPlugin extends Plugin {
         return false;
     }
 
-    private final Pattern TRANSPORT_OPTIONS_REGEX = Pattern.compile("^(avoidWilderness|use\\w+)$");
+    private final Pattern TRANSPORT_OPTIONS_REGEX = Pattern.compile("^(avoidWilderness|currencyThreshold|use\\w+)$");
 
     @Subscribe
     public void onConfigChanged(ConfigChanged event) {
@@ -486,7 +486,7 @@ public class ShortestPathPlugin extends Plugin {
         return defaultValue;
     }
 
-    private int override(String configOverrideKey, int defaultValue) {
+    public static int override(String configOverrideKey, int defaultValue) {
         if (!configOverride.isEmpty()) {
             Object value = configOverride.get(configOverrideKey);
             if (value instanceof Integer) {

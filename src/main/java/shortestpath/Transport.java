@@ -21,6 +21,11 @@ public class Transport {
     public static final int UNDEFINED_DESTINATION = WorldPointUtil.UNDEFINED;
     /** A location placeholder different from null to use for permutation transports */
     private static final int LOCATION_PERMUTATION = WorldPointUtil.packWorldPoint(-1, -1, 1);
+    private static final String DELIM_SPACE = " ";
+    private static final String DELIM_MULTI = ";";
+    private static final String DELIM_STATE = "=";
+    private static final String DELIM_AND = "&";
+    private static final String DELIM_OR = "|";
 
     /** The starting point of this transport */
     @Getter
@@ -38,11 +43,9 @@ public class Transport {
     @Getter
     private Set<Quest> quests = new HashSet<>();
 
-    /** The ids of items required to use this transport.
-     * If the player has **any** of the matching list of items,
-     * this transport is valid */
+    /** The item requirements to use this transport */
     @Getter
-    private Set<Set<Integer>> itemIdRequirements = new HashSet<>();
+    private TransportItems itemRequirements;
 
     /** The type of transport */
     @Getter
@@ -88,8 +91,7 @@ public class Transport {
         this.quests.addAll(origin.quests);
         this.quests.addAll(destination.quests);
 
-        this.itemIdRequirements.addAll(origin.itemIdRequirements);
-        this.itemIdRequirements.addAll(destination.itemIdRequirements);
+        this.itemRequirements = origin.itemRequirements;
 
         this.type = origin.type;
 
@@ -111,17 +113,13 @@ public class Transport {
     }
 
     Transport(Map<String, String> fieldMap, TransportType transportType) {
-        final String DELIM = " ";
-        final String DELIM_MULTI = ";";
-        final String DELIM_STATE = "=";
-
         String value;
 
         // If the origin field is null the transport is a teleportation item or spell
         // If the origin field has 3 elements it is a coordinate of a transport
         // Otherwise it is a transport that needs to be expanded into all permutations (e.g. fairy ring)
         if ((value = fieldMap.get("Origin")) != null) {
-            String[] originArray = value.split(DELIM);
+            String[] originArray = value.split(DELIM_SPACE);
             origin = originArray.length == 3 ? WorldPointUtil.packWorldPoint(
                 Integer.parseInt(originArray[0]),
                 Integer.parseInt(originArray[1]),
@@ -129,7 +127,7 @@ public class Transport {
         }
 
         if ((value = fieldMap.get("Destination")) != null) {
-            String[] destinationArray = value.split(DELIM);
+            String[] destinationArray = value.split(DELIM_SPACE);
             destination = destinationArray.length == 3 ? WorldPointUtil.packWorldPoint(
                 Integer.parseInt(destinationArray[0]),
                 Integer.parseInt(destinationArray[1]),
@@ -144,7 +142,7 @@ public class Transport {
                     if (requirement.isEmpty()) {
                         continue;
                     }
-                    String[] levelAndSkill = requirement.split(DELIM);
+                    String[] levelAndSkill = requirement.split(DELIM_SPACE);
                     assert levelAndSkill.length == 2 : "Invalid level and skill: '" + requirement + "'";
 
                     int level = Integer.parseInt(levelAndSkill[0]);
@@ -159,25 +157,48 @@ public class Transport {
                     }
                 }
             } catch (NumberFormatException e) {
-                log.error("Invalid level and skill", e);
+                log.error("Invalid level and skill: " + value);
             }
         }
 
-        if ((value = fieldMap.get("Item IDs")) != null) {
-            String[] itemIdsList = value.split(DELIM_MULTI);
+        if ((value = fieldMap.get("Items")) != null && !value.isEmpty()) {
+            value = value.replace(DELIM_SPACE, "");
+            value = value.replace(DELIM_AND + DELIM_AND, DELIM_AND);
+            value = value.replace(DELIM_OR + DELIM_OR, DELIM_OR);
+            value = value.toUpperCase();
+            String[] itemVariationAndQuantityList = value.split(DELIM_AND);
             try {
-                for (String listIds : itemIdsList)
-                {
-                    Set<Integer> multiitemList = new HashSet<>();
-                    String[] itemIds = listIds.split(DELIM);
-                    for (String item : itemIds) {
-                        int itemId = Integer.parseInt(item);
-                        multiitemList.add(itemId);
+                int n = itemVariationAndQuantityList.length;
+                int[][] items = new int[n][];
+                int[][] staves = new int[n][];
+                int[][] offhands = new int[n][];
+                int[] quantities = new int[n];
+                for (int i = 0; i < n; i++) {
+                    int maxQuantity = -1;
+                    String[] itemVariationsAndQuantities = itemVariationAndQuantityList[i].split("\\" + DELIM_OR);
+                    int[][] multipleItems = new int[itemVariationsAndQuantities.length][];
+                    int[][] multipleStaves = new int[itemVariationsAndQuantities.length][];
+                    int[][] multipleOffhands = new int[itemVariationsAndQuantities.length][];
+                    for (int k = 0; k < itemVariationsAndQuantities.length; k++) {
+                        String[] itemVariationAndQuantity = itemVariationsAndQuantities[k].split(DELIM_STATE);
+                        if (itemVariationAndQuantity.length == 2) {
+                            ItemVariations itemVariations = ItemVariations.fromName(itemVariationAndQuantity[0]);
+                            multipleItems[k] = itemVariations == null ? new int[]{Integer.parseInt(itemVariationAndQuantity[0])} : itemVariations.getIds();
+                            multipleStaves[k] = ItemVariations.staves(itemVariations);
+                            multipleOffhands[k] = ItemVariations.offhands(itemVariations);
+                            maxQuantity = Math.max(maxQuantity, Integer.parseInt(itemVariationAndQuantity[1]));
+                        } else {
+                            throw new NumberFormatException(itemVariationAndQuantityList[i]);
+                        }
                     }
-                    itemIdRequirements.add(multiitemList);
+                    items[i] = Util.concatenate(multipleItems);
+                    staves[i] = Util.concatenate(multipleStaves);
+                    offhands[i] = Util.concatenate(multipleOffhands);
+                    quantities[i] = maxQuantity;
                 }
+                itemRequirements = new TransportItems(items, staves, offhands, quantities);
             } catch (NumberFormatException e) {
-                log.error("Invalid item ID", e);
+                log.error("Invalid item or quantity: " + value);
             }
         }
 
@@ -189,7 +210,7 @@ public class Transport {
             try {
                 this.duration = Integer.parseInt(value);
             } catch (NumberFormatException e) {
-                log.error("Invalid tick duration", e);
+                log.error("Invalid tick duration: " + value);
             }
         }
         if (TransportType.TELEPORTATION_ITEM.equals(transportType)
@@ -211,7 +232,7 @@ public class Transport {
             try {
                 this.maxWildernessLevel =  Integer.parseInt(value);
             } catch (NumberFormatException e) {
-                log.error("Invalid wilderness level", e);
+                log.error("Invalid wilderness level: ", value);
             }
         }
 
@@ -234,7 +255,7 @@ public class Transport {
                     assert varbitParts.length == 2 : "Invalid varbit id and value: '" + varbitRequirement + "'";
                 }
             } catch (NumberFormatException e) {
-                log.error("Invalid varbit id and value", e);
+                log.error("Invalid varbit id and value: " + value);
             }
         }
 
@@ -257,7 +278,7 @@ public class Transport {
                     assert varPlayerParts.length == 2 : "Invalid VarPlayer id and value: '" + varPlayerRequirement + "'";
                 }
             } catch (NumberFormatException e) {
-                log.error("Invalid VarPlayer id and value", e);
+                log.error("Invalid VarPlayer id and value: " + value);
             }
         }
 
@@ -266,6 +287,17 @@ public class Transport {
             (getRequiredLevel(Skill.RANGED) > 1 || getRequiredLevel(Skill.STRENGTH) > 1)) {
             this.type = TransportType.GRAPPLE_SHORTCUT;
         }
+    }
+
+    @Override
+    public String toString() {
+        return ("(" +
+            WorldPointUtil.unpackWorldX(origin) + ", " +
+            WorldPointUtil.unpackWorldY(origin) + ", " +
+            WorldPointUtil.unpackWorldPlane(origin) + ") to ("+
+            WorldPointUtil.unpackWorldX(destination) + ", " +
+            WorldPointUtil.unpackWorldY(destination) + ", " +
+            WorldPointUtil.unpackWorldPlane(destination) + ")");
     }
 
     /** The skill level required to use this transport */

@@ -17,8 +17,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import shortestpath.TeleportationItem;
+import shortestpath.ItemVariations;
 import shortestpath.ShortestPathConfig;
 import shortestpath.Transport;
+import shortestpath.TransportItems;
 import shortestpath.TransportType;
 import shortestpath.WorldPointUtil;
 import shortestpath.pathfinder.Pathfinder;
@@ -50,41 +52,54 @@ public class PathfinderTest {
     @Before
     public void before() {
         when(config.calculationCutoff()).thenReturn(30);
+        when(config.currencyThreshold()).thenReturn(10000000);
     }
 
     @Test
     public void testAgilityShortcuts() {
         when(config.useAgilityShortcuts()).thenReturn(true);
+        setupInventory(
+            new Item(ItemID.ROPE, 1),
+            new Item(ItemID.CLIMBING_BOOTS, 1));
         testTransportLength(2, TransportType.AGILITY_SHORTCUT);
     }
 
     @Test
     public void testGrappleShortcuts() {
         when(config.useGrappleShortcuts()).thenReturn(true);
+        setupInventory(
+            new Item(ItemID.ADAMANT_CROSSBOW, 1),
+            new Item(ItemID.MITH_GRAPPLE_9419, 1));
         testTransportLength(2, TransportType.GRAPPLE_SHORTCUT);
     }
 
     @Test
     public void testBoats() {
         when(config.useBoats()).thenReturn(true);
+        setupInventory(
+            new Item(ItemID.COINS_995, 10000),
+            new Item(ItemID.ECTOTOKEN, 25));
         testTransportLength(2, TransportType.BOAT);
     }
 
     @Test
     public void testCanoes() {
         when(config.useCanoes()).thenReturn(true);
+        setupInventory(new Item(ItemID.BRONZE_AXE, 1));
         testTransportLength(2, TransportType.CANOE);
     }
 
     @Test
     public void testCharterShips() {
         when(config.useCharterShips()).thenReturn(true);
+        setupInventory(new Item(ItemID.COINS_995, 100000));
         testTransportLength(2, TransportType.CHARTER_SHIP);
     }
 
     @Test
     public void testShips() {
         when(config.useShips()).thenReturn(true);
+        setupInventory(new Item(ItemID.COINS_995, 10000));
         testTransportLength(2, TransportType.SHIP);
     }
 
@@ -103,6 +118,7 @@ public class PathfinderTest {
     @Test
     public void testMinecarts() {
         when(config.useMinecarts()).thenReturn(true);
+        setupInventory(new Item(ItemID.COINS_995, 1000));
         testTransportLength(2, TransportType.MINECART);
     }
 
@@ -200,6 +216,7 @@ public class PathfinderTest {
     @Test
     public void testImpossibleCharterShips() {
         when(config.useCharterShips()).thenReturn(true);
+        setupInventory(new Item(ItemID.COINS_995, 1000000));
 
         testTransportMinimumLength(3,
             WorldPointUtil.packWorldPoint(1455, 2968, 0), // Aldarin
@@ -255,8 +272,9 @@ public class PathfinderTest {
                 }
             }
         }
-        /* Info:
-         * NB: Lemanto Andra (Digsite) can only be destination and origin
+        /* 
+         * Info:
+         * NB: Lemanto Andra (Digsite) can only be destination and not origin
          * single_glider_origin_locations * (number_of_gnome_gliders - 1)
          *   1 * 6   // Ta Quir Priw (Gnome Stronghold)
          * + 3 * 6   // Gandius (Karamja)
@@ -280,7 +298,8 @@ public class PathfinderTest {
                 }
             }
         }
-        /* Info:
+        /*
+         * Info:
          * NB: Primio can only be used between Varrock and Civitas illa Fortis
          * single_quetzal_origin_locations * (number_of_quetzals - 1) + 2
          *   1 * 10 // Aldarin
@@ -313,7 +332,8 @@ public class PathfinderTest {
                 }
             }
         }
-        /* Info:
+        /*
+         * Info:
          * single_tree_origin_locations * (number_of_spirit_trees - 1)
          *   15 * 11   // Tree Gnome Village
          * + 14 * 11   // Gnome Stronghold
@@ -331,6 +351,51 @@ public class PathfinderTest {
          * = 1452
          */
         assertEquals(1452, actualCount);
+    }
+
+    @Test
+    public void testNumberOfCharterShips() {
+        int actualCount = 0;
+        for (int origin : transports.keySet()) {
+            for (Transport transport : transports.get(origin)) {
+                if (TransportType.CHARTER_SHIP.equals(transport.getType())) {
+                    actualCount++;
+                }
+            }
+        }
+        /*
+         * Info:
+         * There are currently 16 unique charter ship origin/destinations.
+         * If every combination was possible then it would be 16^2 = 256.
+         * It is impossible to travel from and to the same place, so subtract 16.
+         * It is also impossible to travel between certain places, presumably
+         * because the distance between them is too small. Currently 12 of these.
+         */
+        assertEquals(16 * 16 - 16 - 12, actualCount);
+    }
+
+    @Test
+    public void testTransportItems() {
+        TransportItems actual = null;
+        for (Transport transport : transports.get(Transport.UNDEFINED_ORIGIN)) {
+            if ("Varrock Teleport".equals(transport.getDisplayInfo())) {
+                actual = transport.getItemRequirements();
+                break;
+            }
+        }
+        if (actual != null) {
+            TransportItems expected = new TransportItems(
+                new int[][]{
+                    ItemVariations.AIR_RUNE.getIds(),
+                    ItemVariations.FIRE_RUNE.getIds(),
+                    ItemVariations.LAW_RUNE.getIds()},
+                new int[][]{
+                    ItemVariations.STAFF_OF_AIR.getIds(),
+                    ItemVariations.STAFF_OF_FIRE.getIds(), null},
+                new int[][]{null, ItemVariations.TOME_OF_FIRE.getIds(), null},
+                new int[]{3, 1, 1});
+            assertEquals(actual, expected);
+        }
     }
 
     private void setupConfig(QuestState questState, int skillLevel, TeleportationItem useTeleportationItems) {
@@ -387,7 +452,7 @@ public class PathfinderTest {
             for (Transport transport : transports.get(origin)) {
                 if (transportType.equals(transport.getType())) {
                     counter++;
-                    assertEquals(expectedLength, calculateTransportLength(transport));
+                    assertEquals(transport.toString(), expectedLength, calculateTransportLength(transport));
                 }
             }
         }
