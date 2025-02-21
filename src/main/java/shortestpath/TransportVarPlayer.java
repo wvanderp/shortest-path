@@ -24,6 +24,10 @@ public class TransportVarPlayer {
                 return values.get(id) > value;
             case SMALLER:
                 return values.get(id) < value;
+            case BIT_SET:
+                return (values.get(id) & value) > 0;
+            case COOLDOWN_MINUTES:
+                return ((System.currentTimeMillis() / 60000) - values.get(id)) > value;
         }
         return false;
     }

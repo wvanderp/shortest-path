@@ -25,7 +25,6 @@ import shortestpath.TransportType;
 import shortestpath.WorldPointUtil;
 import shortestpath.pathfinder.Pathfinder;
 import shortestpath.pathfinder.PathfinderConfig;
-import shortestpath.pathfinder.SplitFlagMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -35,7 +34,6 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PathfinderTest {
-    private static final SplitFlagMap map = SplitFlagMap.fromResources();
     private static final Map<Integer, Set<Transport>> transports = Transport.loadAllFromResources();
 
     private PathfinderConfig pathfinderConfig;
@@ -142,6 +140,20 @@ public class PathfinderTest {
     }
 
     @Test
+    public void testTeleportationMinigames() {
+        when(config.useTeleportationMinigames()).thenReturn(true);
+        when(config.useTeleportationSpells()).thenReturn(false);
+        when(client.getVarbitValue(any(Integer.class))).thenReturn(0);
+        when(client.getVarpValue(any(Integer.class))).thenReturn(0);
+        testTransportLength(2,
+            WorldPointUtil.packWorldPoint(3440, 3334, 0),  // Nature Spirit Grotto
+            WorldPointUtil.packWorldPoint(2658, 3157, 0)); // Fishing Trawler
+        testTransportLength(3,
+            WorldPointUtil.packWorldPoint(3136, 3525, 0),  // In wilderness level 1
+            WorldPointUtil.packWorldPoint(2658, 3157, 0)); // Fishing Trawler
+    }
+
+    @Test
     public void testTeleportationPortals() {
         when(config.useTeleportationPortals()).thenReturn(true);
         testTransportLength(2, TransportType.TELEPORTATION_PORTAL);
@@ -215,6 +227,8 @@ public class PathfinderTest {
 
     @Test
     public void testImpossibleCharterShips() {
+        // Shortest path for impossible charter ships has length 3 and goes
+        // via an intermediate charter ship and not directly with length 2
         when(config.useCharterShips()).thenReturn(true);
         setupInventory(new Item(ItemID.COINS_995, 1000000));
 
@@ -394,12 +408,26 @@ public class PathfinderTest {
                     ItemVariations.STAFF_OF_FIRE.getIds(), null},
                 new int[][]{null, ItemVariations.TOME_OF_FIRE.getIds(), null},
                 new int[]{3, 1, 1});
-            assertEquals(actual, expected);
+            assertEquals(expected, actual);
         }
     }
 
+    @Test
+    public void testIsInWilderness() {
+        assertEquals(true, PathfinderConfig.isInWilderness(
+            WorldPointUtil.packWorldPoint(3339, 3696, 0))); // Green dragons
+        assertEquals(false, PathfinderConfig.isInWilderness(
+            WorldPointUtil.packWorldPoint(3134, 3629, 0))); // Ferox Enclave
+        assertEquals(true, PathfinderConfig.isInWilderness(
+            WorldPointUtil.packWorldPoint(3089, 9957, 0))); // Edgeville Dungeon
+        assertEquals(true, PathfinderConfig.isInWilderness(
+            WorldPointUtil.packWorldPoint(3039, 10260, 0))); // Lava Maze Dungeon
+        assertEquals(false, PathfinderConfig.isInWilderness(
+            WorldPointUtil.packWorldPoint(3009, 3531, 0))); // Non-wildy peninsula
+    }
+
     private void setupConfig(QuestState questState, int skillLevel, TeleportationItem useTeleportationItems) {
-        pathfinderConfig = spy(new PathfinderConfig(map, transports, client, config));
+        pathfinderConfig = spy(new PathfinderConfig(client, config));
 
         when(client.getGameState()).thenReturn(GameState.LOGGED_IN);
         when(client.getClientThread()).thenReturn(Thread.currentThread());
@@ -471,7 +499,8 @@ public class PathfinderTest {
             ", " + WorldPointUtil.unpackWorldPlane(origin) + ") to " +
             "(" + WorldPointUtil.unpackWorldX(destination) +
             ", " + WorldPointUtil.unpackWorldY(destination) +
-            ", " + WorldPointUtil.unpackWorldPlane(destination) + ")");
+            ", " + WorldPointUtil.unpackWorldPlane(destination) + ")" +
+            " with actual length = " + actualLength + " >= minimum length = " + minimumLength);
     }
 
     private int calculateTransportLength(Transport transport) {

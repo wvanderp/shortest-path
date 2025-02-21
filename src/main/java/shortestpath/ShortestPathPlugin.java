@@ -58,7 +58,6 @@ import net.runelite.client.util.Text;
 import shortestpath.pathfinder.CollisionMap;
 import shortestpath.pathfinder.Pathfinder;
 import shortestpath.pathfinder.PathfinderConfig;
-import shortestpath.pathfinder.SplitFlagMap;
 
 @PluginDescriptor(
     name = "Shortest Path",
@@ -81,6 +80,7 @@ public class ShortestPathPlugin extends Plugin {
     private static final String START = ColorUtil.wrapWithColorTag("Start", JagexColors.MENU_TARGET);
     private static final String TARGET = ColorUtil.wrapWithColorTag("Target", JagexColors.MENU_TARGET);
     private static final BufferedImage MARKER_IMAGE = ImageUtil.loadImageResource(ShortestPathPlugin.class, "/marker.png");
+    private static final Pattern TRANSPORT_OPTIONS_REGEX = Pattern.compile("^(avoidWilderness|currencyThreshold|use\\w+)$");
 
     @Inject
     private Client client;
@@ -143,7 +143,6 @@ public class ShortestPathPlugin extends Plugin {
     private GameState lastGameState = null;
     private GameState lastLastGameState = null;
     private List<PendingTask> pendingTasks = new ArrayList<>(3);
-    private Map<String, Set<Integer>> destinations = null;
 
     private ExecutorService pathfindingExecutor = Executors.newSingleThreadExecutor();
     private Future<?> pathfinderFuture;
@@ -163,13 +162,9 @@ public class ShortestPathPlugin extends Plugin {
 
     @Override
     protected void startUp() {
-        SplitFlagMap map = SplitFlagMap.fromResources();
-        Map<Integer, Set<Transport>> transports = Transport.loadAllFromResources();
-        destinations = Destination.loadAllFromResources();
-
         cacheConfigValues();
 
-        pathfinderConfig = new PathfinderConfig(map, transports, client, config);
+        pathfinderConfig = new PathfinderConfig(client, config);
         if (GameState.LOGGED_IN.equals(client.getGameState())) {
             clientThread.invokeLater(pathfinderConfig::refresh);
         }
@@ -198,7 +193,7 @@ public class ShortestPathPlugin extends Plugin {
         }
     }
 
-    public void restartPathfinding(int start, Set<Integer> ends) {
+    public void restartPathfinding(int start, Set<Integer> ends, boolean canReviveFiltered) {
         synchronized (pathfinderMutex) {
             if (pathfinder != null) {
                 pathfinder.cancel();
@@ -213,11 +208,20 @@ public class ShortestPathPlugin extends Plugin {
 
         getClientThread().invokeLater(() -> {
             pathfinderConfig.refresh();
+            pathfinderConfig.filterLocations(ends, canReviveFiltered);
             synchronized (pathfinderMutex) {
-                pathfinder = new Pathfinder(pathfinderConfig, start, ends);
-                pathfinderFuture = pathfindingExecutor.submit(pathfinder);
+                if (ends.isEmpty()) {
+                    setTarget(WorldPointUtil.UNDEFINED);
+                } else {
+                    pathfinder = new Pathfinder(pathfinderConfig, start, ends);
+                    pathfinderFuture = pathfindingExecutor.submit(pathfinder);
+                }
             }
         });
+    }
+
+    public void restartPathfinding(int start, Set<Integer> ends) {
+        restartPathfinding(start, ends, true);
     }
 
     public boolean isNearPath(int location) {
@@ -235,8 +239,6 @@ public class ShortestPathPlugin extends Plugin {
         return false;
     }
 
-    private final Pattern TRANSPORT_OPTIONS_REGEX = Pattern.compile("^(avoidWilderness|currencyThreshold|use\\w+)$");
-
     @Subscribe
     public void onConfigChanged(ConfigChanged event) {
         if (!CONFIG_GROUP.equals(event.getGroup())) {
@@ -244,10 +246,6 @@ public class ShortestPathPlugin extends Plugin {
         }
 
         cacheConfigValues();
-
-        if (pathfinderConfig != null) {
-            clientThread.invokeLater(pathfinderConfig::refresh);
-        }
 
         if ("drawDebugPanel".equals(event.getKey())) {
             if (config.drawDebugPanel()) {
@@ -346,7 +344,8 @@ public class ShortestPathPlugin extends Plugin {
                 }
             }
 
-            restartPathfinding(start, targets.isEmpty() && pathfinder != null ? pathfinder.getTargets() : targets);
+            boolean useOld = targets.isEmpty() && pathfinder != null;
+            restartPathfinding(start, useOld ? pathfinder.getTargets() : targets, useOld);
         } else if (PLUGIN_MESSAGE_CLEAR.equals(action)) {
             this.configOverride.clear();
             cacheConfigValues();
@@ -437,7 +436,7 @@ public class ShortestPathPlugin extends Plugin {
                     }
                 }
             }
-            if (event.getOption().equals(FLASH_ICONS) && destinations.containsKey(simplify(event.getTarget()))) {
+            if (event.getOption().equals(FLASH_ICONS) && pathfinderConfig.hasDestination(simplify(event.getTarget()))) {
                 addMenuEntry(event, FIND_CLOSEST, event.getTarget(), 1);
             }
         }
@@ -573,7 +572,7 @@ public class ShortestPathPlugin extends Plugin {
         } else if (entry.getOption().equals(CLEAR) && entry.getTarget().equals(PATH)) {
             setTarget(WorldPointUtil.UNDEFINED);
         } else if (entry.getOption().equals(FIND_CLOSEST)) {
-            setTargets(destinations.getOrDefault(simplify(entry.getTarget()), null), true);
+            setTargets(pathfinderConfig.getDestinations(simplify(entry.getTarget())), true);
         }
     }
 
@@ -637,7 +636,7 @@ public class ShortestPathPlugin extends Plugin {
             if (pathfinder != null && append) {
                 destinations.addAll(pathfinder.getTargets());
             }
-            restartPathfinding(start, destinations);
+            restartPathfinding(start, destinations, append);
         }
     }
 

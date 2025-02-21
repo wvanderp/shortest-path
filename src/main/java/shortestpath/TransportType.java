@@ -13,9 +13,10 @@ public enum TransportType {
     MINECART,
     QUETZAL,
     SPIRIT_TREE,
-    TELEPORTATION_LEVER,
-    TELEPORTATION_PORTAL,
     TELEPORTATION_ITEM,
+    TELEPORTATION_LEVER,
+    TELEPORTATION_MINIGAME,
+    TELEPORTATION_PORTAL,
     TELEPORTATION_SPELL,
     WILDERNESS_OBELISK,
     ;
@@ -32,6 +33,7 @@ public enum TransportType {
         }
         switch (transportType) {
             case TELEPORTATION_ITEM:
+            case TELEPORTATION_MINIGAME:
             case TELEPORTATION_SPELL:
                 return true;
             default:
