@@ -12,6 +12,7 @@
 2766 3665 0	2766 3663 0	Use Rope -> Boulder 5842	10 Agility	ROPE=1	260>0		10
 3033 3390 0	3033 3389 1	Grapple Wall 17049	11 Agility;19 Ranged;37 Strength	CROSSBOW=1&MITH_GRAPPLE=1			
 3032 3388 0	3032 3389 1	Grapple Wall 17050	11 Agility;19 Ranged;37 Strength	CROSSBOW=1&MITH_GRAPPLE=1			
+2649 9562 0	2647 9557 0	Jump-from Stepping stone 21738	12 Agility				7
 2820 3635 0	2822 3635 0	Climb Rocks 3748	15 Agility	CLIMBING_BOOTS=1			
 2857 3611 0	2857 3613 0	Climb Rocks 3748	15 Agility	CLIMBING_BOOTS=1			
 2856 3611 0	2856 3613 0	Climb Rocks 3748	15 Agility	CLIMBING_BOOTS=1			
@@ -44,6 +45,8 @@
 3153 3363 0	3152 3363 0	Jump-onto Stepping stone 16533	31 Agility				4
 3152 3363 0	3151 3363 0	Jump-onto Stepping stone 16533	31 Agility				4
 3151 3363 0	3150 3363 0	Jump-onto Stepping stone 16533	31 Agility				4
+2863 2971 0	2863 2976 0	Cross Stepping stone 16466	32 Agility				2
+2863 2976 0	2863 2971 0	Cross Stepping stone 16466	32 Agility				2
 2866 3428 0	2869 3428 0	Grapple Rocks 17042	32 Agility;35 Ranged;35 Strength	CROSSBOW=1&MITH_GRAPPLE=1			
 2602 3336 0	2598 3336 0	Walk-across Log balance 16548	33 Agility				
 2598 3336 0	2602 3336 0	Walk-across Log balance 16546	33 Agility				
@@ -55,6 +58,10 @@
 3302 3315 0	3306 3315 0	Climb Rocks 16550	38 Agility				
 2556 3072 0	2556 3073 1	Grapple Wall 17047	39 Agility;21 Ranged;38 Strength	CROSSBOW=1&MITH_GRAPPLE=1			
 2556 3075 0	2556 3074 1	Grapple Wall 17047	39 Agility;21 Ranged;38 Strength	CROSSBOW=1&MITH_GRAPPLE=1			
+1614 3570 0	1610 3570 0	Cross Stepping stone 29729	40 Agility				2
+1610 3570 0	1614 3570 0	Cross Stepping stone 29729	40 Agility				2
+1603 3571	1607 3571 0	Cross Stepping stone 29730	40 Agility				2
+1607 3571 0	1603 3571	Cross Stepping stone 29730	40 Agility				2
 2872 3671 0	2869 3671 0	Climb Rocks 16521	41 Agility				
 2869 3671 0	2872 3671 0	Climb Rocks 16521	41 Agility				
 3070 3257 0	3066 3257 0	Climb-into Underwall tunnel 19036	42 Agility				
@@ -71,6 +78,8 @@
 2884 3683 0	2886 3683 0	Climb Rocks 3803	43 Agility				
 2907 3682 0	2909 3684 0	Climb Rocks 16523	44 Agility				
 2909 3684 0	2907 3682 0	Climb Rocks 16523	44 Agility				
+1720 3551 0	1724 3551 0	Cross Stepping stone 29728	45 Agility				2
+1724 3551 0	1720 3551 0	Cross Stepping stone 29728	45 Agility				2
 2900 3680 0	2903 3680 0	Climb Rocks 16524	47 Agility				
 2903 3680 0	2900 3680 0	Climb Rocks 16524	47 Agility				
 2901 3679 0	2903 3680 0	Climb Rocks 16524	47 Agility				
@@ -95,6 +104,8 @@
 2874 3142 0	2874 3136 0	Grapple Strong Tree 17074	53 Agility;42 Ranged;21 Strength	CROSSBOW=1&MITH_GRAPPLE=1			
 2573 3859 0	2575 3861 0	Cross Stepping stone 11768	55 Agility				
 2575 3861 0	2573 3859 0	Cross Stepping stone 11768	55 Agility				
+2682 9548 0	2690 9547 0	Cross Stepping stone 19040	56 Agility				4
+2697 9525 0	2695 9533 0	Cross Stepping stone 19040	56 Agility				4
 2688 3697 0	2691 3697 0	Jump Broken Fence 544	57 Agility				
 2691 3697 0	2688 3697 0	Jump Broken Fence 544	57 Agility				
 3670 9888 3	3671 9888 2	Jump-down Weathered wall 16526	58 Agility				
@@ -125,6 +136,8 @@
 3426 3478 0	3424 3476 0	Climb Rocks 16999	65 Agility				
 3425 3483 0	3425 3484 0	Squeeze-through Ornate railing 17000	65 Agility				
 3425 3484 0	3425 3483 0	Squeeze-through Ornate railing 17000	65 Agility				
+3212 3137 0	3214 3132 0	Jump-to Stepping stone 16513	66 Agility				3
+3214 3132 0	3212 3137 0	Jump-to Stepping stone 16513	66 Agility				3
 2997 3483 0	3002 3483 0	Climb Rocks 47571	68 Agility				5
 3002 3483 0	2997 3483 0	Climb Rocks 47570	68 Agility				5
 1761 3874 0	1761 3872 0	Climb Rocks 34741	69 Agility				2
@@ -135,6 +148,8 @@
 2892 9799 0	2886 9799 0	Squeeze-through Obstacle pipe 16509	70 Agility				
 2886 9823 0	2888 9823 1	Jump-up Rocks 154	70 Agility				
 2888 9823 1	2886 9823 0	Jump-down Rocks 14106	70 Agility				
+3372 2959 0	3373 2955 0	Cross Stepping stone 53241	71 Agility				2
+3373 2955 0	3372 2959 0	Cross Stepping stone 53241	71 Agility				2
 3447 3575 1	3447 3575 2	Climb-up Spikey chain 16537	71 Agility				
 3447 3575 2	3447 3575 1	Climb-down Spikey chain 16538	71 Agility				
 3446 3576 1	3446 3576 2	Climb-up Spikey chain 16537	71 Agility				
@@ -143,10 +158,11 @@
 3447 3577 2	3447 3577 1	Climb-down Spikey chain 16538	71 Agility				
 3448 3576 1	3448 3576 2	Climb-up Spikey chain 16537	71 Agility				
 3448 3576 2	3448 3576 1	Climb-down Spikey chain 16538	71 Agility				
+3268 3629 0	3268 3625 0	Cross Stepping stone 53237	72 Agility				2
+3268 3625 0	3268 3629 0	Cross Stepping stone 53237	72 Agility				2
 2429 9807 0	2435 9807 0	Enter Tunnel 30174	72 Agility				
 2429 9806 0	2435 9806 0	Enter Tunnel 30174	72 Agility				
 1742 3854 0	1752 3854 0	Climb Rocks 27984	73 Agility				4
-1752 3854 0	1742 3854 0	Climb Rocks 27985	73 Agility				4
 2838 3693 0	2844 3693 0	Climb Rocks 16464	73 Agility				
 2844 3693 0	2838 3693 0	Climb Rocks 16464	73 Agility				
 2843 3692 0	2838 3693 0	Climb Rocks 16464	73 Agility				
