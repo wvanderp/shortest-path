@@ -91,7 +91,7 @@ public class Transport {
         this.quests.addAll(origin.quests);
         this.quests.addAll(destination.quests);
 
-        this.itemRequirements = origin.itemRequirements;
+        this.itemRequirements = destination.itemRequirements;
 
         this.type = origin.type;
 
@@ -406,6 +406,7 @@ public class Transport {
             }
             for (Transport origin : transportOrigins) {
                 for (Transport destination : transportDestinations) {
+                    // The radius threshold prevents transport permutations from including (almost) same origin and destination
                     if (WorldPointUtil.distanceBetween2D(origin.getOrigin(), destination.getDestination()) > radiusThreshold) {
                         transports.computeIfAbsent(origin.getOrigin(), k -> new HashSet<>())
                             .add(new Transport(origin, destination));
@@ -427,6 +428,7 @@ public class Transport {
         addTransports(transports, "/transports/ships.tsv", TransportType.SHIP);
         addTransports(transports, "/transports/fairy_rings.tsv", TransportType.FAIRY_RING);
         addTransports(transports, "/transports/gnome_gliders.tsv", TransportType.GNOME_GLIDER, 6);
+        addTransports(transports, "/transports/hot_air_balloons.tsv", TransportType.HOT_AIR_BALLOON, 7);
         addTransports(transports, "/transports/minecarts.tsv", TransportType.MINECART);
         addTransports(transports, "/transports/quetzals.tsv", TransportType.QUETZAL);
         addTransports(transports, "/transports/spirit_trees.tsv", TransportType.SPIRIT_TREE, 5);

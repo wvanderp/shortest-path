@@ -10,6 +10,7 @@ public enum TransportType {
     SHIP,
     FAIRY_RING,
     GNOME_GLIDER,
+    HOT_AIR_BALLOON,
     MINECART,
     QUETZAL,
     SPIRIT_TREE,

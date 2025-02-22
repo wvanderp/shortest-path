@@ -42,6 +42,7 @@ import static shortestpath.TransportType.CHARTER_SHIP;
 import static shortestpath.TransportType.SHIP;
 import static shortestpath.TransportType.FAIRY_RING;
 import static shortestpath.TransportType.GNOME_GLIDER;
+import static shortestpath.TransportType.HOT_AIR_BALLOON;
 import static shortestpath.TransportType.MINECART;
 import static shortestpath.TransportType.QUETZAL;
 import static shortestpath.TransportType.SPIRIT_TREE;
@@ -116,6 +117,7 @@ public class PathfinderConfig {
         useShips,
         useFairyRings,
         useGnomeGliders,
+        useHotAirBalloons,
         useMinecarts,
         useQuetzals,
         useSpiritTrees,
@@ -168,6 +170,7 @@ public class PathfinderConfig {
         useShips = ShortestPathPlugin.override("useShips", config.useShips());
         useFairyRings = ShortestPathPlugin.override("useFairyRings", config.useFairyRings());
         useGnomeGliders = ShortestPathPlugin.override("useGnomeGliders", config.useGnomeGliders());
+        useHotAirBalloons = ShortestPathPlugin.override("useHotAirBalloons", config.useHotAirBalloons());
         useMinecarts = ShortestPathPlugin.override("useMinecarts", config.useMinecarts());
         useQuetzals = ShortestPathPlugin.override("useQuetzals", config.useQuetzals());
         useSpiritTrees = ShortestPathPlugin.override("useSpiritTrees", config.useSpiritTrees());
@@ -407,6 +410,8 @@ public class PathfinderConfig {
         } else if (FAIRY_RING.equals(type) && !useFairyRings) {
             return false;
         } else if (GNOME_GLIDER.equals(type) && !useGnomeGliders) {
+            return false;
+        } else if (HOT_AIR_BALLOON.equals(type) && !useHotAirBalloons) {
             return false;
         } else if (MINECART.equals(type) && !useMinecarts) {
             return false;

@@ -114,6 +114,18 @@ public class PathfinderTest {
     }
 
     @Test
+    public void testHotAirBalloons() {
+        when(config.useHotAirBalloons()).thenReturn(true);
+        setupInventory(
+            new Item(ItemID.LOGS, 2),
+            new Item(ItemID.OAK_LOGS, 1),
+            new Item(ItemID.WILLOW_LOGS, 1),
+            new Item(ItemID.YEW_LOGS, 1),
+            new Item(ItemID.MAGIC_LOGS, 1));
+        testTransportLength(2, TransportType.HOT_AIR_BALLOON);
+    }
+
+    @Test
     public void testMinecarts() {
         when(config.useMinecarts()).thenReturn(true);
         setupInventory(new Item(ItemID.COINS_995, 1000));
@@ -299,6 +311,31 @@ public class PathfinderTest {
          * = 90
          */
         assertEquals(90, actualCount);
+    }
+
+    @Test
+    public void testNumberOfHotAirBalloons() {
+        // All permutations of hot air balloon transports are resolved from origins and destinations
+        int actualCount = 0;
+        for (int origin : transports.keySet()) {
+            for (Transport transport : transports.get(origin)) {
+                if (TransportType.HOT_AIR_BALLOON.equals(transport.getType())) {
+                    actualCount++;
+                }
+            }
+        }
+        /* 
+         * Info:
+         * single_hot_air_balloon_origin_locations * (number_of_hot_air_balloons - 1)
+         *   6 * 5   // Entrana
+         * + 8 * 5   // Taverley
+         * + 8 * 5   // Crafting Guild
+         * + 8 * 5   // Varrock
+         * + 7 * 5   // Castle Wars
+         * + 8 * 5   // Grand Tree
+         * = 225
+         */
+        assertEquals(225, actualCount);
     }
 
     @Test
