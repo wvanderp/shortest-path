@@ -148,7 +148,7 @@ public class Pathfinder implements Runnable {
                     update = true;
                 }
                 if (update) {
-                    config.refreshTeleports(node.packedPosition, wildernessLevel);
+                    config.dataManager.refreshTeleports(node.packedPosition, wildernessLevel);
                 }
             }
 

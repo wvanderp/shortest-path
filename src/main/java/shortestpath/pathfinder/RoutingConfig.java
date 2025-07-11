@@ -16,47 +16,47 @@ public class RoutingConfig {
 
     private final ShortestPathConfig config;
     @Getter
-    private boolean avoidWilderness;
+    public boolean avoidWilderness;
     @Getter
-    private boolean useAgilityShortcuts;
+    public boolean useAgilityShortcuts;
     @Getter
-    private boolean useGrappleShortcuts;
+    public boolean useGrappleShortcuts;
     @Getter
-    private boolean useBoats;
+    public boolean useBoats;
     @Getter
-    private boolean useCanoes;
+    public boolean useCanoes;
     @Getter
-    private boolean useCharterShips;
+    public boolean useCharterShips;
     @Getter
-    private boolean useShips;
+    public boolean useShips;
     @Getter
     public boolean useFairyRings;
     @Getter
     public boolean useGnomeGliders;
     @Getter
-    private boolean useHotAirBalloons;
+    public boolean useHotAirBalloons;
     @Getter
-    private boolean useMinecarts;
+    public boolean useMinecarts;
     @Getter
-    private boolean useQuetzals;
+    public boolean useQuetzals;
     @Getter
     public boolean useSpiritTrees;
     @Getter
-    private boolean useTeleportationLevers;
+    public boolean useTeleportationLevers;
     @Getter
-    private boolean useTeleportationMinigames;
+    public boolean useTeleportationMinigames;
     @Getter
-    private boolean useTeleportationPortals;
+    public boolean useTeleportationPortals;
     @Getter
-    private boolean useTeleportationSpells;
+    public boolean useTeleportationSpells;
     @Getter
-    private boolean useWildernessObelisks;
+    public boolean useWildernessObelisks;
     @Getter
-    private int currencyThreshold;
+    public int currencyThreshold;
     @Getter
-    private TeleportationItem useTeleportationItems;
+    public TeleportationItem useTeleportationItems;
     @Getter
-    private long calculationCutoffMillis;
+    public long calculationCutoffMillis;
 
 
 
@@ -95,7 +95,4 @@ public class RoutingConfig {
             && !WildernessChecker.isInWilderness(packedPosition) && WildernessChecker.isInWilderness(packedNeighborPosition);
     }
 
-    private void refreshDestinations() {
-        destinations = avoidWilderness ? filteredDestinations : allDestinations;
-    }
 }

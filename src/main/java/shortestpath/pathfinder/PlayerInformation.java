@@ -69,7 +69,7 @@ public class PlayerInformation {
 
     private final Map<Integer, Integer> itemsAndQuantities = new HashMap<>(28 + 11 + 4, 1.0f);
 
-    private RoutingConfig routingConfig;
+    private final RoutingConfig routingConfig;
 
     public PlayerInformation(Client client, RoutingConfig routingConfig) {
         this.client = client;
@@ -153,7 +153,7 @@ public class PlayerInformation {
                     int quantity = itemsAndQuantities.getOrDefault(itemId, 0);
                     int requiredQuantity = transportItems.getQuantities()[i];
                     if (requiredQuantity > 0 && quantity >= requiredQuantity || requiredQuantity == 0 && quantity == 0) {
-                        if (CURRENCIES.contains(itemId) && requiredQuantity > currencyThreshold) {
+                        if (CURRENCIES.contains(itemId) && requiredQuantity > routingConfig.currencyThreshold) {
                             return false;
                         }
                         missing = false;
@@ -226,13 +226,13 @@ public class PlayerInformation {
             return false;
         } else if (TELEPORTATION_ITEM.equals(type)) {
             switch (routingConfig.useTeleportationItems) {
-                case TeleportationItem.ALL:
-                case TeleportationItem.INVENTORY:
+                case ALL:
+                case INVENTORY:
                     break;
-                case TeleportationItem.NONE:
+                case NONE:
                     return false;
-                case TeleportationItem.INVENTORY_NON_CONSUMABLE:
-                case TeleportationItem.ALL_NON_CONSUMABLE:
+                case INVENTORY_NON_CONSUMABLE:
+                case ALL_NON_CONSUMABLE:
                     if (transport.isConsumable()) {
                         return false;
                     }

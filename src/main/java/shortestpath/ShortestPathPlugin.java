@@ -436,7 +436,7 @@ public class ShortestPathPlugin extends Plugin {
                     }
                 }
             }
-            if (event.getOption().equals(FLASH_ICONS) && pathfinderConfig.hasDestination(simplify(event.getTarget()))) {
+            if (event.getOption().equals(FLASH_ICONS) && pathfinderConfig.destinationManager.hasDestination(simplify(event.getTarget()))) {
                 addMenuEntry(event, FIND_CLOSEST, event.getTarget(), 1);
             }
         }
@@ -458,7 +458,7 @@ public class ShortestPathPlugin extends Plugin {
     }
 
     public Map<Integer, Set<Transport>> getTransports() {
-        return pathfinderConfig.getTransports();
+        return pathfinderConfig.dataManager.getTransports();
     }
 
     public CollisionMap getMap() {
@@ -572,7 +572,7 @@ public class ShortestPathPlugin extends Plugin {
         } else if (entry.getOption().equals(CLEAR) && entry.getTarget().equals(PATH)) {
             setTarget(WorldPointUtil.UNDEFINED);
         } else if (entry.getOption().equals(FIND_CLOSEST)) {
-            setTargets(pathfinderConfig.getDestinations(simplify(entry.getTarget())), true);
+            setTargets(pathfinderConfig.destinationManager.getDestinations(simplify(entry.getTarget())), true);
         }
     }
 

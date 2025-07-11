@@ -25,8 +25,9 @@ import shortestpath.TransportType;
 import shortestpath.WorldPointUtil;
 import shortestpath.pathfinder.Pathfinder;
 import shortestpath.pathfinder.PathfinderConfig;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import shortestpath.pathfinder.WildernessChecker;
+
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
@@ -451,16 +452,16 @@ public class PathfinderTest {
 
     @Test
     public void testIsInWilderness() {
-        assertEquals(true, PathfinderConfig.isInWilderness(
-            WorldPointUtil.packWorldPoint(3339, 3696, 0))); // Green dragons
-        assertEquals(false, PathfinderConfig.isInWilderness(
-            WorldPointUtil.packWorldPoint(3134, 3629, 0))); // Ferox Enclave
-        assertEquals(true, PathfinderConfig.isInWilderness(
-            WorldPointUtil.packWorldPoint(3089, 9957, 0))); // Edgeville Dungeon
-        assertEquals(true, PathfinderConfig.isInWilderness(
-            WorldPointUtil.packWorldPoint(3039, 10260, 0))); // Lava Maze Dungeon
-        assertEquals(false, PathfinderConfig.isInWilderness(
-            WorldPointUtil.packWorldPoint(3009, 3531, 0))); // Non-wildy peninsula
+        assertTrue(WildernessChecker.isInWilderness(
+                WorldPointUtil.packWorldPoint(3339, 3696, 0))); // Green dragons
+        assertFalse(WildernessChecker.isInWilderness(
+                WorldPointUtil.packWorldPoint(3134, 3629, 0))); // Ferox Enclave
+        assertTrue(WildernessChecker.isInWilderness(
+                WorldPointUtil.packWorldPoint(3089, 9957, 0))); // Edgeville Dungeon
+        assertTrue(WildernessChecker.isInWilderness(
+                WorldPointUtil.packWorldPoint(3039, 10260, 0))); // Lava Maze Dungeon
+        assertFalse(WildernessChecker.isInWilderness(
+                WorldPointUtil.packWorldPoint(3009, 3531, 0))); // Non-wildy peninsula
     }
 
     private void setupConfig(QuestState questState, int skillLevel, TeleportationItem useTeleportationItems) {
@@ -470,9 +471,9 @@ public class PathfinderTest {
         when(client.getClientThread()).thenReturn(Thread.currentThread());
         when(client.getBoostedSkillLevel(any(Skill.class))).thenReturn(skillLevel);
         when(config.useTeleportationItems()).thenReturn(useTeleportationItems);
-        doReturn(true).when(pathfinderConfig).varbitChecks(any(Transport.class));
-        doReturn(true).when(pathfinderConfig).varPlayerChecks(any(Transport.class));
-        doReturn(questState).when(pathfinderConfig).getQuestState(any(Quest.class));
+        doReturn(true).when(pathfinderConfig).playerInformation.varbitChecks(any(Transport.class));
+        doReturn(true).when(pathfinderConfig).playerInformation.varPlayerChecks(any(Transport.class));
+        doReturn(questState).when(pathfinderConfig).playerInformation.getQuestState(any(Quest.class));
 
         pathfinderConfig.refresh();
     }
