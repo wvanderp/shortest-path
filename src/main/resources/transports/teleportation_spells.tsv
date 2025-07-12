@@ -42,7 +42,7 @@
 1641 3673 0	FIRE_RUNE=1&&WATER_RUNE=1&&LAW_RUNE=2	48 Magic	Client of Kourend	4	Kourend Castle Teleport	20	4070=0	
 								
 # Ardougne Teleport								
-2661 3302 0	WATER_RUNE=2&&LAW_RUNE=2	51 Magic	Plague City	4	Ardougne Teleport	20	4070=0	
+2661 3302 0	WATER_RUNE=2&&LAW_RUNE=2	51 Magic	Plague City	4	Ardougne Teleport	20	4070=0	165=30
 								
 # Civitas illa Fortis Teleport								
 1680 3134 0	EARTH_RUNE=1&&FIRE_RUNE=1&&LAW_RUNE=2	54 Magic	Twilight's Promise	4	Civitas illa Fortis Teleport	20	4070=0	
