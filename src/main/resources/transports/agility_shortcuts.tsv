@@ -148,6 +148,14 @@
 3425 3484 0	3425 3483 0	Squeeze-through Ornate railing 17000	65 Agility				
 3212 3137 0	3214 3132 0	Jump-to Stepping stone 16513	66 Agility				3
 3214 3132 0	3212 3137 0	Jump-to Stepping stone 16513	66 Agility				3
+2615 9503 0	2616 9571 0	Climb-down Pile of rubble 23564	67 Agility				3
+2616 9503 0	2616 9571 0	Climb-down Pile of rubble 23564	67 Agility				3
+2614 9504 0	2616 9571 0	Climb-down Pile of rubble 23564	67 Agility				3
+2614 9505 0	2616 9571 0	Climb-down Pile of rubble 23564	67 Agility				3
+2615 9506 0	2616 9571 0	Climb-down Pile of rubble 23564	67 Agility				3
+2616 9506 0	2616 9571 0	Climb-down Pile of rubble 23564	67 Agility				3
+2616 9571 0	2615 9506 0	Climb-up Pile of rubble 23563	67 Agility				3
+2617 9571 0	2615 9506 0	Climb-up Pile of rubble 23563	67 Agility				3
 2997 3483 0	3002 3483 0	Climb Rocks 47571	68 Agility				5
 3002 3483 0	2997 3483 0	Climb Rocks 47570	68 Agility				5
 1761 3874 0	1761 3872 0	Climb Rocks 34741	69 Agility				2
