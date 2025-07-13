@@ -121,7 +121,10 @@ public class WorldPointUtil {
         if (area.getPlane() != plane) {
             return Integer.MAX_VALUE;
         }
+        return distanceToArea2D(packedPoint, area);
+    }
 
+    public static int distanceToArea2D(int packedPoint, WorldArea area) {
         final int y = unpackWorldY(packedPoint);
         final int x = unpackWorldX(packedPoint);
         final int areaMaxX = area.getX() + area.getWidth() - 1;
