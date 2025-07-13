@@ -50,8 +50,10 @@ public class Node {
 
         if (previous != null) {
             previousCost = previous.cost;
-            // Travel wait time in TransportNode and distance is compared as if the player is walking 1 tile/tick.
-            // TODO: reduce the distance if the player is currently running and has enough run energy for the distance?
+            // Travel wait time in TransportNode and distance is compared as if the player
+            // is walking 1 tile/tick.
+            // TODO: reduce the distance if the player is currently running and has enough
+            // run energy for the distance?
             travelTime = WorldPointUtil.distanceBetween(previous.packedPosition, packedPosition);
         }
 

@@ -16,8 +16,6 @@ public class PathfinderConfig {
     public final DataManager dataManager;
     public final DestinationManager destinationManager;
 
-
-
     public PathfinderConfig(Client client, ShortestPathConfig config) {
         this.routingConfig = new RoutingConfig(config);
         this.playerInformation = new PlayerInformation(client, routingConfig);
@@ -29,8 +27,6 @@ public class PathfinderConfig {
         return dataManager.getMap();
     }
 
-
-
     public void refresh() {
         dataManager.refresh();
         playerInformation.refresh();
@@ -38,12 +34,14 @@ public class PathfinderConfig {
         destinationManager.refresh();
     }
 
-
     public long getCalculationCutoffMillis() {
         return routingConfig.calculationCutoffMillis;
     }
 
-    /** Changes to the config might have invalidated some locations, e.g. those in the wilderness */
+    /**
+     * Changes to the config might have invalidated some locations, e.g. those in
+     * the wilderness
+     */
     public void filterLocations(Set<Integer> locations, boolean canReviveFiltered) {
         if (this.routingConfig.avoidWilderness) {
             locations.removeIf(location -> {
@@ -64,11 +62,10 @@ public class PathfinderConfig {
         }
     }
 
-
     public boolean avoidWilderness(int packedPosition, int packedNeighborPosition, boolean targetInWilderness) {
         return this.routingConfig.avoidWilderness && !targetInWilderness
-            && !WildernessChecker.isInWilderness(packedPosition) && WildernessChecker.isInWilderness(packedNeighborPosition);
+                && !WildernessChecker.isInWilderness(packedPosition)
+                && WildernessChecker.isInWilderness(packedNeighborPosition);
     }
 
-
-  }
+}

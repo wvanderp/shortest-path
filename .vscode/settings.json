@@ -1,6 +1,8 @@
 {
     "java.compile.nullAnalysis.mode": "automatic",
     "cSpell.words": [
+        "FEROX",
+        "mockito",
         "runelite",
         "shortestpath",
         "varbit"

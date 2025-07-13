@@ -58,8 +58,6 @@ public class RoutingConfig {
     @Getter
     public long calculationCutoffMillis;
 
-
-
     public RoutingConfig(ShortestPathConfig config) {
         this.config = config;
         refresh();
@@ -82,8 +80,10 @@ public class RoutingConfig {
         useSpiritTrees = ShortestPathPlugin.override("useSpiritTrees", config.useSpiritTrees());
         useTeleportationItems = ShortestPathPlugin.override("useTeleportationItems", config.useTeleportationItems());
         useTeleportationLevers = ShortestPathPlugin.override("useTeleportationLevers", config.useTeleportationLevers());
-        useTeleportationMinigames = ShortestPathPlugin.override("useTeleportationMinigames", config.useTeleportationMinigames());
-        useTeleportationPortals = ShortestPathPlugin.override("useTeleportationPortals", config.useTeleportationPortals());
+        useTeleportationMinigames = ShortestPathPlugin.override("useTeleportationMinigames",
+                config.useTeleportationMinigames());
+        useTeleportationPortals = ShortestPathPlugin.override("useTeleportationPortals",
+                config.useTeleportationPortals());
         useTeleportationSpells = ShortestPathPlugin.override("useTeleportationSpells", config.useTeleportationSpells());
         useWildernessObelisks = ShortestPathPlugin.override("useWildernessObelisks", config.useWildernessObelisks());
         currencyThreshold = ShortestPathPlugin.override("currencyThreshold", config.currencyThreshold());
@@ -92,7 +92,8 @@ public class RoutingConfig {
 
     public boolean avoidWilderness(int packedPosition, int packedNeighborPosition, boolean targetInWilderness) {
         return avoidWilderness && !targetInWilderness
-            && !WildernessChecker.isInWilderness(packedPosition) && WildernessChecker.isInWilderness(packedNeighborPosition);
+                && !WildernessChecker.isInWilderness(packedPosition)
+                && WildernessChecker.isInWilderness(packedNeighborPosition);
     }
 
 }

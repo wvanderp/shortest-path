@@ -24,20 +24,22 @@ public class Pathfinder implements Runnable {
     private final CollisionMap map;
     private final boolean targetInWilderness;
 
-    // Capacities should be enough to store all nodes without requiring the queue to grow
+    // Capacities should be enough to store all nodes without requiring the queue to
+    // grow
     // They were found by checking the max queue size
     private final Deque<Node> boundary = new ArrayDeque<>(4096);
     private final Queue<Node> pending = new PriorityQueue<>(256);
     private final VisitedTiles visited;
 
     @SuppressWarnings("unchecked") // Casting EMPTY_LIST is safe here
-    private List<Integer> path = (List<Integer>)Collections.EMPTY_LIST;
+    private List<Integer> path = (List<Integer>) Collections.EMPTY_LIST;
     private boolean pathNeedsUpdate = false;
     private Node bestLastNode;
+    
     /**
      * Teleportation transports are updated when this changes.
      * Can be either:
-     *  0 = all teleports can be used (e.g. Chronicle)
+     * 0 = all teleports can be used (e.g. Chronicle)
      * 20 = most teleports can be used (e.g. Varrock Teleport)
      * 30 = some teleports can be used (e.g. Amulet of Glory)
      * 31 = no teleports can be used
@@ -132,8 +134,9 @@ public class Pathfinder implements Runnable {
                 // path or when going from 31 or higher to 30, or from 21 or higher to 20.
 
                 boolean update = false;
-                
-                // These are overlapping boundaries, so if the node isn't in level 30, it's in 0-29
+
+                // These are overlapping boundaries, so if the node isn't in level 30, it's in
+                // 0-29
                 // likewise, if the node isn't in level 20, it's in 0-19
                 if (wildernessLevel > 30 && !WildernessChecker.isInLevel30Wilderness(node.packedPosition)) {
                     wildernessLevel = 30;

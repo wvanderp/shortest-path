@@ -13,7 +13,6 @@ public class DataManager {
     private final ThreadLocal<CollisionMap> map;
     private final Map<Integer, Set<Transport>> allTransports;
     private final Set<Transport> usableTeleports;
-    private final List<Integer> filteredTargets = new ArrayList<>(4);
     @Getter
     private final Map<Integer, Set<Transport>> transports;
     @Getter
@@ -34,7 +33,6 @@ public class DataManager {
         this.transports = new HashMap<>(allTransports.size() / 2);
         this.transportsPacked = new PrimitiveIntHashMap<>(allTransports.size() / 2);
 
-
         this.playerInformation = playerInformation;
         this.routingConfig = routingConfig;
     }
@@ -42,8 +40,6 @@ public class DataManager {
     public CollisionMap getMap() {
         return map.get();
     }
-
-
 
     public void refresh() {
         refreshTransports();
@@ -73,9 +69,12 @@ public class DataManager {
                     // commences
         }
 
-        routingConfig.useFairyRings &= !QuestState.NOT_STARTED.equals(playerInformation.getQuestState(Quest.FAIRYTALE_II__CURE_A_QUEEN));
-        routingConfig.useGnomeGliders &= QuestState.FINISHED.equals(playerInformation.getQuestState(Quest.THE_GRAND_TREE));
-        routingConfig.useSpiritTrees &= QuestState.FINISHED.equals(playerInformation.getQuestState(Quest.TREE_GNOME_VILLAGE));
+        routingConfig.useFairyRings &= !QuestState.NOT_STARTED
+                .equals(playerInformation.getQuestState(Quest.FAIRYTALE_II__CURE_A_QUEEN));
+        routingConfig.useGnomeGliders &= QuestState.FINISHED
+                .equals(playerInformation.getQuestState(Quest.THE_GRAND_TREE));
+        routingConfig.useSpiritTrees &= QuestState.FINISHED
+                .equals(playerInformation.getQuestState(Quest.TREE_GNOME_VILLAGE));
 
         transports.clear();
         transportsPacked.clear();
@@ -92,7 +91,8 @@ public class DataManager {
                 }
 
                 for (TransportVarbit varbitRequirement : transport.getVarbits()) {
-                    playerInformation.varbitValues.put(varbitRequirement.getId(), client.getVarbitValue(varbitRequirement.getId()));
+                    playerInformation.varbitValues.put(varbitRequirement.getId(),
+                            client.getVarbitValue(varbitRequirement.getId()));
                 }
                 for (TransportVarPlayer varPlayerRequirement : transport.getVarPlayers()) {
                     playerInformation.varPlayerValues.put(varPlayerRequirement.getId(),

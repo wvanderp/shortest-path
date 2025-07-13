@@ -29,7 +29,8 @@ public class VisitedTiles {
     public boolean get(int x, int y, int plane) {
         final int regionIndex = getRegionIndex(x / REGION_SIZE, y / REGION_SIZE);
         if (regionIndex < 0 || regionIndex >= visitedRegions.length) {
-            return true; // Region is out of bounds; report that it's been visited to avoid exploring it further
+            return true; // Region is out of bounds; report that it's been visited to avoid exploring it
+                         // further
         }
 
         final VisitedRegion region = visitedRegions[regionIndex];
@@ -50,7 +51,8 @@ public class VisitedTiles {
     public boolean set(int x, int y, int plane) {
         final int regionIndex = getRegionIndex(x / REGION_SIZE, y / REGION_SIZE);
         if (regionIndex < 0 || regionIndex >= visitedRegions.length) {
-            return false; // Region is out of bounds; report that it's been visited to avoid exploring it further
+            return false; // Region is out of bounds; report that it's been visited to avoid exploring it
+                          // further
         }
 
         VisitedRegion region = visitedRegions[regionIndex];
@@ -93,10 +95,12 @@ public class VisitedTiles {
         }
 
         // Sets a tile as visited in the tile bitset
-        // Returns true if the tile is unique and hasn't been seen before or false if it was seen before
+        // Returns true if the tile is unique and hasn't been seen before or false if it
+        // was seen before
         public boolean set(int x, int y, int plane) {
             if (plane >= planeCount) {
-                // Plane is out of bounds; report that it has been visited to avoid further exploration
+                // Plane is out of bounds; report that it has been visited to avoid further
+                // exploration
                 return false;
             }
             final int index = y + plane * REGION_SIZE;
@@ -107,8 +111,10 @@ public class VisitedTiles {
 
         public boolean get(int x, int y, int plane) {
             if (plane >= planeCount) {
-                // This check is necessary since we check visited tiles before checking the collision map, e.g. the node
-                // at (2816, 3455, 1) will check its neighbour to the north which is in a new region with no plane = 1
+                // This check is necessary since we check visited tiles before checking the
+                // collision map, e.g. the node
+                // at (2816, 3455, 1) will check its neighbour to the north which is in a new
+                // region with no plane = 1
                 return true;
             }
             return (planes[y + plane * REGION_SIZE] & (1L << x)) != 0;

@@ -68,7 +68,8 @@ public class SplitFlagMap {
 
     public static SplitFlagMap fromResources() {
         Map<Integer, byte[]> compressedRegions = new HashMap<>();
-        try (ZipInputStream in = new ZipInputStream(ShortestPathPlugin.class.getResourceAsStream("/collision-map.zip"))) {
+        try (ZipInputStream in = new ZipInputStream(
+                ShortestPathPlugin.class.getResourceAsStream("/collision-map.zip"))) {
             int minX = Integer.MAX_VALUE;
             int minY = Integer.MAX_VALUE;
             int maxX = 0;
