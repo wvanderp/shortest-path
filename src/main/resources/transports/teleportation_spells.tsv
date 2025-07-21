@@ -48,9 +48,9 @@
 1680 3134 0	EARTH_RUNE=1&&FIRE_RUNE=1&&LAW_RUNE=2	54 Magic	Twilight's Promise	4	Civitas illa Fortis Teleport	20	4070=0	
 								
 # Watchtower Teleport								
-2549 3112 0	EARTH_RUNE=2&&LAW_RUNE=2	58 Magic	Watchtower Quest	4	Watchtower Teleport	20	4070=0	
+2549 3112 0	EARTH_RUNE=2&&LAW_RUNE=2	58 Magic	Watchtower	4	Watchtower Teleport	20	4070=0	212=14
 # Varbit 4460 is DIARY_ARDOUGNE_HARD								
-2584 3097 0	EARTH_RUNE=2&&LAW_RUNE=2	58 Magic	Watchtower Quest	4	WatchtowerTeleport: Yanille	20	4070=0;4460=1	
+2584 3097 0	EARTH_RUNE=2&&LAW_RUNE=2	58 Magic	Watchtower	4	Watchtower Teleport: Yanille	20	4070=0;4460=1	212=14
 								
 # Trollheim Teleport								
 2890 3679 0	FIRE_RUNE=2&&LAW_RUNE=2	61 Magic	Eadgar's Ruse	4	Trollheim Teleport	20	4070=0	
