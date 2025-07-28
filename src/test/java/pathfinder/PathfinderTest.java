@@ -461,6 +461,8 @@ public class PathfinderTest {
             WorldPointUtil.packWorldPoint(3039, 10260, 0))); // Lava Maze Dungeon
         assertEquals(false, PathfinderConfig.isInWilderness(
             WorldPointUtil.packWorldPoint(3009, 3531, 0))); // Non-wildy peninsula
+        assertEquals(true, PathfinderConfig.isInWilderness(
+            WorldPointUtil.packWorldPoint(3023, 3626, 1))); // Upstairs in Dark Warriors' Fortress
     }
 
     private void setupConfig(QuestState questState, int skillLevel, TeleportationItem useTeleportationItems) {
