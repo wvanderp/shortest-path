@@ -146,6 +146,12 @@ public class PathfinderTest {
     }
 
     @Test
+    public void testTeleportationBoxes() {
+        when(config.useTeleportationBoxes()).thenReturn(true);
+        testTransportLength(2, TransportType.TELEPORTATION_BOX);
+    }
+
+    @Test
     public void testTeleportationLevers() {
         when(config.useTeleportationLevers()).thenReturn(true);
         testTransportLength(2, TransportType.TELEPORTATION_LEVER);
