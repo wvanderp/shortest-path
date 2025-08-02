@@ -288,48 +288,42 @@ public class PathTileOverlay extends Overlay {
     }
 
     private void drawTransportInfo(Graphics2D graphics, int location, int locationEnd) {
-        if (locationEnd == WorldPointUtil.UNDEFINED || !plugin.showTransportInfo) {
+        if (locationEnd == WorldPointUtil.UNDEFINED || !plugin.showTransportInfo ||
+            WorldPointUtil.unpackWorldPlane(location) != client.getPlane()) {
             return;
         }
-        for (int point : WorldPointUtil.toLocalInstance(client, location)) {
-            for (int pointEnd : WorldPointUtil.toLocalInstance(client, locationEnd))
-            {
-                if (WorldPointUtil.unpackWorldPlane(point) != client.getPlane()) {
+        int vertical_offset = 0;
+        for (Transport transport : plugin.getTransports().getOrDefault(location, new HashSet<>())) {
+            if (locationEnd != transport.getDestination()) {
+                continue;
+            }
+
+            String text = transport.getDisplayInfo();
+            if (text == null || text.isEmpty()) {
+                continue;
+            }
+
+            for (int point : WorldPointUtil.toLocalInstance(client, location)) {
+                LocalPoint lp = WorldPointUtil.toLocalPoint(client, point);
+                if (lp == null) {
                     continue;
                 }
 
-                int vertical_offset = 0;
-                for (Transport transport : plugin.getTransports().getOrDefault(point, new HashSet<>())) {
-                    if (pointEnd == WorldPointUtil.UNDEFINED || pointEnd != transport.getDestination()) {
-                        continue;
-                    }
-
-                    String text = transport.getDisplayInfo();
-                    if (text == null || text.isEmpty()) {
-                        continue;
-                    }
-
-                    LocalPoint lp = WorldPointUtil.toLocalPoint(client, point);
-                    if (lp == null) {
-                        continue;
-                    }
-
-                    Point p = Perspective.localToCanvas(client, lp, client.getPlane());
-                    if (p == null) {
-                        continue;
-                    }
-
-                    Rectangle2D textBounds = graphics.getFontMetrics().getStringBounds(text, graphics);
-                    double height = textBounds.getHeight();
-                    int x = (int) (p.getX() - textBounds.getWidth() / 2);
-                    int y = (int) (p.getY() - height) - (vertical_offset);
-                    graphics.setColor(Color.BLACK);
-                    graphics.drawString(text, x + 1, y + 1);
-                    graphics.setColor(plugin.colourText);
-                    graphics.drawString(text, x, y);
-
-                    vertical_offset += (int) height + TRANSPORT_LABEL_GAP;
+                Point p = Perspective.localToCanvas(client, lp, client.getPlane());
+                if (p == null) {
+                    continue;
                 }
+
+                Rectangle2D textBounds = graphics.getFontMetrics().getStringBounds(text, graphics);
+                double height = textBounds.getHeight();
+                int x = (int) (p.getX() - textBounds.getWidth() / 2);
+                int y = (int) (p.getY() - height) - (vertical_offset);
+                graphics.setColor(Color.BLACK);
+                graphics.drawString(text, x + 1, y + 1);
+                graphics.setColor(plugin.colourText);
+                graphics.drawString(text, x, y);
+
+                vertical_offset += (int) height + TRANSPORT_LABEL_GAP;
             }
         }
     }
