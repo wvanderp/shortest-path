@@ -329,7 +329,7 @@ public class PathTileOverlay extends Overlay {
                 Rectangle2D textBounds = graphics.getFontMetrics().getStringBounds(text, graphics);
                 double height = textBounds.getHeight();
                 int x = (int) (p.getX() - textBounds.getWidth() / 2);
-                int y = (int) (p.getY() - height) - (vertical_offset);
+                int y = (int) (p.getY() - height) - vertical_offset;
                 graphics.setColor(Color.BLACK);
                 graphics.drawString(text, x + 1, y + 1);
                 graphics.setColor(plugin.colourText);
