@@ -16,6 +16,7 @@ import net.runelite.api.Perspective;
 import net.runelite.api.Point;
 import net.runelite.api.Tile;
 import net.runelite.api.coords.LocalPoint;
+import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayPosition;
@@ -292,6 +293,17 @@ public class PathTileOverlay extends Overlay {
             WorldPointUtil.unpackWorldPlane(location) != client.getPlane()) {
             return;
         }
+
+        // Workaround for weird pathing inside PoH to instead show info on the player tile
+        LocalPoint playerLocalPoint = client.getLocalPlayer().getLocalLocation();
+        WorldPoint playerWorldPoint = WorldPoint.fromLocalInstance(client, playerLocalPoint);
+        int px = playerWorldPoint.getX();
+        int py = playerWorldPoint.getY();
+        int tx = WorldPointUtil.unpackWorldX(location);
+        int ty = WorldPointUtil.unpackWorldY(location);
+        boolean transportAndPlayerInsidePoh = (tx >= 1792 && tx <= 2047 && ty >= 5696 && ty <= 5767
+            && px >= 1792 && px <= 2047 && py >= 5696 && py <= 5767);
+
         int vertical_offset = 0;
         for (Transport transport : plugin.getTransports().getOrDefault(location, new HashSet<>())) {
             if (locationEnd != transport.getDestination()) {
@@ -309,7 +321,8 @@ public class PathTileOverlay extends Overlay {
                     continue;
                 }
 
-                Point p = Perspective.localToCanvas(client, lp, client.getPlane());
+                Point p = Perspective.localToCanvas(client,
+                    transportAndPlayerInsidePoh ? playerLocalPoint : lp, client.getPlane());
                 if (p == null) {
                     continue;
                 }
