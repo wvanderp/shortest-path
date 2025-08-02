@@ -16,7 +16,6 @@ import net.runelite.api.Perspective;
 import net.runelite.api.Point;
 import net.runelite.api.Tile;
 import net.runelite.api.coords.LocalPoint;
-import net.runelite.api.coords.WorldPoint;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayPosition;
@@ -296,9 +295,9 @@ public class PathTileOverlay extends Overlay {
 
         // Workaround for weird pathing inside PoH to instead show info on the player tile
         LocalPoint playerLocalPoint = client.getLocalPlayer().getLocalLocation();
-        WorldPoint playerWorldPoint = WorldPoint.fromLocalInstance(client, playerLocalPoint);
-        int px = playerWorldPoint.getX();
-        int py = playerWorldPoint.getY();
+        int playerPackedPoint = WorldPointUtil.fromLocalInstance(client, playerLocalPoint);
+        int px = WorldPointUtil.unpackWorldX(playerPackedPoint);
+        int py = WorldPointUtil.unpackWorldY(playerPackedPoint);
         int tx = WorldPointUtil.unpackWorldX(location);
         int ty = WorldPointUtil.unpackWorldY(location);
         boolean transportAndPlayerInsidePoh = (tx >= 1792 && tx <= 2047 && ty >= 5696 && ty <= 5767
