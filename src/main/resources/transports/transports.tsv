@@ -3490,8 +3490,10 @@
 3814 9461 0	3814 3061 0	Climb-up Staircase 5269						1
 3815 9461 0	3814 3061 0	Climb-up Staircase 5269						1
 3816 9462 0	3814 3061 0	Climb-up Staircase 5269						1
+3680 2963 0	3786 2824 0	Transport Brother Tranquility 550						2
 								
 # Harmony Island								
+3786 2824 0	3680 2963 0	Transport Brother Tranquility 550						2
 3794 2844 0	3785 9254 0	Climb-down Statue 22355						
 3785 9254 0	3796 2843 0	Climb Ladder 22371						2
 3804 2844 0	3806 2844 0	Open Door 22119						1
