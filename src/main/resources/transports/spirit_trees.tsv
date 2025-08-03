@@ -159,28 +159,28 @@
 2340 3109 0		Travel Spirit Tree 49595					
 							
 # Tree Gnome Village							
-	2542 3170 0			Tree Gnome Village	2	1: Tree Gnome Village	
+	2542 3170 0			Tree Gnome Village	3	1: Tree Gnome Village	
 # Gnome Stronghold							
-	2461 3444 0			Tree Gnome Village	2	2: Gnome Stronghold	
+	2461 3444 0			Tree Gnome Village	3	2: Gnome Stronghold	
 # Battlefield of Khazard							
-	2555 3259 0			Tree Gnome Village	2	3: Battlefield of Khazard	
+	2555 3259 0			Tree Gnome Village	3	3: Battlefield of Khazard	
 # Grand Exchange							
-	3185 3508 0			Tree Gnome Village	2	4: Grand Exchange	
+	3185 3508 0			Tree Gnome Village	3	4: Grand Exchange	
 # Feldip Hills							
-	2488 2850 0			Tree Gnome Village	2	5: Feldip Hills	
+	2488 2850 0			Tree Gnome Village	3	5: Feldip Hills	
 # Prifddinas							
-	3274 6123 0			Tree Gnome Village;Song of the Elves	2	6: Prifddinas	
+	3274 6123 0			Tree Gnome Village;Song of the Elves	3	6: Prifddinas	
 # Port Sarim							
-	3058 3257 0		83 Farming	Tree Gnome Village	2	7: Port Sarim	4771=20;4772=20
+	3058 3257 0		83 Farming	Tree Gnome Village	3	7: Port Sarim	4771=20;4772=255
 # Etceteria							
-	2613 3855 0		83 Farming	Tree Gnome Village	2	8: Etceteria	4771=20;4772=20
+	2613 3855 0		83 Farming	Tree Gnome Village	3	8: Etceteria	4771=20;4772=255
 # Brimhaven							
-	2800 3203 0		83 Farming	Tree Gnome Village	2	9: Brimhaven	4771=20;4772=20
+	2800 3203 0		83 Farming	Tree Gnome Village	3	9: Brimhaven	4771=20;4772=255
 # Hosidius							
-	1693 3540 0		83 Farming	Tree Gnome Village	2	A: Hosidius	4771=20;4772=20
+	1693 3540 0		83 Farming	Tree Gnome Village	3	A: Hosidius	4771=20;4772=255
 # Farming Guild							
-	1251 3750 0		85 Farming	Tree Gnome Village	2	B: Farming Guild	4771=20;4772=20
+	1251 3750 0		85 Farming	Tree Gnome Village	3	B: Farming Guild	4771=20;4772=255
 # Player-owned house							
-#			75 Construction;83 Farming	Tree Gnome Village	2	C: Your house	
+#			75 Construction;83 Farming	Tree Gnome Village	3	C: Your house	
 # Poison Waste							
-	2339 3109 0			The Path of Glouphrie	2	D: Poison Waste	
+	2339 3109 0			The Path of Glouphrie	3	D: Poison Waste	
