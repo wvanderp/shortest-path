@@ -120,37 +120,37 @@
 3232 9312 0	3233 2887 0	Use Portal 6550						1	
 									
 # Player Owned House portals and nexus									
-1928 5731 0	3288 3888 0	Enter Annakarl Portal 29341	50 Construction;90 Magic		Desert Treasure I			1	
-1928 5731 0	2662 3305 0	Enter Ardougne Portal 13619	50 Construction;51 Magic		Plague City		165=30	1	
-1928 5731 0	2500 3290 0	Enter West Ardougne Portal 37588	50 Construction;61 Magic		Biohazard			1	
-1928 5731 0	1632 3837 0	Enter Arceuus Library Portal 41416	50 Construction;16 Magic					1	
-1928 5731 0	3564 3315 0	Enter Barrows Portal 37591	50 Construction;83 Magic		Priest in Peril			1	
-1928 5731 0	1347 3740 0	Enter Battlefront Portal 37584	50 Construction;23 Magic					1	
-1928 5731 0	2757 3479 0	Camelot Camelot Portal 33094	50 Construction;45 Magic			4560=0		1	
-1928 5731 0	2726 3485 0	Seers' Village Seers' Village Portal 33095	50 Construction;45 Magic			4560=1		1	
-1928 5731 0	3158 3666 0	Enter Carrallanger Portal 33434	50 Construction;84 Magic		Desert Treasure I			1	
-1928 5731 0	2801 3449 0	Enter Catherby Portal 33432	50 Construction;87 Magic					1	
-1928 5731 0	1681 3133 0	Enter Civitas illa Fortis Portal 50713	50 Construction;54 Magic					1	
-1928 5731 0	2981 3764 0	Enter Cemetery Portal 37590	50 Construction;71 Magic					1	
-1928 5731 0	3109 3351 0	Enter Draynor Manor Portal 37583	50 Construction;17 Magic					1	
-1928 5731 0	2964 3378 0	Enter Falador Portal 13617	50 Construction;37 Magic					1	
-1928 5731 0	3548 3529 0	Enter Fenkenstrain's Castle Portal 37587	50 Construction;48 Magic		Priest in Peril			1	
-1928 5731 0	2613 3391 0	Enter Fishing Guild Portal 29343	50 Construction;85 Magic					1	
-1928 5731 0	2976 3872 0	Enter Ghorrock Portal 33433	50 Construction;96 Magic		Desert Treasure I			1	
-1928 5731 0	3797 2866 0	Enter Harmony Island Portal 37589	50 Construction;65 Magic		The Great Brain Robbery			1	
-1928 5731 0	3494 3473 0	Enter Kharyrll Portal 29338	50 Construction;66 Magic		Desert Treasure I			1	
-1928 5731 0	1641 3673 0	Enter Kourend Portal 29345	50 Construction;69 Magic					1	
-1928 5731 0	3221 3218 0	Enter Lumbridge Portal 13616	50 Construction;31 Magic					1	
-1928 5731 0	2113 3915 0	Enter Lunar Isle Portal 29339	50 Construction;69 Magic		Lunar Diplomacy			1	
-1928 5731 0	2798 2799 0	Enter Marim Portal 29344	50 Construction;64 Magic		Recipe for Disaster			1	
-1928 5731 0	2979 3510 0	Enter Mind Altar Portal 37585	50 Construction;28 Magic					1	
-1928 5731 0	3433 3461 0	Enter Salve Graveyard Portal 37586	50 Construction;40 Magic					1	
-1928 5731 0	3320 3337 0	Enter Senntisten Portal 29340	50 Construction;60 Magic		Desert Treasure I			1	
-1928 5731 0	2845 3694 0	Enter Troll Stronghold Portal 33179	50 Construction;61 Magic		Making Friends with My Arm	4493=0		1	
-1928 5731 0	2837 3695 0	Enter Troll Stronghold Portal 33179	50 Construction;61 Magic;73 Agility		Making Friends with My Arm	4493=1		1	
-1928 5731 0	3213 3424 0	Varrock Varrock Portal 33092	50 Construction;25 Magic			4585=0		1	
-1928 5731 0	3165 3479 0	Grand Exchange Grand Exchange Portal 33093	50 Construction;25 Magic			4585=1		1	
-1928 5731 0	2546 3755 0	Enter Waterbirth Island Portal 29342	50 Construction;72 Magic		Lunar Diplomacy			1	
-1928 5731 0	2846 3938 0	Enter Weiss Portal 37581	50 Construction		Making Friends with My Arm			1	
-1864 5732 0	2546 3114 0	Watchtower Yanille Watchtower Portal 33096	50 Construction;58 Magic			4548=0	212=14	1	
-1864 5732 0	2584 3097 0	Yanille Yanille Portal 33097	50 Construction;58 Magic			4548=1		1	
+1928 5731 0	3288 3888 0	Enter Annakarl Portal 29341	50 Construction;90 Magic		Desert Treasure I			1	Annakarl Portal
+1928 5731 0	2662 3305 0	Enter Ardougne Portal 13619	50 Construction;51 Magic		Plague City		165=30	1	Ardougne Portal
+1928 5731 0	2500 3290 0	Enter West Ardougne Portal 37588	50 Construction;61 Magic		Biohazard			1	West Ardougne Portal
+1928 5731 0	1632 3837 0	Enter Arceuus Library Portal 41416	50 Construction;16 Magic					1	Arceuus Library Portal
+1928 5731 0	3564 3315 0	Enter Barrows Portal 37591	50 Construction;83 Magic		Priest in Peril			1	Barrows Portal
+1928 5731 0	1347 3740 0	Enter Battlefront Portal 37584	50 Construction;23 Magic					1	Battlefront Portal
+1928 5731 0	2757 3479 0	Camelot Camelot Portal 33094	50 Construction;45 Magic			4560=0		1	Camelot Portal
+1928 5731 0	2726 3485 0	Seers' Village Seers' Village Portal 33095	50 Construction;45 Magic			4560=1		1	Seers' Village Portal
+1928 5731 0	3158 3666 0	Enter Carrallanger Portal 33434	50 Construction;84 Magic		Desert Treasure I			1	Carrallanger Portal
+1928 5731 0	2801 3449 0	Enter Catherby Portal 33432	50 Construction;87 Magic					1	Catherby Portal
+1928 5731 0	1681 3133 0	Enter Civitas illa Fortis Portal 50713	50 Construction;54 Magic					1	Civitas illa Fortis Portal
+1928 5731 0	2981 3764 0	Enter Cemetery Portal 37590	50 Construction;71 Magic					1	Cemetery Portal
+1928 5731 0	3109 3351 0	Enter Draynor Manor Portal 37583	50 Construction;17 Magic					1	Draynor Manor Portal
+1928 5731 0	2964 3378 0	Enter Falador Portal 13617	50 Construction;37 Magic					1	Falador Portal
+1928 5731 0	3548 3529 0	Enter Fenkenstrain's Castle Portal 37587	50 Construction;48 Magic		Priest in Peril			1	Fenkenstrain's Castle Portal
+1928 5731 0	2613 3391 0	Enter Fishing Guild Portal 29343	50 Construction;85 Magic					1	Fishing Guild Portal
+1928 5731 0	2976 3872 0	Enter Ghorrock Portal 33433	50 Construction;96 Magic		Desert Treasure I			1	Ghorrock Portal
+1928 5731 0	3797 2866 0	Enter Harmony Island Portal 37589	50 Construction;65 Magic		The Great Brain Robbery			1	Harmony Island Portal
+1928 5731 0	3494 3473 0	Enter Kharyrll Portal 29338	50 Construction;66 Magic		Desert Treasure I			1	Kharyrll Portal
+1928 5731 0	1641 3673 0	Enter Kourend Portal 29345	50 Construction;69 Magic					1	Kourend Portal
+1928 5731 0	3221 3218 0	Enter Lumbridge Portal 13616	50 Construction;31 Magic					1	Lumbridge Portal
+1928 5731 0	2113 3915 0	Enter Lunar Isle Portal 29339	50 Construction;69 Magic		Lunar Diplomacy			1	Lunar Isle Portal
+1928 5731 0	2798 2799 0	Enter Marim Portal 29344	50 Construction;64 Magic		Recipe for Disaster			1	Marim Portal
+1928 5731 0	2979 3510 0	Enter Mind Altar Portal 37585	50 Construction;28 Magic					1	Mind Altar Portal
+1928 5731 0	3433 3461 0	Enter Salve Graveyard Portal 37586	50 Construction;40 Magic					1	Salve Graveyard Portal
+1928 5731 0	3320 3337 0	Enter Senntisten Portal 29340	50 Construction;60 Magic		Desert Treasure I			1	Senntisten Portal
+1928 5731 0	2845 3694 0	Enter Troll Stronghold Portal 33179	50 Construction;61 Magic		Making Friends with My Arm	4493=0		1	Troll Stronghold Portal
+1928 5731 0	2837 3695 0	Enter Troll Stronghold Portal 33179	50 Construction;61 Magic;73 Agility		Making Friends with My Arm	4493=1		1	Troll Stronghold Portal
+1928 5731 0	3213 3424 0	Varrock Varrock Portal 33092	50 Construction;25 Magic			4585=0		1	Varrock Portal
+1928 5731 0	3165 3479 0	Grand Exchange Grand Exchange Portal 33093	50 Construction;25 Magic			4585=1		1	Grand Exchange Portal
+1928 5731 0	2546 3755 0	Enter Waterbirth Island Portal 29342	50 Construction;72 Magic		Lunar Diplomacy			1	Waterbirth Island Portal
+1928 5731 0	2846 3938 0	Enter Weiss Portal 37581	50 Construction		Making Friends with My Arm			1	Weiss Portal
+1864 5732 0	2546 3114 0	Watchtower Yanille Watchtower Portal 33096	50 Construction;58 Magic			4548=0	212=14	1	Watchtower Portal
+1864 5732 0	2584 3097 0	Yanille Yanille Portal 33097	50 Construction;58 Magic			4548=1		1	Yanille Portal
