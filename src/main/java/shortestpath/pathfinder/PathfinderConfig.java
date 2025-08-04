@@ -92,7 +92,7 @@ public class PathfinderConfig {
     private final Set<Transport> usableTeleports;
     private final Map<String, Set<Integer>> allDestinations;
     private final Map<String, Set<Integer>> filteredDestinations;
-    private final Map<Integer, Integer> itemsAndQuantities = new HashMap<>(28 + 11 + 4, 1.0f);
+    private final Map<Integer, Integer> itemsAndQuantities = new HashMap<>(28 + 11 + 500);
     private final List<Integer> filteredTargets = new ArrayList<>(4);
 
     @Getter
