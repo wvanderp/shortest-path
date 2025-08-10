@@ -126,6 +126,12 @@ public class PathfinderTest {
     }
 
     @Test
+    public void testMagicMushtrees() {
+        when(config.useMagicMushtrees()).thenReturn(true);
+        testTransportLength(2, TransportType.MAGIC_MUSHTREE);
+    }
+
+    @Test
     public void testMinecarts() {
         when(config.useMinecarts()).thenReturn(true);
         setupInventory(new Item(ItemID.COINS, 1000));
@@ -342,6 +348,29 @@ public class PathfinderTest {
          * = 225
          */
         assertEquals(225, actualCount);
+    }
+
+    @Test
+    public void testNumberOfMagicMushtrees() {
+        // All permutations of magic mushtree transports are resolved from origins and destinations
+        int actualCount = 0;
+        for (int origin : transports.keySet()) {
+            for (Transport transport : transports.get(origin)) {
+                if (TransportType.MAGIC_MUSHTREE.equals(transport.getType())) {
+                    actualCount++;
+                }
+            }
+        }
+        /*
+         * Info:
+         * single_mushtree_origin_locations * (number_of_magic_mushtrees - 1)
+         *   2 * 3   // House on the Hill
+         * + 2 * 3   // Verdant Valley
+         * + 2 * 3   // Sticky Swamp
+         * + 2 * 3   // Mushroom Meadow
+         * = 24
+         */
+        assertEquals(24, actualCount);
     }
 
     @Test

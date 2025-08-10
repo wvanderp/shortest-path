@@ -11,6 +11,7 @@ public enum TransportType {
     FAIRY_RING,
     GNOME_GLIDER,
     HOT_AIR_BALLOON,
+    MAGIC_MUSHTREE,
     MINECART,
     QUETZAL,
     SPIRIT_TREE,

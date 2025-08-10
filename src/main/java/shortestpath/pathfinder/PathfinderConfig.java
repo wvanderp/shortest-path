@@ -43,6 +43,7 @@ import static shortestpath.TransportType.SHIP;
 import static shortestpath.TransportType.FAIRY_RING;
 import static shortestpath.TransportType.GNOME_GLIDER;
 import static shortestpath.TransportType.HOT_AIR_BALLOON;
+import static shortestpath.TransportType.MAGIC_MUSHTREE;
 import static shortestpath.TransportType.MINECART;
 import static shortestpath.TransportType.QUETZAL;
 import static shortestpath.TransportType.SPIRIT_TREE;
@@ -119,6 +120,7 @@ public class PathfinderConfig {
         useFairyRings,
         useGnomeGliders,
         useHotAirBalloons,
+        useMagicMushtrees,
         useMinecarts,
         useQuetzals,
         useSpiritTrees,
@@ -175,6 +177,7 @@ public class PathfinderConfig {
         useFairyRings = ShortestPathPlugin.override("useFairyRings", config.useFairyRings());
         useGnomeGliders = ShortestPathPlugin.override("useGnomeGliders", config.useGnomeGliders());
         useHotAirBalloons = ShortestPathPlugin.override("useHotAirBalloons", config.useHotAirBalloons());
+        useMagicMushtrees = ShortestPathPlugin.override("useMagicMushtrees", config.useMagicMushtrees());
         useMinecarts = ShortestPathPlugin.override("useMinecarts", config.useMinecarts());
         useQuetzals = ShortestPathPlugin.override("useQuetzals", config.useQuetzals());
         useSpiritTrees = ShortestPathPlugin.override("useSpiritTrees", config.useSpiritTrees());
@@ -268,6 +271,7 @@ public class PathfinderConfig {
 
         useFairyRings &= !QuestState.NOT_STARTED.equals(getQuestState(Quest.FAIRYTALE_II__CURE_A_QUEEN));
         useGnomeGliders &= QuestState.FINISHED.equals(getQuestState(Quest.THE_GRAND_TREE));
+        useMagicMushtrees &= QuestState.FINISHED.equals(getQuestState(Quest.BONE_VOYAGE));
         useSpiritTrees &= QuestState.FINISHED.equals(getQuestState(Quest.TREE_GNOME_VILLAGE));
 
         transports.clear();
@@ -417,6 +421,8 @@ public class PathfinderConfig {
         } else if (GNOME_GLIDER.equals(type) && !useGnomeGliders) {
             return false;
         } else if (HOT_AIR_BALLOON.equals(type) && !useHotAirBalloons) {
+            return false;
+        } else if (MAGIC_MUSHTREE.equals(type) && !useMagicMushtrees) {
             return false;
         } else if (MINECART.equals(type) && !useMinecarts) {
             return false;
