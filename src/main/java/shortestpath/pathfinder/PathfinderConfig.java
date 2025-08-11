@@ -13,14 +13,12 @@ import net.runelite.api.Constants;
 import net.runelite.api.EnumComposition;
 import net.runelite.api.EnumID;
 import net.runelite.api.GameState;
-import net.runelite.api.InventoryID;
 import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
 import net.runelite.api.Quest;
 import net.runelite.api.QuestState;
 import net.runelite.api.Skill;
-import net.runelite.api.coords.WorldArea;
-import net.runelite.api.coords.WorldPoint;
+import net.runelite.api.gameval.InventoryID;
 import net.runelite.api.gameval.ItemID;
 import net.runelite.api.gameval.VarbitID;
 import shortestpath.TeleportationItem;
@@ -56,39 +54,37 @@ import static shortestpath.TransportType.TELEPORTATION_SPELL;
 import static shortestpath.TransportType.WILDERNESS_OBELISK;
 
 public class PathfinderConfig {
-    private static final WorldArea WILDERNESS_ABOVE_GROUND = new WorldArea(2944, 3525, 448, 448, 0);
-    private static final WorldArea WILDERNESS_ABOVE_GROUND_LEVEL_20 = new WorldArea(2944, 3680, 448, 448, 0);
-    private static final WorldArea WILDERNESS_ABOVE_GROUND_LEVEL_30 = new WorldArea(2944, 3760, 448, 448, 0);
-    private static final WorldArea WILDERNESS_UNDERGROUND = new WorldArea(2944, 9918, 320, 442, 0);
-    private static final WorldArea WILDERNESS_UNDERGROUND_LEVEL_20 = new WorldArea(2944, 10075, 320, 442, 0);
-    private static final WorldArea WILDERNESS_UNDERGROUND_LEVEL_30 = new WorldArea(2944, 10155, 320, 442, 0);
-    private static final WorldArea FEROX_ENCLAVE_1 = new WorldArea(3123, 3622, 2, 10, 0);
-    private static final WorldArea FEROX_ENCLAVE_2 = new WorldArea(3125, 3617, 16, 23, 0);
-    private static final WorldArea FEROX_ENCLAVE_3 = new WorldArea(3138, 3636, 18, 10, 0);
-    private static final WorldArea FEROX_ENCLAVE_4 = new WorldArea(3141, 3625, 14, 11, 0);
-    private static final WorldArea FEROX_ENCLAVE_5 = new WorldArea(3141, 3619, 7, 6, 0);
-    private static final WorldArea NOT_WILDERNESS_1 = new WorldArea(2997, 3525, 34, 9, 0);
-    private static final WorldArea NOT_WILDERNESS_2 = new WorldArea(3005, 3534, 21, 10, 0);
-    private static final WorldArea NOT_WILDERNESS_3 = new WorldArea(3000, 3534, 5, 5, 0);
-    private static final WorldArea NOT_WILDERNESS_4 = new WorldArea(3031, 3525, 2, 2, 0);
     private static final List<Integer> RUNE_POUCHES = Arrays.asList(
-        ItemID.BH_RUNE_POUCH, ItemID.BH_RUNE_POUCH_TROUVER,
-        ItemID.DIVINE_RUNE_POUCH, ItemID.DIVINE_RUNE_POUCH_TROUVER
-    );
+            ItemID.BH_RUNE_POUCH, ItemID.BH_RUNE_POUCH_TROUVER,
+            ItemID.DIVINE_RUNE_POUCH, ItemID.DIVINE_RUNE_POUCH_TROUVER);
     private static final int[] RUNE_POUCH_RUNE_VARBITS = {
-        VarbitID.RUNE_POUCH_TYPE_1, VarbitID.RUNE_POUCH_TYPE_2, VarbitID.RUNE_POUCH_TYPE_3, VarbitID.RUNE_POUCH_TYPE_4,
-        VarbitID.RUNE_POUCH_TYPE_5, VarbitID.RUNE_POUCH_TYPE_6
-	};
+            VarbitID.RUNE_POUCH_TYPE_1,
+            VarbitID.RUNE_POUCH_TYPE_2,
+            VarbitID.RUNE_POUCH_TYPE_3,
+            VarbitID.RUNE_POUCH_TYPE_4,
+            VarbitID.RUNE_POUCH_TYPE_5,
+            VarbitID.RUNE_POUCH_TYPE_6
+    };
     private static final int[] RUNE_POUCH_AMOUNT_VARBITS = {
-        VarbitID.RUNE_POUCH_QUANTITY_1, VarbitID.RUNE_POUCH_QUANTITY_2, VarbitID.RUNE_POUCH_QUANTITY_3, VarbitID.RUNE_POUCH_QUANTITY_4,
-        VarbitID.RUNE_POUCH_QUANTITY_5, VarbitID.RUNE_POUCH_QUANTITY_6
-	};
+            VarbitID.RUNE_POUCH_QUANTITY_1,
+            VarbitID.RUNE_POUCH_QUANTITY_2,
+            VarbitID.RUNE_POUCH_QUANTITY_3,
+            VarbitID.RUNE_POUCH_QUANTITY_4,
+            VarbitID.RUNE_POUCH_QUANTITY_5,
+            VarbitID.RUNE_POUCH_QUANTITY_6
+    };
     private static final Set<Integer> CURRENCIES = Set.of(
-        ItemID.COINS, ItemID.VILLAGE_TRADE_STICKS, ItemID.ECTOTOKEN, ItemID.WARGUILD_TOKENS);
+            ItemID.COINS,
+            ItemID.VILLAGE_TRADE_STICKS,
+            ItemID.ECTOTOKEN,
+            ItemID.WARGUILD_TOKENS);
 
     private final SplitFlagMap mapData;
     private final ThreadLocal<CollisionMap> map;
-    /** All transports by origin. The WorldPointUtil.UNDEFINED key is used for transports centered on the player. */
+    /**
+     * All transports by origin. The WorldPointUtil.UNDEFINED key is used for
+     * transports centered on the player.
+     */
     private final Map<Integer, Set<Transport>> allTransports;
     private final Set<Transport> usableTeleports;
     private final Map<String, Set<Integer>> allDestinations;
@@ -98,7 +94,8 @@ public class PathfinderConfig {
 
     @Getter
     private final Map<Integer, Set<Transport>> transports;
-    // Copy of transports with packed positions for the hotpath; lists are not copied and are the same reference in both maps
+    // Copy of transports with packed positions for the hotpath; lists are not
+    // copied and are the same reference in both maps
     @Getter
     private final PrimitiveIntHashMap<Set<Transport>> transportsPacked;
     /** Reference that points to either allDestinations or filteredDestinations */
@@ -112,24 +109,24 @@ public class PathfinderConfig {
     @Getter
     private boolean avoidWilderness;
     private boolean useAgilityShortcuts,
-        useGrappleShortcuts,
-        useBoats,
-        useCanoes,
-        useCharterShips,
-        useShips,
-        useFairyRings,
-        useGnomeGliders,
-        useHotAirBalloons,
-        useMagicMushtrees,
-        useMinecarts,
-        useQuetzals,
-        useSpiritTrees,
-        useTeleportationBoxes,
-        useTeleportationLevers,
-        useTeleportationMinigames,
-        useTeleportationPortals,
-        useTeleportationSpells,
-        useWildernessObelisks;
+            useGrappleShortcuts,
+            useBoats,
+            useCanoes,
+            useCharterShips,
+            useShips,
+            useFairyRings,
+            useGnomeGliders,
+            useHotAirBalloons,
+            useMagicMushtrees,
+            useMinecarts,
+            useQuetzals,
+            useSpiritTrees,
+            useTeleportationBoxes,
+            useTeleportationLevers,
+            useTeleportationMinigames,
+            useTeleportationPortals,
+            useTeleportationSpells,
+            useWildernessObelisks;
     private TeleportationItem useTeleportationItems;
     private int currencyThreshold;
     private final int[] boostedLevels = new int[Skill.values().length];
@@ -184,8 +181,10 @@ public class PathfinderConfig {
         useTeleportationItems = ShortestPathPlugin.override("useTeleportationItems", config.useTeleportationItems());
         useTeleportationBoxes = ShortestPathPlugin.override("useTeleportationBoxes", config.useTeleportationBoxes());
         useTeleportationLevers = ShortestPathPlugin.override("useTeleportationLevers", config.useTeleportationLevers());
-        useTeleportationMinigames = ShortestPathPlugin.override("useTeleportationMinigames", config.useTeleportationMinigames());
-        useTeleportationPortals = ShortestPathPlugin.override("useTeleportationPortals", config.useTeleportationPortals());
+        useTeleportationMinigames = ShortestPathPlugin.override("useTeleportationMinigames",
+                config.useTeleportationMinigames());
+        useTeleportationPortals = ShortestPathPlugin.override("useTeleportationPortals",
+                config.useTeleportationPortals());
         useTeleportationSpells = ShortestPathPlugin.override("useTeleportationSpells", config.useTeleportationSpells());
         useWildernessObelisks = ShortestPathPlugin.override("useWildernessObelisks", config.useWildernessObelisks());
         currencyThreshold = ShortestPathPlugin.override("currencyThreshold", config.currencyThreshold());
@@ -201,7 +200,9 @@ public class PathfinderConfig {
         refreshDestinations();
     }
 
-    /** Specialized method for only updating player-held item and spell transports */
+    /**
+     * Specialized method for only updating player-held item and spell transports
+     */
     public void refreshTeleports(int packedLocation, int wildernessLevel) {
         Set<Transport> usableWildyTeleports = new HashSet<>(usableTeleports.size());
 
@@ -221,11 +222,14 @@ public class PathfinderConfig {
         destinations = avoidWilderness ? filteredDestinations : allDestinations;
     }
 
-    /** Changes to the config might have invalidated some locations, e.g. those in the wilderness */
+    /**
+     * Changes to the config might have invalidated some locations, e.g. those in
+     * the wilderness
+     */
     public void filterLocations(Set<Integer> locations, boolean canReviveFiltered) {
         if (avoidWilderness) {
             locations.removeIf(location -> {
-                boolean inWilderness = PathfinderConfig.isInWilderness(location);
+                boolean inWilderness = WildernessChecker.isInWilderness(location);
                 if (inWilderness) {
                     filteredTargets.add(location);
                 }
@@ -250,7 +254,7 @@ public class PathfinderConfig {
             boolean isDifferent = false;
             for (Integer destination : entry.getValue()) {
                 // We filter based on whether the destination is inside or outside wilderness
-                if (!PathfinderConfig.isInWilderness(destination)) {
+                if (!WildernessChecker.isInWilderness(destination)) {
                     usableDestinations.add(destination);
                     isDifferent = true;
                 }
@@ -292,7 +296,10 @@ public class PathfinderConfig {
                     varbitValues.put(varbitRequirement.getId(), client.getVarbitValue(varbitRequirement.getId()));
                 }
                 for (TransportVarPlayer varPlayerRequirement : transport.getVarPlayers()) {
-                    varPlayerValues.put(varPlayerRequirement.getId(), client.getVarpValue(varPlayerRequirement.getId()));
+                    varPlayerValues.put(
+                        varPlayerRequirement.getId(),
+                        client.getVarpValue(varPlayerRequirement.getId())
+                    );
                 }
 
                 if (useTransport(transport) && hasRequiredItems(transport)) {
@@ -311,57 +318,11 @@ public class PathfinderConfig {
         }
     }
 
-    public static boolean isInWilderness(WorldPoint p) {
-        return WILDERNESS_ABOVE_GROUND.distanceTo2D(p) == 0
-            && FEROX_ENCLAVE_1.distanceTo2D(p) != 0
-            && FEROX_ENCLAVE_2.distanceTo2D(p) != 0
-            && FEROX_ENCLAVE_3.distanceTo2D(p) != 0
-            && FEROX_ENCLAVE_4.distanceTo2D(p) != 0
-            && FEROX_ENCLAVE_5.distanceTo2D(p) != 0
-            && NOT_WILDERNESS_1.distanceTo2D(p) != 0
-            && NOT_WILDERNESS_2.distanceTo2D(p) != 0
-            && NOT_WILDERNESS_3.distanceTo2D(p) != 0
-            && NOT_WILDERNESS_4.distanceTo2D(p) != 0
-            || WILDERNESS_UNDERGROUND.distanceTo2D(p) == 0;
-    }
-
-    public static boolean isInWilderness(int packedPoint) {
-        return WorldPointUtil.distanceToArea2D(packedPoint, WILDERNESS_ABOVE_GROUND) == 0
-            && WorldPointUtil.distanceToArea2D(packedPoint, FEROX_ENCLAVE_1) != 0
-            && WorldPointUtil.distanceToArea2D(packedPoint, FEROX_ENCLAVE_2) != 0
-            && WorldPointUtil.distanceToArea2D(packedPoint, FEROX_ENCLAVE_3) != 0
-            && WorldPointUtil.distanceToArea2D(packedPoint, FEROX_ENCLAVE_4) != 0
-            && WorldPointUtil.distanceToArea2D(packedPoint, FEROX_ENCLAVE_5) != 0
-            && WorldPointUtil.distanceToArea2D(packedPoint, NOT_WILDERNESS_1) != 0
-            && WorldPointUtil.distanceToArea2D(packedPoint, NOT_WILDERNESS_2) != 0
-            && WorldPointUtil.distanceToArea2D(packedPoint, NOT_WILDERNESS_3) != 0
-            && WorldPointUtil.distanceToArea2D(packedPoint, NOT_WILDERNESS_4) != 0
-            || WorldPointUtil.distanceToArea2D(packedPoint, WILDERNESS_UNDERGROUND) == 0;
-    }
-
-    public static boolean isInWilderness(Set<Integer> packedPoints) {
-        for (int packedPoint : packedPoints) {
-            if (isInWilderness(packedPoint)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static boolean isInLevel20Wilderness(int packedPoint) {
-        return WorldPointUtil.distanceToArea(packedPoint, WILDERNESS_ABOVE_GROUND_LEVEL_20) == 0
-            || WorldPointUtil.distanceToArea(packedPoint, WILDERNESS_UNDERGROUND_LEVEL_20) == 0;
-    }
-
-    public static boolean isInLevel30Wilderness(int packedPoint){
-        return WorldPointUtil.distanceToArea(packedPoint, WILDERNESS_ABOVE_GROUND_LEVEL_30) == 0
-            || WorldPointUtil.distanceToArea(packedPoint, WILDERNESS_UNDERGROUND_LEVEL_30) == 0;
-
-    }
-
-    public boolean avoidWilderness(int packedPosition, int packedNeightborPosition, boolean targetInWilderness) {
-        return avoidWilderness && !targetInWilderness
-            && !isInWilderness(packedPosition) && isInWilderness(packedNeightborPosition);
+    public boolean avoidWilderness(int packedPosition, int packedNeighborPosition, boolean targetInWilderness) {
+        return avoidWilderness
+                && !targetInWilderness
+                && !WildernessChecker.isInWilderness(packedPosition)
+                && WildernessChecker.isInWilderness(packedNeighborPosition);
     }
 
     public QuestState getQuestState(Quest quest) {
@@ -488,20 +449,25 @@ public class PathfinderConfig {
         return true;
     }
 
-    /** Checks if the player has all the required equipment and inventory items for the transport */
+    /**
+     * Checks if the player has all the required equipment and inventory items for
+     * the transport
+     */
     private boolean hasRequiredItems(Transport transport) {
         if ((TeleportationItem.ALL.equals(useTeleportationItems) ||
-            TeleportationItem.ALL_NON_CONSUMABLE.equals(useTeleportationItems)) &&
-            TransportType.TELEPORTATION_ITEM.equals(transport.getType())) {
+                TeleportationItem.ALL_NON_CONSUMABLE.equals(useTeleportationItems)) &&
+                TransportType.TELEPORTATION_ITEM.equals(transport.getType())) {
             return true;
         }
         if (TeleportationItem.NONE.equals(useTeleportationItems) &&
-            TransportType.TELEPORTATION_ITEM.equals(transport.getType())) {
+                TransportType.TELEPORTATION_ITEM.equals(transport.getType())) {
             return false;
         }
         itemsAndQuantities.clear();
-        ItemContainer inventory = client.getItemContainer(InventoryID.INVENTORY);
-        ItemContainer equipment = client.getItemContainer(InventoryID.EQUIPMENT);
+
+        ItemContainer inventory = client.getItemContainer(InventoryID.INV);
+        ItemContainer equipment = client.getItemContainer(InventoryID.WORN);
+
         if (inventory != null) {
             for (Item item : inventory.getItems()) {
                 if (item.getId() >= 0 && item.getQuantity() > 0) {
@@ -517,8 +483,8 @@ public class PathfinderConfig {
             }
         }
         if (bank != null
-            && (TeleportationItem.INVENTORY_AND_BANK.equals(useTeleportationItems)
-            || TeleportationItem.INVENTORY_AND_BANK_NON_CONSUMABLE.equals(useTeleportationItems))) {
+                && (TeleportationItem.INVENTORY_AND_BANK.equals(useTeleportationItems)
+                        || TeleportationItem.INVENTORY_AND_BANK_NON_CONSUMABLE.equals(useTeleportationItems))) {
             for (Item item : bank.getItems()) {
                 if (item.getId() >= 0 && item.getQuantity() > 0) {
                     itemsAndQuantities.put(item.getId(), item.getQuantity());
@@ -548,7 +514,8 @@ public class PathfinderConfig {
                 for (int itemId : transportItems.getItems()[i]) {
                     int quantity = itemsAndQuantities.getOrDefault(itemId, 0);
                     int requiredQuantity = transportItems.getQuantities()[i];
-                    if (requiredQuantity > 0 && quantity >= requiredQuantity || requiredQuantity == 0 && quantity == 0) {
+                    if (requiredQuantity > 0 && quantity >= requiredQuantity
+                            || requiredQuantity == 0 && quantity == 0) {
                         if (CURRENCIES.contains(itemId) && requiredQuantity > currencyThreshold) {
                             return false;
                         }
