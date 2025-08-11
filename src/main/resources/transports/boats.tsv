@@ -141,3 +141,11 @@
 3661 3278 0	3671 3542 0	Travel Row boat 32602		COINS=10000			5	
 3661 3278 0	3671 3542 0	Travel Row boat 32602		COINS=10000			5	
 3661 3278 0	3671 3542 0	Travel Row boat 32602		COINS=10000			5	
+								
+# Achilka boat between Kastori, Tal Teklan, Gloomthorn Trail								
+1390 3073 0	1257 3126 0	Tal Teklan Achilka 14727					5	Tal Teklan
+1390 3073 0	1400 3246 0	Gloomthorn Achilka 14727					5	Gloomthorn
+1258 3124 0	1390 3074 0	Kastori Achilka 14728					5	Kastori
+1258 3124 0	1400 3246 0	Gloomthorn Achilka 14728					5	Gloomthorn
+1399 3246 0	1257 3126 0	Tal Teklan Achilka 14729					5	Tal Teklan
+1399 3246 0	1390 3074 0	Kastori Achilka 14729					5	Kastori
