@@ -1,4 +1,4 @@
-package pathfinder;
+package shortestpath;
 
 import java.util.HashMap;
 import java.util.HashSet;

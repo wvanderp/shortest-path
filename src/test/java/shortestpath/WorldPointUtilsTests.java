@@ -1,4 +1,4 @@
-package pathfinder;
+package shortestpath;
 
 import net.runelite.api.coords.WorldArea;
 import net.runelite.api.coords.WorldPoint;
@@ -16,7 +16,7 @@ import static shortestpath.WorldPointUtil.unpackWorldPoint;
 import static shortestpath.WorldPointUtil.unpackWorldX;
 import static shortestpath.WorldPointUtil.unpackWorldY;
 
-public class WorldPointTests {
+public class WorldPointUtilsTests {
     private static final WorldArea WILDERNESS_ABOVE_GROUND = new WorldArea(2944, 3523, 448, 448, 0);
 
     @Test

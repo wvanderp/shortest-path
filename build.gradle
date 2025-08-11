@@ -29,3 +29,18 @@ sourceCompatibility = '1.11'
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
+
+test {
+    jvmArgs = ['-Xmx2G']
+}
+
+// Custom run task for the PluginMessageTest main class (in test sources) with assertions enabled
+tasks.register('runRunelite', JavaExec) {
+    group = 'application'
+    description = 'Runs pathfinder.PluginMessageTest with -ea (assertions) enabled.'
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'pathfinder.PluginMessageTest'
+    jvmArgs '-ea', '-Xmx2G'
+    dependsOn testClasses
+}
+
