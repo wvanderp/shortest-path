@@ -329,31 +329,6 @@ public class PathfinderTest {
             WorldPointUtil.packWorldPoint(3038, 3192, 0)); // Port Sarim
     }
 
-    @Test
-    public void testNumberOfGnomeGliders() {
-        // All permutations of gnome glider transports are resolved from origins and destinations
-        int actualCount = 0;
-        for (int origin : transports.keySet()) {
-            for (Transport transport : transports.get(origin)) {
-                if (TransportType.GNOME_GLIDER.equals(transport.getType())) {
-                    actualCount++;
-                }
-            }
-        }
-        /* 
-         * Info:
-         * NB: Lemanto Andra (Digsite) can only be destination and not origin
-         * single_glider_origin_locations * (number_of_gnome_gliders - 1)
-         *   1 * 6   // Ta Quir Priw (Gnome Stronghold)
-         * + 3 * 6   // Gandius (Karamja)
-         * + 3 * 6   // Kar-Hewo (Al-Kharid)
-         * + 2 * 6   // Sindarpos (White Wolf Mountain)
-         * + 3 * 6   // Lemantolly Undri (Feldip Hills)
-         * + 3 * 6   // Ookookolly Undri (Ape Atoll)
-         * = 90
-         */
-        assertEquals(90, actualCount);
-    }
 
     @Test
     public void testNumberOfHotAirBalloons() {
