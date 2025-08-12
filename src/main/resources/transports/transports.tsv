@@ -4341,12 +4341,13 @@
 2888 3660 0	2888 3662 0	Climb Rocks 3803						
 2887 3662 0	2887 3660 0	Climb Rocks 3804						
 2887 3660 0	2887 3662 0	Climb Rocks 3804						
-2892 3671 0	2893 10074 2	Enter Cave Entrance 3759						
-2893 10074 2	2893 3671 0	Exit Cave Exit 3760						
-2893 3671 0	2893 10074 2	Enter Cave Entrance 3759						
-2892 10074 2	2893 3671 0	Exit Cave Exit 3760						
-2894 3671 0	2893 10074 2	Enter Cave Entrance 3759						
-2894 10074 2	2893 3671 0	Exit Cave Exit 3760						
+2892 3671 0	2893 10074 2	Enter Cave Entrance 3759						1
+2893 3671 0	2893 10074 2	Enter Cave Entrance 3759						1
+2894 3671 0	2893 10074 2	Enter Cave Entrance 3759						1
+2895 3672 0	2893 10074 2	Enter Cave Entrance 3759						1
+2892 10074 2	2893 3671 0	Exit Cave Exit 3760						1
+2893 10074 2	2893 3671 0	Exit Cave Exit 3760						1
+2894 10074 2	2893 3671 0	Exit Cave Exit 3760						1
 2837 3736 0	2839 3739 0	Go-through Ice gate 5044						
 2839 3739 0	2837 3739 0	Go-through Ice gate 5043						
 2837 3739 0	2839 3739 0	Go-through Ice gate 5043						
