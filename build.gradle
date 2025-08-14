@@ -41,4 +41,5 @@ tasks.register('runelite', JavaExec) {
     classpath = sourceSets.test.runtimeClasspath
     mainClass.set('pathfinder.ShortestPathPluginTest')
     jvmArgs '-ea'
+    args '--developer-mode'
 }
