@@ -4548,3 +4548,7 @@
 # Lletya Entrance								
 2304 3194 0	2306 3194 0	Pass Tree 8742					517>1	5
 2306 3194 0	2304 3194 0	Pass Tree 8742					517>1	5
+								
+# Miazrqa Rupert the Beard Grim Tales house south of Mind Altar								
+2970 3462 0	2972 3462 0	Climb-over Crumbling wall 24749						2
+2972 3462 0	2970 3462 0	Climb-over Crumbling wall 24749	58 Thieving					2
