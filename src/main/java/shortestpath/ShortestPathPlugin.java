@@ -60,6 +60,7 @@ import net.runelite.client.util.Text;
 import shortestpath.pathfinder.CollisionMap;
 import shortestpath.pathfinder.Pathfinder;
 import shortestpath.pathfinder.PathfinderConfig;
+import shortestpath.transport.Transport;
 
 @PluginDescriptor(
     name = "Shortest Path",

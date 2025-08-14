@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
-import shortestpath.PrimitiveIntHashMap;
-import shortestpath.Transport;
+import shortestpath.transport.Transport;
+import shortestpath.transport.TransportLoader;
 
 public class PrimitiveIntHashMapTests {
     @Test(expected=IllegalArgumentException.class)
@@ -18,7 +18,7 @@ public class PrimitiveIntHashMapTests {
 
     @Test
     public void tryInsertTransports() {
-        HashMap<Integer, Set<Transport>> transports = Transport.loadAllFromResources();
+        HashMap<Integer, Set<Transport>> transports = TransportLoader.loadAllFromResources();
         PrimitiveIntHashMap<Set<Transport>> map = new PrimitiveIntHashMap<>(transports.size());
 
         for (Map.Entry<Integer, Set<Transport>> entry : transports.entrySet()) {

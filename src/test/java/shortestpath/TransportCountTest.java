@@ -3,10 +3,14 @@ package shortestpath;
 import java.util.Map;
 import java.util.Set;
 import org.junit.Test;
+import shortestpath.transport.Transport;
+import shortestpath.transport.TransportLoader;
+import shortestpath.transport.TransportType;
+
 import static org.junit.Assert.assertEquals;
 
 public class TransportCountTest {
-    private static final Map<Integer, Set<Transport>> transports = Transport.loadAllFromResources();
+    private static final Map<Integer, Set<Transport>> transports = TransportLoader.loadAllFromResources();
 
     @Test
     public void testNumberOfGnomeGliders() {
