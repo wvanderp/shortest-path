@@ -126,6 +126,14 @@ public class PathfinderTest {
     }
 
     @Test
+    public void testMagicCarpets() {
+        when(config.useMagicCarpets()).thenReturn(true);
+        setupInventory(
+            new Item(ItemID.COINS, 200));
+        testTransportLength(2, TransportType.MAGIC_CARPET);
+    }
+
+    @Test
     public void testMagicMushtrees() {
         when(config.useMagicMushtrees()).thenReturn(true);
         testTransportLength(2, TransportType.MAGIC_MUSHTREE);

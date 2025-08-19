@@ -43,6 +43,7 @@ import static shortestpath.TransportType.SHIP;
 import static shortestpath.TransportType.FAIRY_RING;
 import static shortestpath.TransportType.GNOME_GLIDER;
 import static shortestpath.TransportType.HOT_AIR_BALLOON;
+import static shortestpath.TransportType.MAGIC_CARPET;
 import static shortestpath.TransportType.MAGIC_MUSHTREE;
 import static shortestpath.TransportType.MINECART;
 import static shortestpath.TransportType.QUETZAL;
@@ -120,6 +121,7 @@ public class PathfinderConfig {
         useFairyRings,
         useGnomeGliders,
         useHotAirBalloons,
+        useMagicCarpets,
         useMagicMushtrees,
         useMinecarts,
         useQuetzals,
@@ -177,6 +179,7 @@ public class PathfinderConfig {
         useFairyRings = ShortestPathPlugin.override("useFairyRings", config.useFairyRings());
         useGnomeGliders = ShortestPathPlugin.override("useGnomeGliders", config.useGnomeGliders());
         useHotAirBalloons = ShortestPathPlugin.override("useHotAirBalloons", config.useHotAirBalloons());
+        useMagicCarpets = ShortestPathPlugin.override("useMagicCarpets", config.useMagicCarpets());
         useMagicMushtrees = ShortestPathPlugin.override("useMagicMushtrees", config.useMagicMushtrees());
         useMinecarts = ShortestPathPlugin.override("useMinecarts", config.useMinecarts());
         useQuetzals = ShortestPathPlugin.override("useQuetzals", config.useQuetzals());
@@ -421,6 +424,8 @@ public class PathfinderConfig {
         } else if (GNOME_GLIDER.equals(type) && !useGnomeGliders) {
             return false;
         } else if (HOT_AIR_BALLOON.equals(type) && !useHotAirBalloons) {
+            return false;
+        } else if (MAGIC_CARPET.equals(type) && !useMagicCarpets) {
             return false;
         } else if (MAGIC_MUSHTREE.equals(type) && !useMagicMushtrees) {
             return false;

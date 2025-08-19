@@ -432,6 +432,7 @@ public class Transport {
         addTransports(transports, "/transports/fairy_rings.tsv", TransportType.FAIRY_RING);
         addTransports(transports, "/transports/gnome_gliders.tsv", TransportType.GNOME_GLIDER, 6);
         addTransports(transports, "/transports/hot_air_balloons.tsv", TransportType.HOT_AIR_BALLOON, 7);
+        addTransports(transports, "/transports/magic_carpets.tsv", TransportType.MAGIC_CARPET);
         addTransports(transports, "/transports/magic_mushtrees.tsv", TransportType.MAGIC_MUSHTREE, 5);
         addTransports(transports, "/transports/minecarts.tsv", TransportType.MINECART);
         addTransports(transports, "/transports/quetzals.tsv", TransportType.QUETZAL);
