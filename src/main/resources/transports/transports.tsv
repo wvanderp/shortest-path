@@ -4677,16 +4677,24 @@
 1361 3309 0	1486 3232 0	Follow Mountain Guide 14529				17226=1		5	
 									
 # Entrance to the Brimhaven Dungeon									
-# TODO If you pay 1 milion GP you get permanent access									
-2745 3152 0	2713 9564 0	Pay Dungeon entrance 20877		COINS=875				2	
-2744 3152 0	2713 9564 0	Pay Dungeon entrance 20877		COINS=875				2	
-									
+2744 3152 0	2713 9564 0	Enter Dungeon entrance 20876		COINS=875				2	
+2744 3152 0	2713 9564 0	Enter Dungeon entrance 20876				5628=1		2	
+2745 3152 0	2713 9564 0	Enter Dungeon entrance 20876		COINS=875				2	
+2745 3152 0	2713 9564 0	Enter Dungeon entrance 20876				5628=1		2	
+2746 3152 0	2713 9564 0	Enter Dungeon entrance 20876		COINS=875				2	
+2746 3152 0	2713 9564 0	Enter Dungeon entrance 20876				5628=1		2	
 2713 9564 0	2745 3152 0	Leave exit 20878						2	
 									
 # Second Brimhaven Dungeon entrance									
-# TODO if you pay 5000 trading sticks you can enter the dungeon down south									
+2760 3064 0	2734 9478 0	Climb Rope 30200		6306=5				2	
+2760 3064 0	2734 9478 0	Climb Rope 30200				5629>0		2	
+2761 3063 0	2734 9478 0	Climb Rope 30200		6306=5				2	
+2761 3063 0	2734 9478 0	Climb Rope 30200				5629>0		2	
+2761 3062 0	2734 9478 0	Climb Rope 30200		6306=5				2	
+2761 3062 0	2734 9478 0	Climb Rope 30200				5629>0		2	
+2760 3061 0	2734 9478 0	Climb Rope 30200		6306=5				2	
+2760 3061 0	2734 9478 0	Climb Rope 30200				5629>0		2	
 									
 # Brimhaven Dungeon Vines									
-# TODO you need a axe you can use									
-2691 9512 0	2689 9512 0	Chop-down Vines 29731						2	
-2689 9512 0	2691 9512 0	Chop-down Vines 29731						2	
+2691 9512 0	2689 9512 0	Chop-down Vines 29731		AXE=1				2	
+2689 9512 0	2691 9512 0	Chop-down Vines 29731		AXE=1				2	
