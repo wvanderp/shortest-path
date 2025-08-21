@@ -4721,3 +4721,7 @@
 2871 2972 1	2871 2972 0	Climb-down Ladder 16679						2	
 2872 2971 0	2872 2971 1	Climb-up Ladder 16683						2	
 2872 2971 1	2872 2971 0	Climb-down Ladder 16679						2	
+									
+# Isle of Souls Dungeon									
+2310 2919 0	2167 9308 0	Enter cave 40736						5	
+2167 9308 0	2310 2919 0	Exit Opening 40737						5	
