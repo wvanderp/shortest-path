@@ -4681,3 +4681,43 @@
 # Brimhaven Dungeon Vines									
 2691 9512 0	2689 9512 0	Chop-down Vines 29731		AXE=1				2	
 2689 9512 0	2691 9512 0	Chop-down Vines 29731		AXE=1				2	
+									
+# Shilo Village									
+2835 2987 0	2835 2987 1	Climb-up Ladder 16684						2	
+2835 2987 1	2835 2987 0	Climb-down Ladder 16679						2	
+2834 2988 0	2834 2988 1	Climb-up Ladder 16684						2	
+2834 2988 1	2834 2988 0	Climb-down Ladder 16679						2	
+2835 2989 0	2835 2989 1	Climb-up Ladder 16684						2	
+2835 2989 1	2835 2989 0	Climb-down Ladder 16679						2	
+2836 2988 0	2836 2988 1	Climb-up Ladder 16684						2	
+2836 2988 1	2836 2988 0	Climb-down Ladder 16679						2	
+2861 2998 0	2861 2998 1	Climb-up Ladder 17026						2	
+2861 2998 1	2861 2998 0	Climb-down Ladder 16679						2	
+2860 2997 1	2860 2997 0	Climb-down Ladder 16679						2	
+2862 2997 1	2862 2997 0	Climb-down Ladder 16679						2	
+2861 2995 1	2861 2995 2	Climb-up Ladder 2268						2	
+2861 2995 2	2861 2995 1	Climb-down Ladder 2269						2	
+2823 2958 0	2823 2958 1	Climb-up Ladder 16683						2	
+2823 2958 1	2823 2958 0	Climb-down Ladder 16679						2	
+2824 2957 0	2824 2957 1	Climb-up Ladder 16683						2	
+2824 2957 1	2824 2957 0	Climb-down Ladder 16679						2	
+2824 2959 0	2824 2959 1	Climb-up Ladder 16683						2	
+2824 2959 1	2824 2959 0	Climb-down Ladder 16679						2	
+2825 2958 0	2825 2958 1	Climb-up Ladder 16683						2	
+2825 2958 1	2825 2958 0	Climb-down Ladder 16679						2	
+2845 2954 0	2845 2954 1	Climb-up Ladder 16683						2	
+2845 2954 1	2845 2954 0	Climb-down Ladder 16679						2	
+2844 2953 1	2844 2953 0	Climb-down Ladder 16679						2	
+2844 2955 1	2844 2955 0	Climb-down Ladder 16679						2	
+2859 2954 0	2859 2954 1	Climb-up Ladder 16683						2	
+2859 2954 1	2859 2954 0	Climb-down Ladder 16679						2	
+2860 2953 1	2860 2953 0	Climb-down Ladder 16679						2	
+2860 2955 1	2860 2955 0	Climb-down Ladder 16679						2	
+2870 2971 0	2870 2971 1	Climb-up Ladder 16683						2	
+2870 2971 1	2870 2971 0	Climb-down Ladder 16679						2	
+2871 2970 0	2871 2970 1	Climb-up Ladder 16683						2	
+2871 2970 1	2871 2970 0	Climb-down Ladder 16679						2	
+2871 2972 0	2871 2972 1	Climb-up Ladder 16683						2	
+2871 2972 1	2871 2972 0	Climb-down Ladder 16679						2	
+2872 2971 0	2872 2971 1	Climb-up Ladder 16683						2	
+2872 2971 1	2872 2971 0	Climb-down Ladder 16679						2	
