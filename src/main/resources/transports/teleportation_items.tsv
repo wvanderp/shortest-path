@@ -3,7 +3,8 @@
 2606 3221 0			13121=1||13122=1||13123=1||13124=1||20760=1		4	Ardougne cloak: Kandarin Monastery	F	20	
 2664 3374 0			13122=1||13123=1||13124=1||20760=1		4	Ardougne cloak: Farm	F	20	
 # Karamja Gloves									
-2840 9387 0			11140=1||13103=1		4	Karamja gloves	F	20	
+2840 9387 0			11140=1||13103=1		4	Karamja gloves: Gem Mine	F	20	
+2869 2982 1			13103=1		4	Karamja gloves 4: Slayer Master	F	20	
 # Desert Amulets (2 and 3 have one teleport per day, 4 is unlimited)									
 3420 2917 0			13134=1||13135=1		4	Desert amulet	F	20	
 3426 2927 0			13136=1		4	Desert amulet	F	20	
