@@ -352,14 +352,13 @@ public class PathfinderConfig {
     }
 
     public static boolean isInLevel20Wilderness(int packedPoint) {
-        return WorldPointUtil.distanceToArea(packedPoint, WILDERNESS_ABOVE_GROUND_LEVEL_20) == 0
-            || WorldPointUtil.distanceToArea(packedPoint, WILDERNESS_UNDERGROUND_LEVEL_20) == 0;
+        return WorldPointUtil.distanceToArea2D(packedPoint, WILDERNESS_ABOVE_GROUND_LEVEL_20) == 0
+            || WorldPointUtil.distanceToArea2D(packedPoint, WILDERNESS_UNDERGROUND_LEVEL_20) == 0;
     }
 
     public static boolean isInLevel30Wilderness(int packedPoint){
-        return WorldPointUtil.distanceToArea(packedPoint, WILDERNESS_ABOVE_GROUND_LEVEL_30) == 0
-            || WorldPointUtil.distanceToArea(packedPoint, WILDERNESS_UNDERGROUND_LEVEL_30) == 0;
-
+        return WorldPointUtil.distanceToArea2D(packedPoint, WILDERNESS_ABOVE_GROUND_LEVEL_30) == 0
+            || WorldPointUtil.distanceToArea2D(packedPoint, WILDERNESS_UNDERGROUND_LEVEL_30) == 0;
     }
 
     public boolean avoidWilderness(int packedPosition, int packedNeightborPosition, boolean targetInWilderness) {
