@@ -47,11 +47,18 @@
 3240 3334 0	3240 3335 0	Jump-over Fence 16518	13 Agility				2
 2820 3635 0	2822 3635 0	Climb Rocks 3748	15 Agility	CLIMBING_BOOTS=1			
 2857 3611 0	2857 3613 0	Climb Rocks 3748	15 Agility	CLIMBING_BOOTS=1			
-2856 3611 0	2856 3613 0	Climb Rocks 3748	15 Agility	CLIMBING_BOOTS=1						
+2856 3611 0	2856 3613 0	Climb Rocks 3748	15 Agility	CLIMBING_BOOTS=1			
+2795 2978 0	2791 2978 0	Climb Rocks 2231	15 Agility				5
+2795 2979 0	2791 2979 0	Climb Rocks 2231	15 Agility				5
+2795 2980 0	2791 2980 0	Climb Rocks 2231	15 Agility				5
+2791 2978 0	2795 2978 0	Climb Rocks 2231	15 Agility				5
+2791 2979 0	2795 2979 0	Climb Rocks 2231	15 Agility				5
+2791 2980 0	2795 2980 0	Climb Rocks 2231	15 Agility				5
 2575 3107 0	2575 3112 0	Climb-under Castle wall 16519	16 Agility				
 2575 3112 0	2575 3107 0	Climb-into Hole 16520	16 Agility				
 3444 3533 0	3442 3531 0	Climb-through Broken window 2173	18 Agility				4
 3442 3531 0	3444 3533 0	Climb-through Broken window 2173	18 Agility				4
+2548 3119 0	2548 3117 1	Climb-up Trellis 20056	18 Agility				3
 2603 3477 0	2598 3477 0	Walk-across Log balance 23274	20 Agility				
 2599 3478 0	2603 3477 0	Walk-across Log balance 23274	20 Agility				
 2602 3478 0	2598 3477 0	Walk-across Log balance 23274	20 Agility				
@@ -111,7 +118,6 @@
 2580 9520 0	2580 9512 0	Walk-across Balancing ledge 23548	40 Agility				9
 2580 9512 0	2580 9520 0	Walk-across Balancing ledge 23548	40 Agility				9
 2578 9506 0	2572 9506 0	Squeeze-through Obstacle pipe 23140	40 Agility				10
-2548 3119 0	2548 3117 1	Climb-up Trellis 20056	18 Agility				3
 2872 3671 0	2869 3671 0	Climb Rocks 16521	41 Agility				
 2869 3671 0	2872 3671 0	Climb Rocks 16521	41 Agility				
 1391 3323 0	1396 3323 0	Climb Rocks 56994	41 Agility				6
@@ -258,6 +264,8 @@
 3673 3375 0	3670 3375 0	Climb Wall 39541	63 Agility		10450=1		
 3672 3376 0	3670 3375 0	Climb Wall 39541	63 Agility		10450=1		
 3672 3374 0	3670 3375 0	Climb Wall 39541	63 Agility		10450=1		
+1820 9946 0	1820 9944 0	Jump-over Strange floor 3483	63 Agility				4
+1820 9944 0	1820 9946 0	Jump-over Strange floor 3483	63 Agility				4
 2915 3672 0	2918 3672 0	Climb Rocks 16545	64 Agility				
 2918 3672 0	2915 3672 0	Climb Rocks 16545	64 Agility				
 2921 3672 0	2924 3673 0	Climb Rocks 16545	64 Agility				
@@ -333,13 +341,3 @@
 2332 3252 0	2338 3253 0	Climb rocks 16514	85 Agility				6
 3500 9510 2	3506 9505 2	Squeeze-through Crevice 16465	86 Agility				
 3506 9505 2	3500 9510 2	Squeeze-through Crevice 16465	86 Agility				
-# Forthos Dungeon
-1820 9946 0	1820 9944 0	Jump-over Strange floor 3483	63 Agility				4
-1820 9944 0	1820 9946 0	Jump-over Strange floor 3483	63 Agility				4
-# Cairn Isle
-2795 2978 0	2791 2978 0	Climb Rocks 2231	15 Agility			
-2795 2979 0	2791 2979 0	Climb Rocks 2231	15 Agility			
-2795 2980 0	2791 2980 0	Climb Rocks 2231	15 Agility				
-2791 2978 0	2795 2978 0	Climb Rocks 2231	15 Agility            
-2791 2979 0	2795 2979 0	Climb Rocks 2231	15 Agility            
-2791 2980 0	2795 2980 0	Climb Rocks 2231	15 Agility
