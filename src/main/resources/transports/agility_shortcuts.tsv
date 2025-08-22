@@ -102,6 +102,8 @@
 2599 3337 0	2602 3336 0	Walk-across Log balance 16546	33 Agility				
 1368 3327 0	1368 3323 0	Climb-into Tunnel 56989	33 Agility				5
 1368 3323 0	1368 3327 0	Climb-into Tunnel 56989	33 Agility				5
+2552 3558 0	2552 3561 0	Squeeze-through Obstacle pipe 20210	35 Agility				5
+2552 3561 0	2552 3558 0	Squeeze-through Obstacle pipe 20210	35 Agility				5
 2841 3427 0	2841 3433 0	Grapple Crossbow Tree 17062	36 Agility;39 Ranged;22 Strength	CROSSBOW=1&MITH_GRAPPLE=1			
 1393 3309 0	1399 3309 0	Cross Stepping stone 56988	36 Agility				7
 1399 3309 0	1393 3309 0	Cross Stepping stone 56988	36 Agility				7
