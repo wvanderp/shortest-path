@@ -629,8 +629,8 @@ public class ShortestPathPlugin extends Plugin {
             }
         } else {
             return client.isMenuOpen()
-                ? calculateMapPoint(lastMenuOpenedPoint.getX(), lastMenuOpenedPoint.getY())
-                : calculateMapPoint(client.getMouseCanvasPosition().getX(), client.getMouseCanvasPosition().getY());
+                ? MapPointMapper.calculateMapPoint(client, lastMenuOpenedPoint.getX(), lastMenuOpenedPoint.getY())
+                : MapPointMapper.calculateMapPoint(client, client.getMouseCanvasPosition().getX(), client.getMouseCanvasPosition().getY());
         }
         return WorldPointUtil.UNDEFINED;
     }
@@ -692,74 +692,6 @@ public class ShortestPathPlugin extends Plugin {
         }
         startPointSet = true;
         restartPathfinding(start, pathfinder.getTargets());
-    }
-
-    public int calculateMapPoint(int pointX, int pointY) {
-        WorldMap worldMap = client.getWorldMap();
-        float zoom = worldMap.getWorldMapZoom();
-        int mapPoint = WorldPointUtil.packWorldPoint(worldMap.getWorldMapPosition().getX(), worldMap.getWorldMapPosition().getY(), 0);
-        int middleX = mapWorldPointToGraphicsPointX(mapPoint);
-        int middleY = mapWorldPointToGraphicsPointY(mapPoint);
-
-        if (pointX == Integer.MIN_VALUE || pointY == Integer.MIN_VALUE ||
-            middleX == Integer.MIN_VALUE || middleY == Integer.MIN_VALUE) {
-            return WorldPointUtil.UNDEFINED;
-        }
-
-        final int dx = (int) ((pointX - middleX) / zoom);
-        final int dy = (int) ((-(pointY - middleY)) / zoom);
-
-        return WorldPointUtil.dxdy(mapPoint, dx, dy);
-    }
-
-    public int mapWorldPointToGraphicsPointX(int packedWorldPoint) {
-        WorldMap worldMap = client.getWorldMap();
-
-        float pixelsPerTile = worldMap.getWorldMapZoom();
-
-        Widget map = client.getWidget(ComponentID.WORLD_MAP_MAPVIEW);
-        if (map != null) {
-            Rectangle worldMapRect = map.getBounds();
-
-            int widthInTiles = (int) Math.ceil(worldMapRect.getWidth() / pixelsPerTile);
-
-            Point worldMapPosition = worldMap.getWorldMapPosition();
-
-            int xTileOffset = WorldPointUtil.unpackWorldX(packedWorldPoint) + widthInTiles / 2 - worldMapPosition.getX();
-
-            int xGraphDiff = ((int) (xTileOffset * pixelsPerTile));
-            xGraphDiff += pixelsPerTile - Math.ceil(pixelsPerTile / 2);
-            xGraphDiff += (int) worldMapRect.getX();
-
-            return xGraphDiff;
-        }
-        return Integer.MIN_VALUE;
-    }
-
-    public int mapWorldPointToGraphicsPointY(int packedWorldPoint) {
-        WorldMap worldMap = client.getWorldMap();
-
-        float pixelsPerTile = worldMap.getWorldMapZoom();
-
-        Widget map = client.getWidget(ComponentID.WORLD_MAP_MAPVIEW);
-        if (map != null) {
-            Rectangle worldMapRect = map.getBounds();
-
-            int heightInTiles = (int) Math.ceil(worldMapRect.getHeight() / pixelsPerTile);
-
-            Point worldMapPosition = worldMap.getWorldMapPosition();
-
-            int yTileMax = worldMapPosition.getY() - heightInTiles / 2;
-            int yTileOffset = (yTileMax - WorldPointUtil.unpackWorldY(packedWorldPoint) - 1) * -1;
-
-            int yGraphDiff = (int) (yTileOffset * pixelsPerTile);
-            yGraphDiff -= pixelsPerTile - Math.ceil(pixelsPerTile / 2);
-            yGraphDiff = worldMapRect.height - yGraphDiff;
-            yGraphDiff += (int) worldMapRect.getY();
-
-            return yGraphDiff;
-        }
-        return Integer.MIN_VALUE;
     }
 
     private void addMenuEntry(MenuEntryAdded event, String option, String target, int position) {

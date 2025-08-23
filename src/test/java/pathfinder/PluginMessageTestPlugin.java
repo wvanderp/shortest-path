@@ -17,6 +17,8 @@ import net.runelite.api.events.MenuOpened;
 import net.runelite.api.widgets.ComponentID;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.worldmap.WorldMap;
+import shortestpath.MapPointMapper;
+import shortestpath.WorldPointUtil;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.PluginMessage;
@@ -163,80 +165,18 @@ public class PluginMessageTestPlugin extends Plugin {
                 return WorldPoint.fromLocalInstance(client, client.getSelectedSceneTile().getLocalLocation());
             }
         } else {
-            return client.isMenuOpen()
-                ? calculateMapPoint(lastMenuOpenedPoint.getX(), lastMenuOpenedPoint.getY())
-                : calculateMapPoint(client.getMouseCanvasPosition().getX(), client.getMouseCanvasPosition().getY());
+            int packed = client.isMenuOpen()
+                ? MapPointMapper.calculateMapPoint(client, lastMenuOpenedPoint.getX(), lastMenuOpenedPoint.getY())
+                : MapPointMapper.calculateMapPoint(client, client.getMouseCanvasPosition().getX(), client.getMouseCanvasPosition().getY());
+            if (packed == WorldPointUtil.UNDEFINED) {
+                return null;
+            }
+            return new WorldPoint(WorldPointUtil.unpackWorldX(packed), WorldPointUtil.unpackWorldY(packed), WorldPointUtil.unpackWorldPlane(packed));
         }
         return null;
     }
 
-    private WorldPoint calculateMapPoint(int pointX, int pointY) {
-        WorldMap worldMap = client.getWorldMap();
-        float zoom = worldMap.getWorldMapZoom();
-        WorldPoint mapPoint = new WorldPoint(worldMap.getWorldMapPosition().getX(), worldMap.getWorldMapPosition().getY(), 0);
-        int middleX = mapWorldPointToGraphicsPointX(mapPoint);
-        int middleY = mapWorldPointToGraphicsPointY(mapPoint);
-
-        if (pointX == Integer.MIN_VALUE || pointY == Integer.MIN_VALUE ||
-            middleX == Integer.MIN_VALUE || middleY == Integer.MIN_VALUE) {
-            return null;
-        }
-
-        final int dx = (int) ((pointX - middleX) / zoom);
-        final int dy = (int) ((-(pointY - middleY)) / zoom);
-
-        return mapPoint.dx(dx).dy(dy);
-    }
-
-    public int mapWorldPointToGraphicsPointX(WorldPoint worldPoint) {
-        WorldMap worldMap = client.getWorldMap();
-
-        float pixelsPerTile = worldMap.getWorldMapZoom();
-
-        Widget map = client.getWidget(ComponentID.WORLD_MAP_MAPVIEW);
-        if (map != null) {
-            Rectangle worldMapRect = map.getBounds();
-
-            int widthInTiles = (int) Math.ceil(worldMapRect.getWidth() / pixelsPerTile);
-
-            Point worldMapPosition = worldMap.getWorldMapPosition();
-
-            int xTileOffset = worldPoint.getX() + widthInTiles / 2 - worldMapPosition.getX();
-
-            int xGraphDiff = ((int) (xTileOffset * pixelsPerTile));
-            xGraphDiff += pixelsPerTile - Math.ceil(pixelsPerTile / 2);
-            xGraphDiff += (int) worldMapRect.getX();
-
-            return xGraphDiff;
-        }
-        return Integer.MIN_VALUE;
-    }
-
-    public int mapWorldPointToGraphicsPointY(WorldPoint worldPoint) {
-        WorldMap worldMap = client.getWorldMap();
-
-        float pixelsPerTile = worldMap.getWorldMapZoom();
-
-        Widget map = client.getWidget(ComponentID.WORLD_MAP_MAPVIEW);
-        if (map != null) {
-            Rectangle worldMapRect = map.getBounds();
-
-            int heightInTiles = (int) Math.ceil(worldMapRect.getHeight() / pixelsPerTile);
-
-            Point worldMapPosition = worldMap.getWorldMapPosition();
-
-            int yTileMax = worldMapPosition.getY() - heightInTiles / 2;
-            int yTileOffset = (yTileMax - worldPoint.getY() - 1) * -1;
-
-            int yGraphDiff = (int) (yTileOffset * pixelsPerTile);
-            yGraphDiff -= pixelsPerTile - Math.ceil(pixelsPerTile / 2);
-            yGraphDiff = worldMapRect.height - yGraphDiff;
-            yGraphDiff += (int) worldMapRect.getY();
-
-            return yGraphDiff;
-        }
-        return Integer.MIN_VALUE;
-    }
+    // Use MapPointMapper for conversions in tests
 
     private static int packWorldPoint(WorldPoint wp) {
         if (wp == null) {

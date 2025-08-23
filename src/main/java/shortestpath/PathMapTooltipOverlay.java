@@ -69,29 +69,29 @@ public class PathMapTooltipOverlay extends Overlay {
 
     private boolean drawTooltip(Graphics2D graphics, Point cursorPos, int point, int nextPoint, int n) {
         int offsetPoint = WorldPointUtil.dxdy(point, 1, -1);
-        int startX = plugin.mapWorldPointToGraphicsPointX(point);
-        int startY = plugin.mapWorldPointToGraphicsPointY(point);
-        int endX = plugin.mapWorldPointToGraphicsPointX(offsetPoint);
-        int endY = plugin.mapWorldPointToGraphicsPointY(offsetPoint);
+        int startX = MapPointMapper.mapWorldPointToGraphicsPointX(client, point);
+        int startY = MapPointMapper.mapWorldPointToGraphicsPointY(client, point);
+        int endX = MapPointMapper.mapWorldPointToGraphicsPointX(client, offsetPoint);
+        int endY = MapPointMapper.mapWorldPointToGraphicsPointY(client, offsetPoint);
 
         if (startX == Integer.MIN_VALUE || startY == Integer.MIN_VALUE ||
-            endX == Integer.MIN_VALUE || endY == Integer.MIN_VALUE) {
+                endX == Integer.MIN_VALUE || endY == Integer.MIN_VALUE) {
             return false;
         }
 
         int width = endX - startX;
 
         if (cursorPos.getX() < (startX - width / 2) || cursorPos.getX() > (endX - width / 2) ||
-            cursorPos.getY() < (startY - width / 2) || cursorPos.getY() > (endY - width / 2)) {
+                cursorPos.getY() < (startY - width / 2) || cursorPos.getY() > (endY - width / 2)) {
             return false;
         }
 
         List<String> rows = new ArrayList<>(Arrays.asList("Shortest path:",
-            n < 0 ? "Unused target" : ("Step " + n + " of " + plugin.getPathfinder().getPath().size())));
+                n < 0 ? "Unused target" : ("Step " + n + " of " + plugin.getPathfinder().getPath().size())));
         if (nextPoint != WorldPointUtil.UNDEFINED) {
             for (Transport transport : plugin.getTransports().getOrDefault(point, new HashSet<>())) {
                 if (nextPoint == transport.getDestination()
-                    && transport.getDisplayInfo() != null && !transport.getDisplayInfo().isEmpty()) {
+                        && transport.getDisplayInfo() != null && !transport.getDisplayInfo().isEmpty()) {
                     rows.add(transport.getDisplayInfo());
                     break;
                 }
@@ -131,7 +131,8 @@ public class PathMapTooltipOverlay extends Overlay {
 
         graphics.setColor(JagexColors.TOOLTIP_TEXT);
         for (int i = 0; i < rows.size(); i++) {
-            graphics.drawString(rows.get(i), drawPointX, drawPointY + TOOLTIP_TEXT_OFFSET_HEIGHT + (i + 1) * tooltipHeight);
+            graphics.drawString(rows.get(i), drawPointX,
+                    drawPointY + TOOLTIP_TEXT_OFFSET_HEIGHT + (i + 1) * tooltipHeight);
         }
 
         return true;
