@@ -18,7 +18,7 @@ public final class MapPointMapper
         {
             return WorldPointUtil.UNDEFINED;
         }
-
+        
         float zoom = worldMap.getWorldMapZoom();
         int mapPoint = WorldPointUtil.packWorldPoint(worldMap.getWorldMapPosition().getX(), worldMap.getWorldMapPosition().getY(), 0);
         int middleX = mapWorldPointToGraphicsPointX(client, mapPoint);

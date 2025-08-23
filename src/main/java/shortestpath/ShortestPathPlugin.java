@@ -648,6 +648,12 @@ public class ShortestPathPlugin extends Plugin {
     }
 
     private void setTargets(Set<Integer> targets, boolean append) {
+        // Temporary debug logging to help unit tests capture map state when a
+        // new route/target is created. Logs world map zoom, map position,
+        // widget bounds and computed points to stdout.
+        if (targets != null && !targets.isEmpty()) {
+            logTargetInfo(targets);
+        }
         if (targets == null || targets.isEmpty()) {
             synchronized (pathfinderMutex) {
                 if (pathfinder != null) {
@@ -683,6 +689,124 @@ public class ShortestPathPlugin extends Plugin {
                 destinations.addAll(pathfinder.getTargets());
             }
             restartPathfinding(start, destinations, append);
+        }
+    }
+
+    // Temporary helper: prints map-related state to stdout for test inspection.
+    private void logTargetInfo(Set<Integer> targets) {
+        try {
+            WorldMap worldMap = client.getWorldMap();
+            System.out.println("[TEMP-LOG] setTargets called with targets size=" + (targets == null ? 0 : targets.size()));
+            if (worldMap == null) {
+                System.out.println("[TEMP-LOG] worldMap=null");
+            } else {
+                System.out.println("[TEMP-LOG] worldMap.zoom=" + worldMap.getWorldMapZoom());
+                Point pos = worldMap.getWorldMapPosition();
+                System.out.println("[TEMP-LOG] worldMap.position=" + (pos == null ? "null" : pos.getX() + "," + pos.getY()));
+            }
+
+            Widget mapWidget = client.getWidget(ComponentID.WORLD_MAP_MAPVIEW);
+            System.out.println("[TEMP-LOG] widget(world_map_mapview)=" + (mapWidget == null ? "null" : mapWidget.getBounds()));
+
+            // Log mouse and last menu points and what they map to
+            try {
+                Point mouse = client.getMouseCanvasPosition();
+                System.out.println("[TEMP-LOG] mouseCanvasPosition=" + (mouse == null ? "null" : mouse.getX() + "," + mouse.getY()));
+            } catch (Exception e) {
+                System.out.println("[TEMP-LOG] mouseCanvasPosition=error:" + e.getMessage());
+            }
+
+            System.out.println("[TEMP-LOG] lastMenuOpenedPoint=" + (lastMenuOpenedPoint == null ? "null" : lastMenuOpenedPoint.getX() + "," + lastMenuOpenedPoint.getY()));
+
+            // Calculate what MapPointMapper would return for those points
+            if (lastMenuOpenedPoint != null) {
+                int calc = MapPointMapper.calculateMapPoint(client, lastMenuOpenedPoint.getX(), lastMenuOpenedPoint.getY());
+                System.out.println("[TEMP-LOG] calculatedFromLastMenuOpenedPoint=" + calc);
+            }
+            try {
+                Point mouse = client.getMouseCanvasPosition();
+                if (mouse != null) {
+                    int calcMouse = MapPointMapper.calculateMapPoint(client, mouse.getX(), mouse.getY());
+                    System.out.println("[TEMP-LOG] calculatedFromMouseCanvasPosition=" + calcMouse);
+                }
+            } catch (Exception e) {
+                System.out.println("[TEMP-LOG] calculateFromMouseCanvasPosition=error:" + e.getMessage());
+            }
+
+            for (Integer t : targets) {
+                if (t == null) {
+                    System.out.println("[TEMP-LOG] target= null");
+                    continue;
+                }
+                int packed = t;
+                int wx = WorldPointUtil.unpackWorldX(packed);
+                int wy = WorldPointUtil.unpackWorldY(packed);
+                int wz = WorldPointUtil.unpackWorldPlane(packed);
+                System.out.println("[TEMP-LOG] target.packed=" + packed + " -> world=(" + wx + "," + wy + "," + wz + ")");
+            }
+
+            // Also print a copy-pastable Case(...) entry for tests
+            try {
+                float zoom = (worldMap != null) ? worldMap.getWorldMapZoom() : 0.0f;
+                Point mapPos = (worldMap != null) ? worldMap.getWorldMapPosition() : null;
+                Rectangle bounds = (mapWidget != null) ? mapWidget.getBounds() : new Rectangle(0, 0, 0, 0);
+
+                Point mousePoint = null;
+                try {
+                    mousePoint = client.getMouseCanvasPosition();
+                } catch (Exception ignored) {
+                }
+
+                int mouseX = (mousePoint != null) ? mousePoint.getX() : 0;
+                int mouseY = (mousePoint != null) ? mousePoint.getY() : 0;
+                int lastX = (lastMenuOpenedPoint != null) ? lastMenuOpenedPoint.getX() : 0;
+                int lastY = (lastMenuOpenedPoint != null) ? lastMenuOpenedPoint.getY() : 0;
+
+                int calcMouse = WorldPointUtil.UNDEFINED;
+                int calcLast = WorldPointUtil.UNDEFINED;
+                try {
+                    if (mousePoint != null) {
+                        calcMouse = MapPointMapper.calculateMapPoint(client, mouseX, mouseY);
+                    }
+                } catch (Exception ignored) {
+                }
+                try {
+                    if (lastMenuOpenedPoint != null) {
+                        calcLast = MapPointMapper.calculateMapPoint(client, lastX, lastY);
+                    }
+                } catch (Exception ignored) {
+                }
+
+                int t1 = WorldPointUtil.UNDEFINED;
+                int t2 = WorldPointUtil.UNDEFINED;
+                if (targets != null) {
+                    java.util.Iterator<Integer> it = targets.iterator();
+                    if (it.hasNext()) {
+                        t1 = it.next();
+                    }
+                    if (it.hasNext()) {
+                        t2 = it.next();
+                    }
+                }
+
+                String desc = (mapPos != null) ? ("Auto-generated: " + mapPos.getX() + "," + mapPos.getY()) : "Auto-generated";
+
+                System.out.println("        cases.add(new Case(");
+                System.out.println("            \"" + desc + "\",");
+                System.out.println("            " + zoom + "f,");
+                System.out.println("            new Point(" + (mapPos != null ? mapPos.getX() : 0) + ", " + (mapPos != null ? mapPos.getY() : 0) + "),");
+                System.out.println("            new Rectangle(" + bounds.x + ", " + bounds.y + ", " + bounds.width + ", " + bounds.height + "),");
+                System.out.println("            " + mouseX + ", " + mouseY + ",");
+                System.out.println("            " + lastX + ", " + lastY + ",");
+                System.out.println("            " + calcMouse + ",");
+                System.out.println("            " + calcLast);
+                System.out.println("        ));");
+            } catch (Exception e) {
+                System.out.println("[TEMP-LOG] error while printing case: " + e.toString());
+            }
+        } catch (Throwable ex) {
+            // Avoid breaking plugin flow; this is temporary and only prints
+            System.out.println("[TEMP-LOG] error while logging target info: " + ex.toString());
         }
     }
 
