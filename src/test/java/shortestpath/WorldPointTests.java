@@ -1,4 +1,4 @@
-package pathfinder;
+package shortestpath;
 
 import net.runelite.api.coords.WorldArea;
 import net.runelite.api.coords.WorldPoint;

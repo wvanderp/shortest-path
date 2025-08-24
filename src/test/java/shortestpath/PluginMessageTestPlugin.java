@@ -1,4 +1,4 @@
-package pathfinder;
+package shortestpath;
 
 import java.awt.Color;
 import java.awt.Rectangle;

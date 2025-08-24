@@ -1,4 +1,4 @@
-package pathfinder;
+package shortestpath;
 
 import java.util.Map;
 import java.util.Set;
@@ -16,14 +16,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import shortestpath.TeleportationItem;
-import shortestpath.ItemVariations;
-import shortestpath.ShortestPathConfig;
-import shortestpath.ShortestPathPlugin;
-import shortestpath.Transport;
-import shortestpath.TransportItems;
-import shortestpath.TransportType;
-import shortestpath.WorldPointUtil;
 import shortestpath.pathfinder.Pathfinder;
 import shortestpath.pathfinder.PathfinderConfig;
 import static org.junit.Assert.assertEquals;
