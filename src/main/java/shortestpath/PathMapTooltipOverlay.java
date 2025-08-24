@@ -46,7 +46,7 @@ public class PathMapTooltipOverlay extends Overlay {
         }
 
         if (plugin.getPathfinder() != null) {
-            List<Integer> path = plugin.getPathfinder().getPath();
+            PrimitiveIntList path = plugin.getPathfinder().getPath();
             Point cursorPos = client.getMouseCanvasPosition();
             for (int i = 0; i < path.size(); i++) {
                 int nextPoint = WorldPointUtil.UNDEFINED;

@@ -1,13 +1,13 @@
 package shortestpath.pathfinder;
 
 import java.util.ArrayDeque;
-import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
 import lombok.Getter;
+import shortestpath.PrimitiveIntList;
 import shortestpath.ShortestPathPlugin;
 import shortestpath.WorldPointUtil;
 
@@ -32,8 +32,7 @@ public class Pathfinder implements Runnable {
     private final Queue<Node> pending = new PriorityQueue<>(256);
     private final VisitedTiles visited;
 
-    @SuppressWarnings("unchecked") // Casting EMPTY_LIST is safe here
-    private List<Integer> path = (List<Integer>)Collections.EMPTY_LIST;
+    private PrimitiveIntList path = new PrimitiveIntList();
     private boolean pathNeedsUpdate = false;
     private Node bestLastNode;
     /**
@@ -75,7 +74,7 @@ public class Pathfinder implements Runnable {
         return null;
     }
 
-    public List<Integer> getPath() {
+    public PrimitiveIntList getPath() {
         Node lastNode = bestLastNode; // For thread safety, read bestLastNode once
         if (lastNode == null) {
             return path;

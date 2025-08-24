@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Shape;
-import java.util.List;
 import net.runelite.api.Client;
 import net.runelite.api.Perspective;
 import net.runelite.api.Point;
@@ -42,9 +41,10 @@ public class PathMinimapOverlay extends Overlay {
         }
         graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 
-        List<Integer> pathPoints = plugin.getPathfinder().getPath();
+        PrimitiveIntList pathPoints = plugin.getPathfinder().getPath();
         Color pathColor = plugin.getPathfinder().isDone() ? plugin.colourPath : plugin.colourPathCalculating;
-        for (int pathPoint : pathPoints) {
+        for (int i = 0; i < pathPoints.size(); i++) {
+            int pathPoint = pathPoints.get(i);
             if (WorldPointUtil.unpackWorldPlane(pathPoint) != client.getPlane()) {
                 continue;
             }
@@ -61,8 +61,9 @@ public class PathMinimapOverlay extends Overlay {
     }
 
     private void drawOnMinimap(Graphics2D graphics, int location, Color color) {
-        for (int point : WorldPointUtil.toLocalInstance(client, location)) {
-            LocalPoint lp = WorldPointUtil.toLocalPoint(client, point);
+        PrimitiveIntList points = WorldPointUtil.toLocalInstance(client, location);
+        for (int i = 0; i < points.size(); i++) {
+            LocalPoint lp = WorldPointUtil.toLocalPoint(client, points.get(i));
 
             if (lp == null) {
                 continue;

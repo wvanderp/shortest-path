@@ -232,13 +232,14 @@ public class ShortestPathPlugin extends Plugin {
     }
 
     public boolean isNearPath(int location) {
-        if (pathfinder == null || pathfinder.getPath() == null || pathfinder.getPath().isEmpty() ||
+        PrimitiveIntList path = null;
+        if (pathfinder == null || (path = pathfinder.getPath()) == null || path.isEmpty() ||
             config.recalculateDistance() < 0 || lastLocation == (lastLocation = location)) {
             return true;
         }
 
-        for (int point : pathfinder.getPath()) {
-            if (WorldPointUtil.distanceBetween(location, point) < config.recalculateDistance()) {
+        for (int i = 0; i < path.size(); i++) {
+            if (WorldPointUtil.distanceBetween(location, path.get(i)) < config.recalculateDistance()) {
                 return true;
             }
         }
@@ -370,7 +371,7 @@ public class ShortestPathPlugin extends Plugin {
             List<WorldPoint> transportDestinations = new ArrayList<>();
             List<String> transportObjectInfos = new ArrayList<>();
             List<String> transportDisplayInfos = new ArrayList<>();
-            List<Integer> currentPath = pathfinder.getPath();
+            PrimitiveIntList currentPath = pathfinder.getPath();
             for (int i = 1; i < currentPath.size(); i++) {
                 int origin = currentPath.get(i-1);
                 int destination = currentPath.get(i);
@@ -443,9 +444,10 @@ public class ShortestPathPlugin extends Plugin {
                     }
                 }
                 int selectedTile = getSelectedWorldPoint();
-                if (pathfinder.getPath() != null) {
-                    for (int tile : pathfinder.getPath()) {
-                        if (tile == selectedTile) {
+                PrimitiveIntList path = null;
+                if ((path = pathfinder.getPath()) != null) {
+                    for (int i = 0; i < path.size(); i++) {
+                        if (path.get(i) == selectedTile) {
                             addMenuEntry(event, CLEAR, PATH, 1);
                             break;
                         }

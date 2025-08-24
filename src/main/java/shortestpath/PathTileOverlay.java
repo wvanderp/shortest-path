@@ -8,9 +8,7 @@ import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import net.runelite.api.Client;
 import net.runelite.api.Perspective;
 import net.runelite.api.Point;
@@ -54,7 +52,9 @@ public class PathTileOverlay extends Overlay {
                 if (b == null || TransportType.isTeleport(b.getType())) {
                     continue; // skip teleports
                 }
-                for (int destination : WorldPointUtil.toLocalInstance(client, b.getDestination())) {
+                PrimitiveIntList destinations = WorldPointUtil.toLocalInstance(client, b.getDestination());
+                for (int i = 0; i < destinations.size(); i++) {
+                    int destination = destinations.get(i);
                     if (destination == Transport.UNDEFINED_DESTINATION) {
                         continue;
                     }
@@ -144,7 +144,7 @@ public class PathTileOverlay extends Overlay {
                     plugin.colourPath.getAlpha() / 2)
                 : colorCalculating;
 
-            List<Integer> path = plugin.getPathfinder().getPath();
+            PrimitiveIntList path = plugin.getPathfinder().getPath();
             int counter = 0;
             if (TileStyle.LINES.equals(plugin.pathStyle)) {
                 for (int i = 1; i < path.size(); i++) {
@@ -197,7 +197,9 @@ public class PathTileOverlay extends Overlay {
             return;
         }
 
-        for (int point : WorldPointUtil.toLocalInstance(client, location)) {
+        PrimitiveIntList points = WorldPointUtil.toLocalInstance(client, location);
+        for (int i = 0; i < points.size(); i++) {
+            int point = points.get(i);
             if (point == WorldPointUtil.UNDEFINED) {
                 continue;
             }
@@ -222,15 +224,15 @@ public class PathTileOverlay extends Overlay {
     }
 
     private void drawLine(Graphics2D graphics, int startLoc, int endLoc, Color color, int counter) {
-        Collection<Integer> starts = WorldPointUtil.toLocalInstance(client, startLoc);
-        Collection<Integer> ends = WorldPointUtil.toLocalInstance(client, endLoc);
+        PrimitiveIntList starts = WorldPointUtil.toLocalInstance(client, startLoc);
+        PrimitiveIntList ends = WorldPointUtil.toLocalInstance(client, endLoc);
 
         if (starts.isEmpty() || ends.isEmpty()) {
             return;
         }
 
-        int start = starts.iterator().next();
-        int end = ends.iterator().next();
+        int start = starts.get(0);
+        int end = ends.get(0);
 
         final int z = client.getPlane();
         if (WorldPointUtil.unpackWorldPlane(start) != z) {
@@ -314,8 +316,9 @@ public class PathTileOverlay extends Overlay {
                 continue;
             }
 
-            for (int point : WorldPointUtil.toLocalInstance(client, location)) {
-                LocalPoint lp = WorldPointUtil.toLocalPoint(client, point);
+            PrimitiveIntList points = WorldPointUtil.toLocalInstance(client, location);
+            for (int i = 0; i < points.size(); i++) {
+                LocalPoint lp = WorldPointUtil.toLocalPoint(client, points.get(i));
                 if (lp == null) {
                     continue;
                 }

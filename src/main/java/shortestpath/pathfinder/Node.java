@@ -1,8 +1,6 @@
 package shortestpath.pathfinder;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import shortestpath.PrimitiveIntList;
 import shortestpath.WorldPointUtil;
 
 public class Node {
@@ -20,28 +18,22 @@ public class Node {
         this(packedPosition, previous, cost(packedPosition, previous));
     }
 
-    public List<Integer> getPath() {
-        List<Integer> path = new LinkedList<>();
+    public PrimitiveIntList getPath() {
         Node node = this;
+        int n = 0;
 
         while (node != null) {
-            path.add(0, node.packedPosition);
+            node = node.previous;
+            n++;
+        }
+        PrimitiveIntList path = new PrimitiveIntList(n, true);
+        node = this;
+        while (node != null) {
+            path.set(--n, node.packedPosition);
             node = node.previous;
         }
 
-        return new ArrayList<>(path);
-    }
-
-    public List<Integer> getPathPacked() {
-        List<Integer> path = new LinkedList<>();
-        Node node = this;
-
-        while (node != null) {
-            path.add(0, node.packedPosition);
-            node = node.previous;
-        }
-
-        return new ArrayList<>(path);
+        return path;
     }
 
     private static int cost(int packedPosition, Node previous) {

@@ -7,10 +7,6 @@ import net.runelite.api.coords.WorldArea;
 import net.runelite.api.coords.WorldPoint;
 import static net.runelite.api.Constants.CHUNK_SIZE;
 import static net.runelite.api.Perspective.LOCAL_COORD_BITS;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 public class WorldPointUtil {
     public static final int UNDEFINED = -1;
@@ -188,11 +184,13 @@ public class WorldPointUtil {
         return rotate(x, y, templateChunkPlane, 4 - rotation);
     }
 
-    public static Collection<Integer> toLocalInstance(Client client, int packedPoint) {
+    public static PrimitiveIntList toLocalInstance(Client client, int packedPoint) {
         WorldView worldView = client.getTopLevelWorldView();
 
+        PrimitiveIntList worldPoints = new PrimitiveIntList();
         if (!worldView.isInstance()) {
-            return Collections.singleton(packedPoint);
+            worldPoints.add(packedPoint);
+            return worldPoints;
         }
 
         int baseX = worldView.getBaseX();
@@ -204,7 +202,6 @@ public class WorldPointUtil {
         int[][][] instanceTemplateChunks = worldView.getInstanceTemplateChunks();
 
         // find instance chunks using the template point. there might be more than one.
-        List<Integer> worldPoints = new ArrayList<>();
         for (int z = 0; z < instanceTemplateChunks.length; z++) {
             for (int x = 0; x < instanceTemplateChunks[z].length; ++x) {
                 for (int y = 0; y < instanceTemplateChunks[z][x].length; ++y) {
