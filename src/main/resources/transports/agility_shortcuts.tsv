@@ -78,6 +78,8 @@
 2324 3497 0	2322 3502 0	Climb Rocks 19849	25 Agility				6
 2948 3309 0	2948 3313 0	Climb-into Underwall tunnel 16527	26 Agility				
 2948 3313 0	2948 3309 0	Climb-into Underwall tunnel 16528	26 Agility				
+1324 3777 0	1324 3785 0	Climb Rocks 34397	29 Agility				8
+1324 3785 0	1324 3777 0	Climb Rocks 34397	29 Agility				8
 2485 2898 0	2489 2898 0	Climb-down Rocks 31759	30 Agility			176=10	
 2489 2898 0	2485 2898 0	Climb-down Rocks 31758	30 Agility			176=10	
 2925 2951 0	2925 2950 0	Cross Stepping stones 23645	30 Agility				2
@@ -258,6 +260,8 @@
 3295 2700 0	3289 2700 0	Cross Stepping stone 43989	62 Agility				
 3295 2704 0	3295 2708 0	Cross Stepping stone 43990	62 Agility				
 3295 2708 0	3295 2704 0	Cross Stepping stone 43990	62 Agility				
+1324 3787 0	1324 3795 0	Climb Rocks 34396	62 Agility				8
+1324 3795 0	1324 3787 0	Climb Rocks 34396	62 Agility				8
 2936 9810 0	2935 9810 0	Squeeze-through Loose Railing 28849	63 Agility				
 2935 9810 0	2936 9810 0	Squeeze-through Loose Railing 28849	63 Agility				
 3667 3375 0	3670 3375 0	Climb Wall 39542	63 Agility		10449=1		
