@@ -1,5 +1,5 @@
 # Origin	Destination	menuOption menuTarget objectID	Duration	Items	Quests	Display info
-# Shantay Pass, Pollnivneachm Bedabin Camp, Ruins of Uzer						
+# Shantay Pass, Pollnivneach Bedabin Camp, Ruins of Uzer						
 3311 3109 0	3467 3110 0	Travel Rug Merchant 17	65	COINS=200	The Golem	1: Uzer
 3467 3110 0	3311 3109 0	Travel Rug Merchant 21	65	COINS=200	The Golem	1: Shantay Pass
 3311 3109 0	3182 3043 0	Travel Rug Merchant 17	77	COINS=200		2: Bedabin Camp
