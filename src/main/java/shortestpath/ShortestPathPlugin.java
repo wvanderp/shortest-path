@@ -11,20 +11,17 @@ import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadFactory;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 import lombok.Getter;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
@@ -518,6 +515,80 @@ public class ShortestPathPlugin extends Plugin {
         }
     }
 
+    private void scrollFairyRingPanel() {
+        PrimitiveIntList path = null;
+        Map<Integer, Set<Transport>> transports = null;
+
+        if (pathfinder == null
+            || (path = pathfinder.getPath()) == null
+            || (transports = getTransports()) == null) {
+            return;
+        }
+
+        String fairyRingCode = null;
+
+        for (int i = 1; i < path.size(); i++) {
+            int destination = path.get(i);
+            int origin = path.get(i - 1);
+            Set<Transport> candidateTransports = transports.get(origin);
+            if (candidateTransports != null) {
+                for (Transport transport : candidateTransports) {
+                    if (transport.getDestination() == destination
+                        && TransportType.FAIRY_RING.equals(transport.getType())) {
+                        fairyRingCode = transport.getDisplayInfo();
+                    }
+                }
+            }
+        }
+        if (fairyRingCode == null) {
+            return;
+        }
+
+        Widget codeWidget = null;
+
+        Widget favesPanel = client.getWidget(InterfaceID.FairyringsLog.FAVES);
+        if (favesPanel != null) {
+            for (Widget widget : favesPanel.getStaticChildren()) {
+                if (widget != null && fairyRingCode.equals(widget.getText())) {
+                    codeWidget = widget;
+                    break;
+                }
+            }
+        }
+
+        Widget contentsList = client.getWidget(InterfaceID.FairyringsLog.CONTENTS);
+        if (contentsList != null && codeWidget == null) {
+            for (Widget widget : contentsList.getDynamicChildren()) {
+                if (widget != null && fairyRingCode.equals(widget.getText())) {
+                    codeWidget = widget;
+                    break;
+                }
+            }
+        }
+
+        if (codeWidget == null) {
+            return;
+        }
+
+        int panelScrollY = Math.min(
+            codeWidget.getRelativeY(),
+            contentsList.getScrollHeight() - contentsList.getHeight()
+        );
+
+        contentsList.setScrollY(panelScrollY);
+        contentsList.revalidateScroll();
+
+        codeWidget.setTextColor(0x00FF00);
+        codeWidget.setText("(Shortest Path) " + codeWidget.getText());
+
+        client.runScript(
+            ScriptID.UPDATE_SCROLLBAR,
+            InterfaceID.FairyringsLog.SCROLLBAR,
+            InterfaceID.FairyringsLog.CONTENTS,
+            panelScrollY
+        );
+    }
+
     public Map<Integer, Set<Transport>> getTransports() {
         return pathfinderConfig.getTransports();
     }
@@ -891,72 +962,5 @@ public class ShortestPathPlugin extends Plugin {
             polygon.addPoint(point.x + offsetX, point.y + offsetY);
         }
         return polygon;
-    }
-
-    /**
-     * Find the applicable fairy ring log panels then scroll to and highlight the fairy ring destination in our path.
-     */
-    public void scrollFairyRingPanel() {
-        final String fairyRingCode = getFairyRingCodeFromPath();
-        if (fairyRingCode == null) return;
-
-        final Widget contentsList = client.getWidget(InterfaceID.FairyringsLog.CONTENTS);
-        if (contentsList == null) return;
-
-        final Widget favesPanel = client.getWidget(InterfaceID.FairyringsLog.FAVES);
-        findMatchingFairyRingWidget(favesPanel, contentsList, fairyRingCode).ifPresent(foundCodeWidget -> {
-            final int panelScrollY = Math.min(
-                    foundCodeWidget.getRelativeY(),
-                    contentsList.getScrollHeight() - contentsList.getHeight()
-            );
-
-            contentsList.setScrollY(panelScrollY);
-            contentsList.revalidateScroll();
-
-            foundCodeWidget.setTextColor(0x00FF00);
-            foundCodeWidget.setText("(Shortest Path) " + foundCodeWidget.getText());
-
-            client.runScript(
-                    ScriptID.UPDATE_SCROLLBAR,
-                    InterfaceID.FairyringsLog.SCROLLBAR,
-                    InterfaceID.FairyringsLog.CONTENTS,
-                    panelScrollY
-            );
-        });
-    }
-
-    /**
-     * Find the applicable fairy ring transport based on our current pathfinder path.
-     */
-    private String getFairyRingCodeFromPath() {
-        final PrimitiveIntList path = getPathfinder().getPath();
-        for (int i = 0; i < path.size() - 1; i++) {
-            final int tile = path.get(i);
-            final int nextTile = path.get(i + 1);
-            final Map<Integer, Set<Transport>> allTransports = getTransports();
-            final Set<Transport> candidateTransports = allTransports.getOrDefault(tile, Collections.emptySet());
-            for (final Transport transport : candidateTransports) {
-                if (TransportType.FAIRY_RING.equals(transport.getType()) && nextTile == transport.getDestination()) {
-                    return transport.getDisplayInfo();
-                }
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Find the widget that matches our fairy ring code.
-     */
-    private Optional<Widget> findMatchingFairyRingWidget(Widget favoritesPanel, Widget panelList, String fairyRingCode) {
-        return Stream.concat(
-                        Optional.ofNullable(favoritesPanel)
-                                .stream()
-                                .map(Widget::getStaticChildren)
-                                .flatMap(Arrays::stream),
-                        Arrays.stream(panelList.getDynamicChildren())
-                )
-                .filter(widget -> widget.getText().equals(fairyRingCode))
-                .findAny();
     }
 }
