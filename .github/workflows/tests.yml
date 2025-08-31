@@ -29,6 +29,7 @@ jobs:
           ./gradlew --version
           ./gradlew test jacocoTestReport --no-daemon --stacktrace
         shell: bash
+        
       - name: Upload JUnit XML results
         if: always()
         uses: actions/upload-artifact@v4
