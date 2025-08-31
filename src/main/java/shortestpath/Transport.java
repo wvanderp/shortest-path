@@ -1,12 +1,11 @@
 package shortestpath;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.Set;
+import java.util.List;
 import lombok.Getter;
 import net.runelite.api.Quest;
 import net.runelite.api.Skill;
@@ -19,7 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 public class Transport {
     public static final int UNDEFINED_ORIGIN = WorldPointUtil.UNDEFINED;
     public static final int UNDEFINED_DESTINATION = WorldPointUtil.UNDEFINED;
-    /** A location placeholder different from null to use for permutation transports */
+    /**
+     * A location placeholder different from null to use for permutation transports
+     */
     private static final int LOCATION_PERMUTATION = WorldPointUtil.packWorldPoint(-1, -1, 1);
     private static final String DELIM_SPACE = " ";
     private static final String DELIM_MULTI = ";";
@@ -55,12 +56,17 @@ public class Transport {
     @Getter
     private int duration;
 
-    /** Info to display for this transport. For spirit trees, fairy rings,
-     * and others, this is the destination option to pick. */
+    /**
+     * Info to display for this transport. For spirit trees, fairy rings,
+     * and others, this is the destination option to pick.
+     */
     @Getter
     private String displayInfo = null;
 
-    /** If this is an item transport, this tracks if it is consumable (as opposed to having infinite uses) */
+    /**
+     * If this is an item transport, this tracks if it is consumable (as opposed to
+     * having infinite uses)
+     */
     @Getter
     private boolean isConsumable = false;
 
@@ -76,20 +82,25 @@ public class Transport {
     @Getter
     private final Set<TransportVarbit> varbits = new HashSet<>();
 
-    /** Any varplayers to check for the transport to be valid. All must pass for a transport to be valid */
+    /**
+     * Any varplayers to check for the transport to be valid. All must pass for a
+     * transport to be valid
+     */
     @Getter
     private final Set<TransportVarPlayer> varPlayers = new HashSet<>();
 
-    /** Creates a new transport from an origin-only transport
-     * and a destination-only transport, and merges requirements */
+    /**
+     * Creates a new transport from an origin-only transport
+     * and a destination-only transport, and merges requirements
+     */
     Transport(Transport origin, Transport destination) {
         this.origin = origin.origin;
         this.destination = destination.destination;
 
         for (int i = 0; i < skillLevels.length; i++) {
             this.skillLevels[i] = Math.max(
-                origin.skillLevels[i],
-                destination.skillLevels[i]);
+                    origin.skillLevels[i],
+                    destination.skillLevels[i]);
         }
 
         this.quests.addAll(origin.quests);
@@ -100,8 +111,8 @@ public class Transport {
         this.type = origin.type;
 
         this.duration = Math.max(
-            origin.duration,
-            destination.duration);
+                origin.duration,
+                destination.duration);
 
         this.displayInfo = destination.displayInfo;
 
@@ -109,8 +120,8 @@ public class Transport {
         this.isConsumable |= destination.isConsumable;
 
         this.maxWildernessLevel = Math.max(
-            origin.maxWildernessLevel,
-            destination.maxWildernessLevel);
+                origin.maxWildernessLevel,
+                destination.maxWildernessLevel);
 
         this.objectInfo = origin.objectInfo;
 
@@ -126,21 +137,22 @@ public class Transport {
 
         // If the origin field is null the transport is a teleportation item or spell
         // If the origin field has 3 elements it is a coordinate of a transport
-        // Otherwise it is a transport that needs to be expanded into all permutations (e.g. fairy ring)
+        // Otherwise it is a transport that needs to be expanded into all permutations
+        // (e.g. fairy ring)
         if ((value = fieldMap.get("Origin")) != null) {
             String[] originArray = value.split(DELIM_SPACE);
             origin = originArray.length == 3 ? WorldPointUtil.packWorldPoint(
-                Integer.parseInt(originArray[0]),
-                Integer.parseInt(originArray[1]),
-                Integer.parseInt(originArray[2])) : LOCATION_PERMUTATION;
+                    Integer.parseInt(originArray[0]),
+                    Integer.parseInt(originArray[1]),
+                    Integer.parseInt(originArray[2])) : LOCATION_PERMUTATION;
         }
 
         if ((value = fieldMap.get("Destination")) != null) {
             String[] destinationArray = value.split(DELIM_SPACE);
             destination = destinationArray.length == 3 ? WorldPointUtil.packWorldPoint(
-                Integer.parseInt(destinationArray[0]),
-                Integer.parseInt(destinationArray[1]),
-                Integer.parseInt(destinationArray[2])) : LOCATION_PERMUTATION;
+                    Integer.parseInt(destinationArray[0]),
+                    Integer.parseInt(destinationArray[1]),
+                    Integer.parseInt(destinationArray[2])) : LOCATION_PERMUTATION;
         }
 
         if ((value = fieldMap.get("Skills")) != null) {
@@ -192,7 +204,9 @@ public class Transport {
                         String[] itemVariationAndQuantity = itemVariationsAndQuantities[k].split(DELIM_STATE);
                         if (itemVariationAndQuantity.length == 2) {
                             ItemVariations itemVariations = ItemVariations.fromName(itemVariationAndQuantity[0]);
-                            multipleItems[k] = itemVariations == null ? new int[]{Integer.parseInt(itemVariationAndQuantity[0])} : itemVariations.getIds();
+                            multipleItems[k] = itemVariations == null
+                                    ? new int[] { Integer.parseInt(itemVariationAndQuantity[0]) }
+                                    : itemVariations.getIds();
                             multipleStaves[k] = ItemVariations.staves(itemVariations);
                             multipleOffhands[k] = ItemVariations.offhands(itemVariations);
                             maxQuantity = Math.max(maxQuantity, Integer.parseInt(itemVariationAndQuantity[1]));
@@ -238,7 +252,7 @@ public class Transport {
 
         if ((value = fieldMap.get("Wilderness level")) != null && !value.isEmpty()) {
             try {
-                this.maxWildernessLevel =  Integer.parseInt(value);
+                this.maxWildernessLevel = Integer.parseInt(value);
             } catch (NumberFormatException e) {
                 log.error("Invalid wilderness level: " + value);
             }
@@ -287,7 +301,8 @@ public class Transport {
                             break;
                         }
                     }
-                    assert varPlayerParts.length == 2 : "Invalid VarPlayer id and value: '" + varPlayerRequirement + "'";
+                    assert varPlayerParts.length == 2
+                            : "Invalid VarPlayer id and value: '" + varPlayerRequirement + "'";
                 }
             } catch (NumberFormatException e) {
                 log.error("Invalid VarPlayer id and value: " + value);
@@ -296,7 +311,7 @@ public class Transport {
 
         this.type = transportType;
         if (TransportType.AGILITY_SHORTCUT.equals(transportType) &&
-            (getRequiredLevel(Skill.RANGED) > 1 || getRequiredLevel(Skill.STRENGTH) > 1)) {
+                (getRequiredLevel(Skill.RANGED) > 1 || getRequiredLevel(Skill.STRENGTH) > 1)) {
             this.type = TransportType.GRAPPLE_SHORTCUT;
         }
     }
@@ -304,12 +319,12 @@ public class Transport {
     @Override
     public String toString() {
         return ("(" +
-            WorldPointUtil.unpackWorldX(origin) + ", " +
-            WorldPointUtil.unpackWorldY(origin) + ", " +
-            WorldPointUtil.unpackWorldPlane(origin) + ") to ("+
-            WorldPointUtil.unpackWorldX(destination) + ", " +
-            WorldPointUtil.unpackWorldY(destination) + ", " +
-            WorldPointUtil.unpackWorldPlane(destination) + ")");
+                WorldPointUtil.unpackWorldX(origin) + ", " +
+                WorldPointUtil.unpackWorldY(origin) + ", " +
+                WorldPointUtil.unpackWorldPlane(origin) + ") to (" +
+                WorldPointUtil.unpackWorldX(destination) + ", " +
+                WorldPointUtil.unpackWorldY(destination) + ", " +
+                WorldPointUtil.unpackWorldPlane(destination) + ")");
     }
 
     /** The skill level required to use this transport */
@@ -336,93 +351,51 @@ public class Transport {
         return quests;
     }
 
-    private static void addTransports(Map<Integer, Set<Transport>> transports, String path, TransportType transportType) {
+    private static void addTransports(Map<Integer, Set<Transport>> transports, String path,
+            TransportType transportType) {
         addTransports(transports, path, transportType, 0);
     }
 
-    private static void addTransports(Map<Integer, Set<Transport>> transports, String path, TransportType transportType, int radiusThreshold) {
-        final String DELIM_COLUMN = "\t";
-        final String PREFIX_COMMENT = "#";
-
+    private static void addTransports(
+            Map<Integer, Set<Transport>> transports,
+            String path,
+            TransportType transportType,
+            int radiusThreshold) {
         try {
-            String s = new String(Util.readAllBytes(ShortestPathPlugin.class.getResourceAsStream(path)), StandardCharsets.UTF_8);
-            Scanner scanner = new Scanner(s);
-
-            // Header line is the first line in the file and will start with either '#' or '# '
-            String headerLine = scanner.nextLine();
-            headerLine = headerLine.startsWith(PREFIX_COMMENT + " ") ? headerLine.replace(PREFIX_COMMENT + " ", PREFIX_COMMENT) : headerLine;
-            headerLine = headerLine.startsWith(PREFIX_COMMENT) ? headerLine.replace(PREFIX_COMMENT, "") : headerLine;
-            String[] headers = headerLine.split(DELIM_COLUMN);
-
+            List<Map<String, String>> rows = TsvReader.readResource(path);
             Set<Transport> newTransports = new HashSet<>();
-
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-
-                if (line.startsWith(PREFIX_COMMENT) || line.isBlank()) {
-                    continue;
-                }
-
-                String[] fields = line.split(DELIM_COLUMN);
-                Map<String, String> fieldMap = new HashMap<>();
-                for (int i = 0; i < headers.length; i++) {
-                    if (i < fields.length) {
-                        fieldMap.put(headers[i], fields[i]);
-                    }
-                }
-
+            for (Map<String, String> fieldMap : rows) {
                 Transport transport = new Transport(fieldMap, transportType);
                 newTransports.add(transport);
-
             }
-            scanner.close();
 
-            /*
-             * A transport with origin A and destination B is one-way and must
-             * be duplicated as origin B and destination A to become two-way.
-             * Example: key-locked doors
-             * 
-             * A transport with origin A and a missing destination is one-way,
-             * but can go from origin A to all destinations with a missing origin.
-             * Example: fairy ring AIQ -> <blank>
-             * 
-             * A transport with a missing origin and destination B is one-way,
-             * but can go from all origins with a missing destination to destination B.
-             * Example: fairy ring <blank> -> AIQ
-             * 
-             * Identical transports from origin A to destination A are skipped, and
-             * non-identical transports from origin A to destination A can be skipped
-             * by specifying a radius threshold to ignore almost identical coordinates.
-             * Example: fairy ring AIQ -> AIQ
-             */
             Set<Transport> transportOrigins = new HashSet<>();
             Set<Transport> transportDestinations = new HashSet<>();
             for (Transport transport : newTransports) {
                 int origin = transport.getOrigin();
                 int destination = transport.getDestination();
-                // Logic to determine ordinary transport vs teleport vs permutation (e.g. fairy ring)
                 if ((origin == UNDEFINED_ORIGIN && destination == UNDEFINED_DESTINATION)
-                    || (origin == LOCATION_PERMUTATION && destination == LOCATION_PERMUTATION)) {
+                        || (origin == LOCATION_PERMUTATION && destination == LOCATION_PERMUTATION)) {
                     continue;
                 } else if (origin != LOCATION_PERMUTATION && origin != UNDEFINED_ORIGIN
-                    && destination == LOCATION_PERMUTATION) {
+                        && destination == LOCATION_PERMUTATION) {
                     transportOrigins.add(transport);
                 } else if (origin == LOCATION_PERMUTATION
-                    && destination != LOCATION_PERMUTATION && destination != UNDEFINED_DESTINATION) {
+                        && destination != LOCATION_PERMUTATION && destination != UNDEFINED_DESTINATION) {
                     transportDestinations.add(transport);
                 }
                 if (origin != LOCATION_PERMUTATION
-                    && destination != UNDEFINED_DESTINATION && destination != LOCATION_PERMUTATION
-                    && (origin == UNDEFINED_ORIGIN || origin != destination)) {
+                        && destination != UNDEFINED_DESTINATION && destination != LOCATION_PERMUTATION
+                        && (origin == UNDEFINED_ORIGIN || origin != destination)) {
                     transports.computeIfAbsent(origin, k -> new HashSet<>()).add(transport);
                 }
             }
             for (Transport origin : transportOrigins) {
                 for (Transport destination : transportDestinations) {
-                    // The radius threshold prevents transport permutations from including (almost) same origin and destination
-                    if (WorldPointUtil.distanceBetween2D(origin.getOrigin(), destination.getDestination()) > radiusThreshold) {
+                    if (WorldPointUtil.distanceBetween2D(origin.getOrigin(),
+                            destination.getDestination()) > radiusThreshold) {
                         transports.computeIfAbsent(origin.getOrigin(), k -> new HashSet<>())
-                            .add(new Transport(origin, destination));
+                                .add(new Transport(origin, destination));
                     }
                 }
             }
