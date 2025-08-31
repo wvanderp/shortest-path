@@ -9,6 +9,9 @@ bin/
 # Lock files of libre office
 .~lock.*
 
+# vscode
+.vscode/
+
 # For the Collision Map build
 runelite/
 cache/
