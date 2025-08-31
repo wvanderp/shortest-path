@@ -498,6 +498,9 @@ public class CollisionMapDumper
 		}
 	}
 
+	/**
+	 * This is a list of object IDs that can be walked through and thus need to be excluded from collision map
+	 */
 	private enum Exclusion
 	{
 		AMETHYST_CRYSTALS_EMPTY_WALL_11393(11393),
@@ -671,9 +674,11 @@ public class CollisionMapDumper
 
 		YANILLE_DUNGEON_DOOR_11728(11728),
 		YANILLE_GRAPPLE_WALL_17047(17047),
-		YANILLE_GRAPPLE_WALL_17048(17058),
+		YANILLE_GRAPPLE_WALL_17058(17058),
 
 		ZANARIS_SHED_DOOR_2406(2406),
+
+		VARLAMORE_AUBURNVALE_BRIDGE_11591(11591),
 		;
 
 		/**
