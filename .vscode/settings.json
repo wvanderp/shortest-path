@@ -1,0 +1,7 @@
+{
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "editor.defaultFormatter": "redhat.java",
+    "editor.formatOnSave": true,
+    "java.format.settings.url": "${workspaceFolder}/config/eclipse-java-formatter.xml",
+    "java.format.settings.profile": "GoogleStyle"
+}

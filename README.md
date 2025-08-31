@@ -13,3 +13,22 @@ Draws the shortest path to a chosen destination on the map (right click a spot o
 
 ## Features, examples and options
 Read the [plugin wiki](../../wiki) for info about features, examples and plugin options.
+
+## Code Style & Formatting
+
+Canonical formatter: `config/eclipse-java-formatter.xml` (GoogleStyle).
+
+Editors:
+- VS Code: uses Red Hat Java extension configured in `.vscode/settings.json` (format on save enabled).
+- IntelliJ IDEA: Import via Settings → Editor → Code Style → Java → Scheme (Project) → … → Import Scheme → Eclipse XML → select `config/eclipse-java-formatter.xml` (profile `GoogleStyle`).
+
+CI:
+- Enforced with Spotless (`./gradlew --no-daemon spotlessCheck`). The CI workflow `format-check.yml` runs on every push and PR.
+
+Local usage:
+- Check: `./gradlew spotlessCheck`
+- Apply fixes: `./gradlew spotlessApply`
+
+Whitespace basics enforced through `.editorconfig` (indent = 4 spaces, LF line endings, UTF-8, trailing whitespace trimmed, final newline ensured).
+
+Note: This PR only adds formatting infrastructure and does not bulk reformat existing Java sources to keep the diff focused. A follow-up command to apply formatting is `./gradlew spotlessApply`.

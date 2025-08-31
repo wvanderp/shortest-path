@@ -4,6 +4,8 @@ build/
 out/
 bin/
 
+# Allow committing VS Code settings for formatter
+!.vscode/settings.json
 .vscode/
 
 # Lock files of libre office
