@@ -1,4 +1,4 @@
-package shortestpath;
+package shortestpath.transport;
 
 public enum TransportType {
     TRANSPORT,
@@ -22,8 +22,7 @@ public enum TransportType {
     TELEPORTATION_MINIGAME,
     TELEPORTATION_PORTAL,
     TELEPORTATION_SPELL,
-    WILDERNESS_OBELISK,
-    ;
+    WILDERNESS_OBELISK;
 
     /*
      * Indicates whether a TransportType is a teleport.

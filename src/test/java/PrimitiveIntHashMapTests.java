@@ -10,6 +10,11 @@ import java.util.Random;
 import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
+
+import shortestpath.PrimitiveIntHashMap;
+import shortestpath.transport.Transport;
+import shortestpath.transport.TransportLoader;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -26,7 +31,7 @@ public class PrimitiveIntHashMapTests {
 
     @Test
     public void tryInsertTransports() {
-        HashMap<Integer, Set<Transport>> transports = Transport.loadAllFromResources();
+        HashMap<Integer, Set<Transport>> transports = TransportLoader.loadAllFromResources();
         PrimitiveIntHashMap<Set<Transport>> map = new PrimitiveIntHashMap<>(transports.size());
 
         for (Map.Entry<Integer, Set<Transport>> entry : transports.entrySet()) {

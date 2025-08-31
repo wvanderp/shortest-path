@@ -16,6 +16,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import shortestpath.TeleportationItem;
+import shortestpath.ItemVariations;
+import shortestpath.ShortestPathConfig;
+import shortestpath.transport.Transport;
+import shortestpath.transport.TransportItems;
+import shortestpath.transport.TransportLoader;
+import shortestpath.transport.TransportType;
+import shortestpath.WorldPointUtil;
 import shortestpath.pathfinder.Pathfinder;
 import shortestpath.pathfinder.PathfinderConfig;
 import static org.junit.Assert.assertEquals;
@@ -27,7 +35,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PathfinderTest {
-    private static final Map<Integer, Set<Transport>> transports = Transport.loadAllFromResources();
+    private static final Map<Integer, Set<Transport>> transports = TransportLoader.loadAllFromResources();
 
     private PathfinderConfig pathfinderConfig;
 
