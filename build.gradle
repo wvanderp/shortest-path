@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'jacoco'
+    id 'com.diffplug.spotless' version '7.0.0'
 }
 
 repositories {
@@ -29,6 +30,16 @@ sourceCompatibility = '1.11'
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
+}
+
+// Spotless configuration for consistent formatting
+spotless {
+    java {
+        eclipse().configFile("$rootDir/config/eclipse-java-formatter.xml")
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
 }
 
 test {
