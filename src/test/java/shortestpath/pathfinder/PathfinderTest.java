@@ -8,6 +8,7 @@ import net.runelite.api.InventoryID;
 import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
 import net.runelite.api.gameval.ItemID;
+import net.runelite.api.gameval.VarbitID;
 import net.runelite.api.Quest;
 import net.runelite.api.QuestState;
 import net.runelite.api.Skill;
@@ -109,6 +110,8 @@ public class PathfinderTest {
     @Test
     public void testFairyRings() {
         when(config.useFairyRings()).thenReturn(true);
+        setupInventory(new Item(ItemID.DRAMEN_STAFF, 1));
+        when(client.getVarbitValue(VarbitID.FAIRY2_QUEENCURE_QUEST)).thenReturn(100);
         testTransportLength(2, TransportType.FAIRY_RING);
     }
 
@@ -367,6 +370,7 @@ public class PathfinderTest {
 
     @Test
     public void testTransportItems() {
+        // Varrock Teleport
         TransportItems actual = null;
         for (Transport transport : transports.get(Transport.UNDEFINED_ORIGIN)) {
             if ("Varrock Teleport".equals(transport.getDisplayInfo())) {
@@ -374,8 +378,9 @@ public class PathfinderTest {
                 break;
             }
         }
+        TransportItems expected = null;
         if (actual != null) {
-            TransportItems expected = new TransportItems(
+            expected = new TransportItems(
                 new int[][]{
                     ItemVariations.AIR_RUNE.getIds(),
                     ItemVariations.FIRE_RUNE.getIds(),
@@ -385,6 +390,30 @@ public class PathfinderTest {
                     ItemVariations.STAFF_OF_FIRE.getIds(), null},
                 new int[][]{null, ItemVariations.TOME_OF_FIRE.getIds(), null},
                 new int[]{3, 1, 1});
+            assertEquals(expected, actual);
+        }
+
+        // Trollheim Teleport
+        actual = null;
+        for (Transport transport : transports.get(Transport.UNDEFINED_ORIGIN)) {
+            if ("Trollheim Teleport".equals(transport.getDisplayInfo())) {
+                actual = transport.getItemRequirements();
+                break;
+            }
+        }
+        expected = null;
+        if (actual != null) {
+            expected = new TransportItems(
+                new int[][]{
+                    ItemVariations.FIRE_RUNE.getIds(),
+                    ItemVariations.LAW_RUNE.getIds()},
+                new int[][]{
+                    ItemVariations.STAFF_OF_FIRE.getIds(),
+                    null},
+                new int[][]{
+                    ItemVariations.TOME_OF_FIRE.getIds(),
+                    null},
+                new int[]{2, 2});
             assertEquals(expected, actual);
         }
     }
