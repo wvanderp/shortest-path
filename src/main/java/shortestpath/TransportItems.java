@@ -1,5 +1,7 @@
 package shortestpath;
 
+import java.util.Arrays;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -18,5 +20,22 @@ public class TransportItems {
         this.staves = staves;
         this.offhands = offhands;
         this.quantities = quantities;
+    }
+
+    @Override
+    public String toString() {
+        return "[" +
+            toString(items) + ", " +
+            toString(staves) + ", " +
+            toString(offhands) + ", " +
+            Arrays.toString(quantities) + "]";
+    }
+
+    private String toString(int[][] array) {
+        String text = "";
+        for (int[] inner : array) {
+            text += (text.isEmpty() ? "" : ", ") + Arrays.toString(inner);
+        }
+        return "[" + text + "]";
     }
 }

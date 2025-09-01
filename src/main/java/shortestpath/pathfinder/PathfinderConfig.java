@@ -27,6 +27,7 @@ import shortestpath.TeleportationItem;
 import shortestpath.ShortestPathConfig;
 import shortestpath.ShortestPathPlugin;
 import shortestpath.Destination;
+import shortestpath.ItemVariations;
 import shortestpath.PrimitiveIntHashMap;
 import shortestpath.Transport;
 import shortestpath.TransportItems;
@@ -86,6 +87,11 @@ public class PathfinderConfig {
 	};
     private static final Set<Integer> CURRENCIES = Set.of(
         ItemID.COINS, ItemID.VILLAGE_TRADE_STICKS, ItemID.ECTOTOKEN, ItemID.WARGUILD_TOKENS);
+    private static final TransportItems DRAMEN_STAFF = new TransportItems(
+        new int[][]{null},
+        new int[][]{ItemVariations.DRAMEN_STAFF.getIds()},
+        new int[][]{null},
+        new int[]{1});
 
     private final SplitFlagMap mapData;
     private final ThreadLocal<CollisionMap> map;
@@ -274,7 +280,8 @@ public class PathfinderConfig {
             return; // Has to run on the client thread; data will be refreshed when path finding commences
         }
 
-        useFairyRings &= !QuestState.NOT_STARTED.equals(getQuestState(Quest.FAIRYTALE_II__CURE_A_QUEEN));
+        useFairyRings &= ((client.getVarbitValue(VarbitID.FAIRY2_QUEENCURE_QUEST) > 39)
+            && (client.getVarbitValue(VarbitID.LUMBRIDGE_DIARY_ELITE_COMPLETE) == 1 || hasRequiredItems(DRAMEN_STAFF)));
         useGnomeGliders &= QuestState.FINISHED.equals(getQuestState(Quest.THE_GRAND_TREE));
         useMagicMushtrees &= QuestState.FINISHED.equals(getQuestState(Quest.BONE_VOYAGE));
         useSpiritTrees &= QuestState.FINISHED.equals(getQuestState(Quest.TREE_GNOME_VILLAGE));
@@ -505,6 +512,14 @@ public class PathfinderConfig {
             TransportType.TELEPORTATION_ITEM.equals(transport.getType())) {
             return false;
         }
+        return hasRequiredItems(transport.getItemRequirements());
+    }
+
+    /** Checks if the player has all the required equipment and inventory items for the transport */
+    private boolean hasRequiredItems(TransportItems transportItems) {
+        if (transportItems == null) {
+            return true;
+        }
         itemsAndQuantities.clear();
         ItemContainer inventory = client.getItemContainer(InventoryID.INVENTORY);
         ItemContainer equipment = client.getItemContainer(InventoryID.EQUIPMENT);
@@ -544,10 +559,6 @@ public class PathfinderConfig {
         }
         boolean usingStaff = false;
         boolean usingOffhand = false;
-        TransportItems transportItems = transport.getItemRequirements();
-        if (transportItems == null) {
-            return true;
-        }
         for (int i = 0; i < transportItems.getItems().length; i++) {
             boolean missing = true;
             if (transportItems.getItems()[i] != null) {
