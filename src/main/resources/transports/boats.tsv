@@ -12,14 +12,14 @@
 3792 3560 0	3703 3487 0	Travel Ghost captain 3005					6	
 								
 # Mort Myre, Mort'ton								
-3498 3380 0	3522 3285 0	Board Swamp Boaty 6970					18	
-3499 3380 0	3522 3285 0	Board Swamp Boaty 6970					18	
-3500 3380 0	3522 3285 0	Board Swamp Boaty 6970					18	
-3501 3378 0	3522 3285 0	Board Swamp Boaty 6970					18	
-3501 3379 0	3522 3285 0	Board Swamp Boaty 6970					18	
-3522 3284 0	3498 3380 0	Quick-board Swamp Boaty 6969		COINS=10			18	
-3522 3285 0	3498 3380 0	Quick-board Swamp Boaty 6969		COINS=10			18	
-3522 3286 0	3498 3380 0	Quick-board Swamp Boaty 6969		COINS=10			18	
+3498 3380 0	3522 3285 0	Board Swamp Boaty 6970			Nature Spirit		18	
+3499 3380 0	3522 3285 0	Board Swamp Boaty 6970			Nature Spirit		18	
+3500 3380 0	3522 3285 0	Board Swamp Boaty 6970			Nature Spirit		18	
+3501 3378 0	3522 3285 0	Board Swamp Boaty 6970			Nature Spirit		18	
+3501 3379 0	3522 3285 0	Board Swamp Boaty 6970			Nature Spirit		18	
+3522 3284 0	3498 3380 0	Quick-board Swamp Boaty 6969		COINS=10	Nature Spirit		18	
+3522 3285 0	3498 3380 0	Quick-board Swamp Boaty 6969		COINS=10	Nature Spirit		18	
+3522 3286 0	3498 3380 0	Quick-board Swamp Boaty 6969		COINS=10	Nature Spirit		18	
 								
 # Rellekka, Waterbirth Island								
 2621 3683 0	2544 3761 0	Waterbirth Island Jarvald 6535			The Fremennik Trials		7	
