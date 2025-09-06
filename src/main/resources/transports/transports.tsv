@@ -128,6 +128,19 @@
 3229 3225 1	3229 3225 0	Climb-down Ladder 16684						2	
 3211 3243 1	3211 3243 0	Climb-down Ladder 16679						2	
 3211 3243 0	3211 3243 1	Climb-up Ladder 16683						2	
+3219 9618 0	3221 9618 0	Squeeze-through Hole 6905				532>3		3	
+3221 9618 0	3219 9618 0	Squeeze-through Hole 6905				532>3		3	
+3224 9604 0	3224 9600 0	Squeeze-through Hole 6912				538=1		4	
+3224 9600 0	3224 9604 0	Squeeze-through Hole 6912				538=1		4	
+									
+# Lumbridge swamp									
+3169 3171 0	3169 9571 0	Climb-down Dark hole 5947						2	
+3169 9571 0	3169 3171 0	Climb Climbing rope 5946						2	
+3168 3172 0	3168 9572 0	Climb-down Dark hole 5947						2	
+3168 9572 0	3168 3172 0	Climb Climbing rope 5946						2	
+3170 3172 0	3170 9572 0	Climb-down Dark hole 5947						2	
+3170 9572 0	3170 3172 0	Climb Climbing rope 5946						2	
+3169 3173 0	3167 9573 0	Climb-down Dark hole 5947						2	
 									
 # Farm between Lumbridge and Draynor									
 3197 3278 0	3197 3275 0	Climb-over Stile 12982						6	
