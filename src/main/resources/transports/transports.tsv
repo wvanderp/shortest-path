@@ -477,6 +477,14 @@
 2621 9565 0	2621 9496 0	Climb-up Staircase 15657						1	
 2601 9481 0	2601 9482 0	Pick-lock Door 11728	82 Thieving	1523=1				10	
 2601 9482 0	2601 9481 0	Pick-lock Door 11728	82 Thieving	1523=1				10	
+2597 3087 0	2596 3087 0	Open Magic guild door 1732	66 Magic					1	
+2596 3087 0	2597 3087 0	Open Magic guild door 1732						1	
+2597 3088 0	2596 3088 0	Open Magic guild door 1733	66 Magic					1	
+2596 3088 0	2597 3088 0	Open Magic guild door 1733						1	
+2584 3087 0	2585 3087 0	Open Magic guild door 1733	66 Magic					1	
+2585 3087 0	2584 3087 0	Open Magic guild door 1733						1	
+2584 3088 0	2585 3088 0	Open Magic guild door 1732	66 Magic					1	
+2585 3088 0	2584 3088 0	Open Magic guild door 1732						1	
 									
 # Hazelmere Island									
 2677 3088 1	2677 3088 0	Climb-down Ladder 16679						2	
