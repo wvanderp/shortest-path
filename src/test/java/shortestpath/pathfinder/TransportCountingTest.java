@@ -12,7 +12,54 @@ import shortestpath.TransportType;
 public class TransportCountingTest {
     private static final Map<Integer, Set<Transport>> transports = Transport.loadAllFromResources();
 
-@Test
+    @Test
+    public void testNumberOfCharterShips() {
+        int actualCount = 0;
+        for (int origin : transports.keySet()) {
+            for (Transport transport : transports.get(origin)) {
+                if (TransportType.CHARTER_SHIP.equals(transport.getType())) {
+                    actualCount++;
+                }
+            }
+        }
+        /*
+         * Info:
+         * There are currently 16 unique charter ship origin/destinations.
+         * If every combination was possible then it would be 16^2 = 256.
+         * It is impossible to travel from and to the same place, so subtract 16.
+         * It is also impossible to travel between certain places, presumably
+         * because the distance between them is too small. Currently 12 of these.
+         */
+        assertEquals(16 * 16 - 16 - 12, actualCount);
+    }
+
+    @Test
+    public void testNumberOfGnomeGliders() {
+        // All permutations of gnome glider transports are resolved from origins and destinations
+        int actualCount = 0;
+        for (int origin : transports.keySet()) {
+            for (Transport transport : transports.get(origin)) {
+                if (TransportType.GNOME_GLIDER.equals(transport.getType())) {
+                    actualCount++;
+                }
+            }
+        }
+        /* 
+         * Info:
+         * NB: Lemanto Andra (Digsite) can only be destination and not origin
+         * single_glider_origin_locations * (number_of_gnome_gliders - 1)
+         *   1 * 6   // Ta Quir Priw (Gnome Stronghold)
+         * + 3 * 6   // Gandius (Karamja)
+         * + 3 * 6   // Kar-Hewo (Al-Kharid)
+         * + 2 * 6   // Sindarpos (White Wolf Mountain)
+         * + 3 * 6   // Lemantolly Undri (Feldip Hills)
+         * + 3 * 6   // Ookookolly Undri (Ape Atoll)
+         * = 90
+         */
+        assertEquals(90, actualCount);
+    }
+
+    @Test
     public void testNumberOfHotAirBalloons() {
         // All permutations of hot air balloon transports are resolved from origins and destinations
         int actualCount = 0;
@@ -127,26 +174,5 @@ public class TransportCountingTest {
          * = 1452
          */
         assertEquals(1452, actualCount);
-    }
-
-    @Test
-    public void testNumberOfCharterShips() {
-        int actualCount = 0;
-        for (int origin : transports.keySet()) {
-            for (Transport transport : transports.get(origin)) {
-                if (TransportType.CHARTER_SHIP.equals(transport.getType())) {
-                    actualCount++;
-                }
-            }
-        }
-        /*
-         * Info:
-         * There are currently 16 unique charter ship origin/destinations.
-         * If every combination was possible then it would be 16^2 = 256.
-         * It is impossible to travel from and to the same place, so subtract 16.
-         * It is also impossible to travel between certain places, presumably
-         * because the distance between them is too small. Currently 12 of these.
-         */
-        assertEquals(16 * 16 - 16 - 12, actualCount);
     }
 }

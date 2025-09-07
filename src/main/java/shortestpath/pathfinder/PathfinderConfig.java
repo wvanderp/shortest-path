@@ -22,6 +22,7 @@ import net.runelite.api.Skill;
 import net.runelite.api.coords.WorldArea;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.gameval.ItemID;
+import net.runelite.api.gameval.VarPlayerID;
 import net.runelite.api.gameval.VarbitID;
 import shortestpath.TeleportationItem;
 import shortestpath.ShortestPathConfig;
@@ -140,7 +141,7 @@ public class PathfinderConfig {
         useWildernessObelisks;
     private TeleportationItem useTeleportationItems;
     private int currencyThreshold;
-    private final int[] boostedLevels = new int[Skill.values().length];
+    private final int[] boostedSkillLevelsAndMore = new int[Skill.values().length + 3];
     private Map<Quest, QuestState> questStates = new HashMap<>();
     private Map<Integer, Integer> varbitValues = new HashMap<>();
     private Map<Integer, Integer> varPlayerValues = new HashMap<>();
@@ -200,9 +201,13 @@ public class PathfinderConfig {
         currencyThreshold = ShortestPathPlugin.override("currencyThreshold", config.currencyThreshold());
 
         if (GameState.LOGGED_IN.equals(client.getGameState())) {
-            for (int i = 0; i < Skill.values().length; i++) {
-                boostedLevels[i] = client.getBoostedSkillLevel(Skill.values()[i]);
+            int i = 0;
+            for (; i < Skill.values().length; i++) {
+                boostedSkillLevelsAndMore[i] = client.getBoostedSkillLevel(Skill.values()[i]);
             }
+            boostedSkillLevelsAndMore[i++] = client.getTotalLevel(); // skill total level
+            boostedSkillLevelsAndMore[i++] = getCombatLevel(); // combat level
+            boostedSkillLevelsAndMore[i++] = client.getVarpValue(VarPlayerID.QP); // quest points
 
             refreshTransports();
         }
@@ -409,10 +414,6 @@ public class PathfinderConfig {
     private boolean useTransport(Transport transport) {
         final boolean isQuestLocked = transport.isQuestLocked();
 
-        if (!hasRequiredLevels(transport)) {
-            return false;
-        }
-
         TransportType type = transport.getType();
 
         if (AGILITY_SHORTCUT.equals(type) && !useAgilityShortcuts) {
@@ -446,14 +447,18 @@ public class PathfinderConfig {
         } else if (TELEPORTATION_ITEM.equals(type)) {
             switch (useTeleportationItems) {
                 case ALL:
+                    return true;
+                case ALL_NON_CONSUMABLE:
+                    return transport.isConsumable();
+                case UNLOCKED:
                 case INVENTORY:
                 case INVENTORY_AND_BANK:
                     break;
                 case NONE:
                     return false;
+                case UNLOCKED_NON_CONSUMABLE:
                 case INVENTORY_NON_CONSUMABLE:
                 case INVENTORY_AND_BANK_NON_CONSUMABLE:
-                case ALL_NON_CONSUMABLE:
                     if (transport.isConsumable()) {
                         return false;
                     }
@@ -470,6 +475,10 @@ public class PathfinderConfig {
         } else if (TELEPORTATION_SPELL.equals(type) && !useTeleportationSpells) {
             return false;
         } else if (WILDERNESS_OBELISK.equals(type) && !useWildernessObelisks) {
+            return false;
+        }
+
+        if (!hasRequiredLevels(transport)) {
             return false;
         }
 
@@ -491,8 +500,8 @@ public class PathfinderConfig {
     /** Checks if the player has all the required skill levels for the transport */
     private boolean hasRequiredLevels(Transport transport) {
         int[] requiredLevels = transport.getSkillLevels();
-        for (int i = 0; i < boostedLevels.length; i++) {
-            int boostedLevel = boostedLevels[i];
+        for (int i = 0; i < boostedSkillLevelsAndMore.length; i++) {
+            int boostedLevel = boostedSkillLevelsAndMore[i];
             int requiredLevel = requiredLevels[i];
             if (boostedLevel < requiredLevel) {
                 return false;
@@ -503,14 +512,18 @@ public class PathfinderConfig {
 
     /** Checks if the player has all the required equipment and inventory items for the transport */
     private boolean hasRequiredItems(Transport transport) {
-        if ((TeleportationItem.ALL.equals(useTeleportationItems) ||
-            TeleportationItem.ALL_NON_CONSUMABLE.equals(useTeleportationItems)) &&
-            TransportType.TELEPORTATION_ITEM.equals(transport.getType())) {
-            return true;
-        }
-        if (TeleportationItem.NONE.equals(useTeleportationItems) &&
-            TransportType.TELEPORTATION_ITEM.equals(transport.getType())) {
-            return false;
+        if (TransportType.TELEPORTATION_ITEM.equals(transport.getType())) {
+            switch (useTeleportationItems) {
+                case ALL:
+                case ALL_NON_CONSUMABLE:
+                case UNLOCKED:
+                case UNLOCKED_NON_CONSUMABLE:
+                    return true;
+                case NONE:
+                    return false;
+                default:
+                    break;
+            }
         }
         return hasRequiredItems(transport.getItemRequirements());
     }
@@ -601,5 +614,22 @@ public class PathfinderConfig {
             }
         }
         return true;
+    }
+
+    /** Calculates the combat level of the player */
+    private int getCombatLevel() {
+        int attack = client.getRealSkillLevel(Skill.ATTACK);
+        int strength = client.getRealSkillLevel(Skill.STRENGTH);
+        int defence = client.getRealSkillLevel(Skill.DEFENCE);
+        int hitpoints = client.getRealSkillLevel(Skill.HITPOINTS);
+        int magic = client.getRealSkillLevel(Skill.MAGIC);
+        int ranged = client.getRealSkillLevel(Skill.RANGED);
+        int prayer = client.getRealSkillLevel(Skill.PRAYER);
+        double base = 0.25 * (defence + hitpoints + (prayer) / 2);
+        double melee = (13 * (attack + strength)) / 40.0;
+        double range = (13 * ((3 * ranged) / 2)) / 40.0;
+        double mage = (13 * ((3 * magic) / 2)) / 40.0;
+        int combatLevel = (int) Math.floor(base + Math.max(Math.max(melee, range), Math.max(melee, mage)));
+        return combatLevel;
     }
 }

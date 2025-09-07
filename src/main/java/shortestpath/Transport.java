@@ -35,9 +35,9 @@ public class Transport {
     @Getter
     private int destination = UNDEFINED_DESTINATION;
 
-    /** The skill levels required to use this transport */
+    /** The skill levels, total level, combat level and quest points required to use this transport */
     @Getter
-    private final int[] skillLevels = new int[Skill.values().length];
+    private final int[] skillLevels = new int[Skill.values().length + 3];
 
     /** The quests required to use this transport */
     @Getter
@@ -155,14 +155,25 @@ public class Transport {
                     assert levelAndSkill.length == 2 : "Invalid level and skill: '" + requirement + "'";
 
                     int level = Integer.parseInt(levelAndSkill[0]);
-                    String skillName = levelAndSkill[1];
+                    String skillName = levelAndSkill[1] == null ? "" : levelAndSkill[1];
 
                     Skill[] skills = Skill.values();
-                    for (int i = 0; i < skills.length; i++) {
+                    int i = 0;
+                    for (; i < skills.length; i++) {
                         if (skills[i].getName().equals(skillName)) {
                             skillLevels[i] = level;
-                            break;
                         }
+                    }
+                    if (skillName.toLowerCase().startsWith("total")) {
+                        skillLevels[i] = level;
+                    }
+                    i++;
+                    if (skillName.toLowerCase().startsWith("combat")) {
+                        skillLevels[i] = level;
+                    }
+                    i++;
+                    if (skillName.toLowerCase().startsWith("quest")) {
+                        skillLevels[i] = level;
                     }
                 }
             } catch (NumberFormatException e) {

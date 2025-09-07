@@ -195,7 +195,8 @@ public interface ShortestPathConfig extends Config {
         keyName = "useTeleportationItems",
         name = "Use teleportation items",
         description = "Whether to include teleportation items from the player's inventory and equipment.<br>" +
-            "Options labelled (perm) only use permanent non-charge items.",
+            "Options labelled (perm) only use permanent non-charge items.<br>" +
+            "The All options do not check skill, quest or item requirements.",
         position = 16,
         section = sectionSettings
     )
