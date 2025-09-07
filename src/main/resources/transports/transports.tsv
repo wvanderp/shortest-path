@@ -140,6 +140,14 @@
 3170 9572 0	3170 3172 0	Climb Climbing rope 5946						2	
 3169 3173 0	3167 9573 0	Climb-down Dark hole 5947						2	
 									
+# Lumbridge Swamp Caves									
+3225 9542 0	3219 9532 2	Enter Tunnel 6659						2	
+3226 9542 0	3219 9532 2	Enter Tunnel 6659						2	
+3227 9542 0	3219 9532 2	Enter Tunnel 6659						2	
+3218 9532 2	3226 9542 0	Enter Tunnel 6658						2	
+3219 9532 2	3226 9542 0	Enter Tunnel 6658						2	
+3220 9532 2	3226 9542 0	Enter Tunnel 6658						2	
+									
 # Farm between Lumbridge and Draynor									
 3197 3278 0	3197 3275 0	Climb-over Stile 12982						6	
 3197 3275 0	3197 3278 0	Climb-over Stile 12982						6	
