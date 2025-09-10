@@ -34,7 +34,6 @@ import java.util.Collection;
 import net.runelite.cache.definitions.ObjectDefinition;
 import net.runelite.cache.fs.Store;
 import net.runelite.cache.region.Location;
-import net.runelite.cache.region.LocationType;
 import net.runelite.cache.region.Position;
 import net.runelite.cache.region.Region;
 import net.runelite.cache.region.RegionLoader;
