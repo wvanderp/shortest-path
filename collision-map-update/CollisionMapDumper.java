@@ -498,6 +498,13 @@ public class CollisionMapDumper
 		}
 	}
 
+	/*
+	 * Normally some objects are not considered blocking, for example doors that can be opened.
+	 * But sometimes we want to either force them to be blocking, either because they have requirements to be opened
+	 * or because they are just decorative and cannot be opened at all.
+	 * This enum contains a list of object IDs that should be treated as blocking (default)
+	 * 
+	 */
 	private enum Exclusion
 	{
 		AMETHYST_CRYSTALS_EMPTY_WALL_11393(11393),
