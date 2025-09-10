@@ -34,6 +34,7 @@ import java.util.Collection;
 import net.runelite.cache.definitions.ObjectDefinition;
 import net.runelite.cache.fs.Store;
 import net.runelite.cache.region.Location;
+import net.runelite.cache.region.LocationType;
 import net.runelite.cache.region.Position;
 import net.runelite.cache.region.Region;
 import net.runelite.cache.region.RegionLoader;
@@ -49,30 +50,50 @@ import org.apache.commons.cli.ParseException;
 /**
  * Collision map dumper
  *
- * Cache and XTEA keys can be downloaded from:
- * https://archive.openrs2.org/caches
- * and replace "mapsquare" with "region" and "key" with "keys".
- * Compile the client with "mvn install -f pom.xml -DskipTests -U".
- * Run "java net.runelite.cache.CollisionMapDumper --cachedir ../cache --xteapath ../keys.json --outputdir ../output"
+ * <p>
+ * Tool to export a compact representation of region collision data from a
+ * RuneLite/OpenRS2 cache. The output is a BitSet-backed byte array per region
+ * which encodes walkable/blocking flags for tile edges and planes. These files
+ * are useful for offline analysis or third-party navigation tools that don't
+ * need to load the full client.
+ * </p>
+ *
+ * <p>
+ * Inputs and usage:
+ * Cache and XTEA keys can be downloaded from https://archive.openrs2.org/caches
+ * (replace "mapsquare" with "region" and "key" with "keys"). Build with
+ * Maven and run the class with the --cachedir, --xteapath and --outputdir
+ * arguments as described in the original README.
+ * </p>
  */
-public class CollisionMapDumper
-{
+public class CollisionMapDumper {
 	private final RegionLoader regionLoader;
 	private final ObjectManager objectManager;
 
-	public CollisionMapDumper(Store store, KeyProvider keyProvider)
-	{
+	public CollisionMapDumper(Store store, KeyProvider keyProvider) {
 		this(store, new RegionLoader(store, keyProvider));
 	}
 
-	public CollisionMapDumper(Store store, RegionLoader regionLoader)
-	{
+	/**
+	 * Construct a CollisionMapDumper using a store and a key provider.
+	 *
+	 * @param store       the cache store
+	 * @param keyProvider provider for XTEA region keys
+	 */
+
+	public CollisionMapDumper(Store store, RegionLoader regionLoader) {
 		this.regionLoader = regionLoader;
 		this.objectManager = new ObjectManager(store);
 	}
 
-	public CollisionMapDumper load() throws IOException
-	{
+	/**
+	 * Load required data from the cache: object definitions and regions.
+	 *
+	 * @return this (for chaining)
+	 * @throws IOException on I/O problems while reading cache data
+	 */
+
+	public CollisionMapDumper load() throws IOException {
 		objectManager.load();
 		regionLoader.loadRegions();
 		regionLoader.calculateBounds();
@@ -80,13 +101,22 @@ public class CollisionMapDumper
 		return this;
 	}
 
-	private ObjectDefinition findObject(int id)
-	{
+	/**
+	 * Find an object definition by id.
+	 *
+	 * @param id the object id
+	 * @return the object definition, or null if not found
+	 */
+	private ObjectDefinition findObject(int id) {
 		return objectManager.getObject(id);
 	}
 
-	public static void main(String[] args) throws IOException
-	{
+	/**
+	 * Command-line entrypoint. Requires three options:
+	 * --cachedir (path to cache), --xteapath (JSON file with XTEA keys),
+	 * and --outputdir (destination directory).
+	 */
+	public static void main(String[] args) throws IOException {
 		Options options = new Options();
 		options.addOption(Option.builder().longOpt("cachedir").hasArg().required().build());
 		options.addOption(Option.builder().longOpt("xteapath").hasArg().required().build());
@@ -94,12 +124,9 @@ public class CollisionMapDumper
 
 		CommandLineParser parser = new DefaultParser();
 		CommandLine cmd;
-		try
-		{
+		try {
 			cmd = parser.parse(options, args);
-		}
-		catch (ParseException ex)
-		{
+		} catch (ParseException ex) {
 			System.err.println("Error parsing command line options: " + ex.getMessage());
 			System.exit(-1);
 			return;
@@ -110,8 +137,7 @@ public class CollisionMapDumper
 		final String outputDirectory = cmd.getOptionValue("outputdir");
 
 		XteaKeyManager xteaKeyManager = new XteaKeyManager();
-		try (FileInputStream fin = new FileInputStream(xteaJSONPath))
-		{
+		try (FileInputStream fin = new FileInputStream(xteaJSONPath)) {
 			xteaKeyManager.loadKeys(fin);
 		}
 
@@ -119,8 +145,7 @@ public class CollisionMapDumper
 		File outDir = new File(outputDirectory);
 		outDir.mkdirs();
 
-		try (Store store = new Store(base))
-		{
+		try (Store store = new Store(base)) {
 			store.load();
 
 			CollisionMapDumper dumper = new CollisionMapDumper(store, xteaKeyManager);
@@ -131,20 +156,24 @@ public class CollisionMapDumper
 			int n = 0;
 			int total = regions.size();
 
-			for (Region region : regions)
-			{
+			for (Region region : regions) {
 				dumper.makeCollisionMap(region, outputDirectory, ++n, total);
 			}
 		}
 	}
 
-	private void makeCollisionMap(Region region, String outputDirectory, int n, int total)
-	{
+	private void makeCollisionMap(Region region, String outputDirectory, int n, int total) {
 		int baseX = region.getBaseX();
 		int baseY = region.getBaseY();
 
+		// Create a FlagMap that covers the full coordinate range of this
+		// region. FlagMap stores a small set of boolean flags per tile per
+		// z-plane indicating whether movement across the north/south or
+		// east/west edge of the tile is allowed.
 		FlagMap flagMap = new FlagMap(baseX, baseY, baseX + Region.X - 1, baseY + Region.Y - 1);
 
+		// Populate flags for this region and the eight neighbouring regions
+		// so that edges on region boundaries are correctly represented.
 		addCollisions(flagMap, region);
 		addNeighborCollisions(flagMap, region, -1, -1);
 		addNeighborCollisions(flagMap, region, -1, 0);
@@ -158,57 +187,66 @@ public class CollisionMapDumper
 		String name = region.getRegionX() + "_" + region.getRegionY();
 
 		byte[] buf = flagMap.toBytes();
-		if (buf.length > 0)
-		{
-			try (FileOutputStream out = new FileOutputStream(outputDirectory + "/" + name))
-			{
+		if (buf.length > 0) {
+			try (FileOutputStream out = new FileOutputStream(outputDirectory + "/" + name)) {
 				out.write(buf, 0, buf.length);
 				System.out.println("Exporting region " + name + " (" + n + " / " + total + ")");
-			}
-			catch (IOException e)
-			{
+			} catch (IOException e) {
 				System.out.println("Unable to write compressed output bytes for " + name + ". " + e);
 			}
 		}
 	}
 
-	private void addNeighborCollisions(FlagMap flagMap, Region region, int dx, int dy)
-	{
-		Region neighbor = regionLoader.findRegionForRegionCoordinates(region.getRegionX() + dx, region.getRegionY() + dy);
-		if (neighbor == null)
-		{
+	private void addNeighborCollisions(FlagMap flagMap, Region region, int dx, int dy) {
+		Region neighbor = regionLoader.findRegionForRegionCoordinates(region.getRegionX() + dx,
+				region.getRegionY() + dy);
+		if (neighbor == null) {
 			return;
 		}
 		addCollisions(flagMap, neighbor);
 	}
 
-	private void addCollisions(FlagMap flagMap, Region region)
-	{
+	private void addCollisions(FlagMap flagMap, Region region) {
 		int baseX = region.getBaseX();
 		int baseY = region.getBaseY();
 
-		for (int z = 0; z < Region.Z; z++)
-		{
-			for (int localX = 0; localX < Region.X; localX++)
-			{
+		for (int z = 0; z < Region.Z; z++) {
+			for (int localX = 0; localX < Region.X; localX++) {
 				int regionX = baseX + localX;
-				for (int localY = 0; localY < Region.Y; localY++)
-				{
+				for (int localY = 0; localY < Region.Y; localY++) {
 					int regionY = baseY + localY;
 
+					// Check whether the local tile is a bridge tile. Bridge tiles are
+					// represented in the client by a setting bit which indicates the
+					// visible floor is on the plane above the base plane. When a
+					// bridge is present we should compare object positions against the
+					// bridge plane (z + 1) instead of the base plane.
 					boolean isBridge = (region.getTileSetting(1, localX, localY) & 2) != 0;
 					int tileZ = z + (isBridge ? 1 : 0);
 
-					for (Location loc : region.getLocations())
-					{
+					for (Location loc : region.getLocations()) {
 						Position pos = loc.getPosition();
-						if (pos.getX() != regionX || pos.getY() != regionY || pos.getZ() != tileZ)
-						{
+						if (pos.getX() != regionX || pos.getY() != regionY || pos.getZ() != tileZ) {
 							continue;
 						}
 
+						// Default to blocked until proven otherwise. Some objects have
+						// overrides listed in the Exclusion enum (for example doors that
+						// should be treated as permanently blocking). matches() returns
+						// a Boolean when an override exists, or null otherwise.
 						boolean tile = FlagMap.TILE_BLOCKED;
 						Boolean exclusion = Exclusion.matches(loc.getId());
+
+						// Monitoring / debug for specific object IDs causing unexpected blocking
+						final int WATCH_ID_1 = 31366;
+						final int WATCH_ID_2 = 31310;
+						final int WATCH_ID_3 = 11591;
+						final int WATCH_ID_4 = 2639;
+						final boolean watch = loc.getId() == WATCH_ID_1 || loc.getId() == WATCH_ID_2 || loc.getId() == WATCH_ID_3 || loc.getId() == WATCH_ID_4;
+						if (watch) {
+							System.out.println("[CollisionMapDumper] WATCH OBJECT id=" + loc.getId() + " region=(" + region.getRegionX() + "," + region.getRegionY() + ") base=(" + baseX + "," + baseY + ") tile=(" + regionX + "," + regionY + ",z=" + z + ") tileZ=" + tileZ);
+							System.out.println("  pos=" + pos + " type=" + loc.getType() + " orient=" + loc.getOrientation() + " exclusion=" + exclusion);
+						}
 
 						int X = loc.getPosition().getX();
 						int Y = loc.getPosition().getY();
@@ -219,107 +257,97 @@ public class CollisionMapDumper
 
 						ObjectDefinition object = findObject(loc.getId());
 
+						// The object's bounding size in tiles depends on its orientation;
+						// orientations 1 and 3 swap the X/Y dimensions.
 						int sizeX = (orientation == 1 || orientation == 3) ? object.getSizeY() : object.getSizeX();
 						int sizeY = (orientation == 1 || orientation == 3) ? object.getSizeX() : object.getSizeY();
 
 						// Walls
-						if (type >= 0 && type <= 3)
-						{
+						if (LocationType.isWallFamily(type)) {
 							Z = z != tileZ ? z : loc.getPosition().getZ();
 
-							if (object.getMapSceneID() != -1)
-							{
-								if (exclusion != null)
-								{
+							if (object.getMapSceneID() != -1) {
+								if (exclusion != null) {
 									tile = exclusion;
-								}
-								else if (object.getInteractType() == 0)
-								{
+								} else if (object.getInteractType() == 0) {
 									continue;
 								}
-								for (int sx = 0; sx < sizeX; sx++)
-								{
-									for (int sy = 0; sy < sizeY; sy++)
-									{
+								for (int sx = 0; sx < sizeX; sx++) {
+									for (int sy = 0; sy < sizeY; sy++) {
+										if (watch) System.out.println("[CollisionMapDumper] WRITE wall id=" + loc.getId() + " at=(" + (X + sx) + "," + (Y + sy) + "," + Z + ") north=" + tile + " east=" + tile);
 										flagMap.set(X + sx, Y + sy, Z, FlagMap.FLAG_NORTH, tile);
 										flagMap.set(X + sx, Y + sy, Z, FlagMap.FLAG_EAST, tile);
+										if (watch) System.out.println("[CollisionMapDumper] WRITE wall id=" + loc.getId() + " at=(" + (X + sx) + "," + (Y + sy - 1) + "," + Z + ") north=" + tile);
 										flagMap.set(X + sx, Y + sy - 1, Z, FlagMap.FLAG_NORTH, tile);
+										if (watch) System.out.println("[CollisionMapDumper] WRITE wall id=" + loc.getId() + " at=(" + (X + sx - 1) + "," + (Y + sy) + "," + Z + ") east=" + tile);
 										flagMap.set(X + sx - 1, Y + sy, Z, FlagMap.FLAG_EAST, tile);
 									}
 								}
-							}
-							else
-							{
+							} else {
 								boolean door = object.getWallOrDoor() != 0;
 								boolean doorway = !door && object.getInteractType() == 0 && type == 0;
 								tile = door ? FlagMap.TILE_DEFAULT : FlagMap.TILE_BLOCKED;
-								if (exclusion != null)
-								{
+								if (exclusion != null) {
 									tile = exclusion;
-								}
-								else if (doorway)
-								{
+								} else if (doorway) {
 									continue;
 								}
 
-								if (type == 0 || type == 2)
-								{
+								if (type == 0 || type == 2) {
 									if (orientation == 0) // wall on west
 									{
+										if (watch) System.out.println("[CollisionMapDumper] WRITE wall edge id=" + loc.getId() + " at=(" + (X - 1) + "," + Y + "," + Z + ") west=" + tile);
 										flagMap.set(X - 1, Y, Z, FlagMap.FLAG_WEST, tile);
-									}
-									else if (orientation == 1) // wall on north
+									} else if (orientation == 1) // wall on north
 									{
+										if (watch) System.out.println("[CollisionMapDumper] WRITE wall edge id=" + loc.getId() + " at=(" + X + "," + Y + "," + Z + ") north=" + tile);
 										flagMap.set(X, Y, Z, FlagMap.FLAG_NORTH, tile);
-									}
-									else if (orientation == 2) // wall on east
+									} else if (orientation == 2) // wall on east
 									{
+										if (watch) System.out.println("[CollisionMapDumper] WRITE wall edge id=" + loc.getId() + " at=(" + X + "," + Y + "," + Z + ") east=" + tile);
 										flagMap.set(X, Y, Z, FlagMap.FLAG_EAST, tile);
-									}
-									else if (orientation == 3) // wall on south
+									} else if (orientation == 3) // wall on south
 									{
+										if (watch) System.out.println("[CollisionMapDumper] WRITE wall edge id=" + loc.getId() + " at=(" + X + "," + (Y - 1) + "," + Z + ") south=" + tile);
 										flagMap.set(X, Y - 1, Z, FlagMap.FLAG_SOUTH, tile);
 									}
 								}
 
 								/*
-								if (type == 3)
-								{
-									if (orientation == 0) // corner north-west
-									{
-										flagMap.set(X - 1, Y, Z, FlagMap.FLAG_WEST, tile);
-									}
-									else if (orientation == 1) // corner north-east
-									{
-										flagMap.set(X, Y, Z, FlagMap.FLAG_NORTH, tile);
-									}
-									else if (orientation == 2) // corner south-east
-									{
-										flagMap.set(X, Y, Z, FlagMap.FLAG_EAST, tile);
-									}
-									else if (orientation == 3) // corner south-west
-									{
-										flagMap.set(X, Y - 1, Z, FlagMap.FLAG_SOUTH, tile);
-									}
-								}
-								*/
+								 * if (type == 3)
+								 * {
+								 * if (orientation == 0) // corner north-west
+								 * {
+								 * flagMap.set(X - 1, Y, Z, FlagMap.FLAG_WEST, tile);
+								 * }
+								 * else if (orientation == 1) // corner north-east
+								 * {
+								 * flagMap.set(X, Y, Z, FlagMap.FLAG_NORTH, tile);
+								 * }
+								 * else if (orientation == 2) // corner south-east
+								 * {
+								 * flagMap.set(X, Y, Z, FlagMap.FLAG_EAST, tile);
+								 * }
+								 * else if (orientation == 3) // corner south-west
+								 * {
+								 * flagMap.set(X, Y - 1, Z, FlagMap.FLAG_SOUTH, tile);
+								 * }
+								 * }
+								 */
 
 								if (type == 2) // double walls
 								{
-									if (orientation == 3)
-									{
+									if (orientation == 3) {
+										if (watch) System.out.println("[CollisionMapDumper] WRITE double-wall edge id=" + loc.getId() + " at=(" + (X - 1) + "," + Y + "," + Z + ") west=" + tile);
 										flagMap.set(X - 1, Y, Z, FlagMap.FLAG_WEST, tile);
-									}
-									else if (orientation == 0)
-									{
+									} else if (orientation == 0) {
+										if (watch) System.out.println("[CollisionMapDumper] WRITE double-wall edge id=" + loc.getId() + " at=(" + X + "," + Y + "," + Z + ") north=" + tile);
 										flagMap.set(X, Y, Z, FlagMap.FLAG_NORTH, tile);
-									}
-									else if (orientation == 1)
-									{
+									} else if (orientation == 1) {
+										if (watch) System.out.println("[CollisionMapDumper] WRITE double-wall edge id=" + loc.getId() + " at=(" + X + "," + Y + "," + Z + ") east=" + tile);
 										flagMap.set(X, Y, Z, FlagMap.FLAG_EAST, tile);
-									}
-									else if (orientation == 2)
-									{
+									} else if (orientation == 2) {
+										if (watch) System.out.println("[CollisionMapDumper] WRITE double-wall edge id=" + loc.getId() + " at=(" + X + "," + (Y - 1) + "," + Z + ") south=" + tile);
 										flagMap.set(X, Y - 1, Z, FlagMap.FLAG_SOUTH, tile);
 									}
 								}
@@ -327,31 +355,26 @@ public class CollisionMapDumper
 						}
 
 						// Diagonal walls
-						if (type == 9)
-						{
-							if (object.getMapSceneID() != -1)
-							{
-								if (exclusion != null)
-								{
+						if (LocationType.isDiagonal(type)) {
+							if (object.getMapSceneID() != -1) {
+								if (exclusion != null) {
 									tile = exclusion;
 								}
-								for (int sx = 0; sx < sizeX; sx++)
-								{
-									for (int sy = 0; sy < sizeY; sy++)
-									{
+								for (int sx = 0; sx < sizeX; sx++) {
+									for (int sy = 0; sy < sizeY; sy++) {
+										if (watch) System.out.println("[CollisionMapDumper] WRITE diag-wall id=" + loc.getId() + " at=(" + (X + sx) + "," + (Y + sy) + "," + Z + ") north/east=" + tile);
 										flagMap.set(X + sx, Y + sy, Z, FlagMap.FLAG_NORTH, tile);
 										flagMap.set(X + sx, Y + sy, Z, FlagMap.FLAG_EAST, tile);
+										if (watch) System.out.println("[CollisionMapDumper] WRITE diag-wall id=" + loc.getId() + " at=(" + (X + sx) + "," + (Y + sy - 1) + "," + Z + ") north=" + tile);
 										flagMap.set(X + sx, Y + sy - 1, Z, FlagMap.FLAG_NORTH, tile);
+										if (watch) System.out.println("[CollisionMapDumper] WRITE diag-wall id=" + loc.getId() + " at=(" + (X + sx - 1) + "," + (Y + sy) + "," + Z + ") east=" + tile);
 										flagMap.set(X + sx - 1, Y + sy, Z, FlagMap.FLAG_EAST, tile);
 									}
 								}
-							}
-							else
-							{
+							} else {
 								boolean door = object.getWallOrDoor() != 0;
 								tile = door ? FlagMap.TILE_DEFAULT : FlagMap.TILE_BLOCKED;
-								if (exclusion != null)
-								{
+								if (exclusion != null) {
 									tile = exclusion;
 								}
 
@@ -361,8 +384,7 @@ public class CollisionMapDumper
 									flagMap.set(X, Y, Z, FlagMap.FLAG_EAST, tile);
 									flagMap.set(X, Y - 1, Z, FlagMap.FLAG_NORTH, tile);
 									flagMap.set(X - 1, Y, Z, FlagMap.FLAG_EAST, tile);
-								}
-								else // diagonal wall pointing north-west
+								} else // diagonal wall pointing north-west
 								{
 									flagMap.set(X, Y, Z, FlagMap.FLAG_NORTH, tile);
 									flagMap.set(X, Y, Z, FlagMap.FLAG_WEST, tile);
@@ -373,22 +395,21 @@ public class CollisionMapDumper
 						}
 
 						// Remaining objects
-						if (type == 22 || (type >= 9 && type <= 11) || (type >= 12 && type <= 21))
-						{
-							if (object.getInteractType() != 0 && (object.getWallOrDoor() == 1 || (type >= 10 && type <= 21)))
-							{
-								if (exclusion != null)
-								{
+						if (LocationType.isDiagonal(type) || LocationType.isMapIconCandidate(type)) {
+							if (object.getInteractType() != 0
+									&& (object.getWallOrDoor() == 1 || (type >= 10 && type <= 21))) {
+								if (exclusion != null) {
 									tile = exclusion;
 								}
 
-								for (int sx = 0; sx < sizeX; sx++)
-								{
-									for (int sy = 0; sy < sizeY; sy++)
-									{
+								for (int sx = 0; sx < sizeX; sx++) {
+									for (int sy = 0; sy < sizeY; sy++) {
+										if (watch) System.out.println("[CollisionMapDumper] WRITE obj id=" + loc.getId() + " at=(" + (X + sx) + "," + (Y + sy) + "," + Z + ") north/east=" + tile);
 										flagMap.set(X + sx, Y + sy, Z, FlagMap.FLAG_NORTH, tile);
 										flagMap.set(X + sx, Y + sy, Z, FlagMap.FLAG_EAST, tile);
+										if (watch) System.out.println("[CollisionMapDumper] WRITE obj id=" + loc.getId() + " at=(" + (X + sx) + "," + (Y + sy - 1) + "," + Z + ") north=" + tile);
 										flagMap.set(X + sx, Y + sy - 1, Z, FlagMap.FLAG_NORTH, tile);
+										if (watch) System.out.println("[CollisionMapDumper] WRITE obj id=" + loc.getId() + " at=(" + (X + sx - 1) + "," + (Y + sy) + "," + Z + ") east=" + tile);
 										flagMap.set(X + sx - 1, Y + sy, Z, FlagMap.FLAG_EAST, tile);
 									}
 								}
@@ -396,7 +417,8 @@ public class CollisionMapDumper
 						}
 					}
 
-					// Tile without floor / floating in the air ("noclip" tiles, typically found where z > 0)
+					// Tile without floor / floating in the air ("noclip" tiles, typically found
+					// where z > 0)
 					int underlayId = region.getUnderlayId(z < 3 ? tileZ : z, localX, localY);
 					int overlayId = region.getOverlayId(z < 3 ? tileZ : z, localX, localY);
 					boolean noFloor = underlayId == 0 && overlayId == 0;
@@ -404,11 +426,10 @@ public class CollisionMapDumper
 					// Nomove
 					int floorType = region.getTileSetting(z < 3 ? tileZ : z, localX, localY);
 					if (floorType == 1 || // water, rooftop wall
-						floorType == 3 || // bridge wall
-						floorType == 5 || // house wall/roof
-						floorType == 7 || // house wall
-						noFloor)
-					{
+							floorType == 3 || // bridge wall
+							floorType == 5 || // house wall/roof
+							floorType == 7 || // house wall
+							noFloor) {
 						flagMap.set(regionX, regionY, z, FlagMap.FLAG_NORTH, FlagMap.TILE_BLOCKED);
 						flagMap.set(regionX, regionY, z, FlagMap.FLAG_EAST, FlagMap.TILE_BLOCKED);
 						flagMap.set(regionX, regionY - 1, z, FlagMap.FLAG_NORTH, FlagMap.TILE_BLOCKED);
@@ -419,8 +440,7 @@ public class CollisionMapDumper
 		}
 	}
 
-	private static class FlagMap
-	{
+	private static class FlagMap {
 		/**
 		 * The default value of a tile in the compressed collision map
 		 */
@@ -445,6 +465,11 @@ public class CollisionMapDumper
 		public static final int FLAG_EAST = 1;
 		public static final int FLAG_WEST = 1;
 
+		/**
+		 * BitSet containing FLAG_COUNT bits per tile per plane. The layout is
+		 * (plane, y, x, flag) -> single bit index. Use {@link #index} to compute
+		 * the index.
+		 */
 		public final BitSet flags;
 		private final int minX;
 		private final int minY;
@@ -453,13 +478,11 @@ public class CollisionMapDumper
 		private final int width;
 		private final int height;
 
-		public FlagMap(int minX, int minY, int maxX, int maxY)
-		{
+		public FlagMap(int minX, int minY, int maxX, int maxY) {
 			this(minX, minY, maxX, maxY, TILE_DEFAULT);
 		}
 
-		public FlagMap(int minX, int minY, int maxX, int maxY, boolean value)
-		{
+		public FlagMap(int minX, int minY, int maxX, int maxY, boolean value) {
 			this.minX = minX;
 			this.minY = minY;
 			this.maxX = maxX;
@@ -470,28 +493,25 @@ public class CollisionMapDumper
 			flags.set(0, flags.size(), value);
 		}
 
-		public byte[] toBytes()
-		{
+		public byte[] toBytes() {
 			return flags.toByteArray();
 		}
 
-		public void set(int x, int y, int z, int flag, boolean value)
-		{
-			if (isValidIndex(x, y, z, flag))
-			{
+		public void set(int x, int y, int z, int flag, boolean value) {
+			if (isValidIndex(x, y, z, flag)) {
 				flags.set(index(x, y, z, flag), value);
 			}
 		}
 
-		private boolean isValidIndex(int x, int y, int z, int flag)
-		{
-			return x >= minX && x <= maxX && y >= minY && y <= maxY && z >= 0 && z <= PLANE_COUNT - 1 && flag >= 0 && flag <= FLAG_COUNT - 1;
+		private boolean isValidIndex(int x, int y, int z, int flag) {
+			return x >= minX && x <= maxX && y >= minY && y <= maxY && z >= 0 && z <= PLANE_COUNT - 1 && flag >= 0
+					&& flag <= FLAG_COUNT - 1;
 		}
 
-		private int index(int x, int y, int z, int flag)
-		{
-			if (isValidIndex(x, y, z, flag))
-			{
+		private int index(int x, int y, int z, int flag) {
+			if (isValidIndex(x, y, z, flag)) {
+				// Compute a linear index for the 4D coordinate of (z, y, x, flag).
+				// Plane-major ordering is used: all tiles for plane 0, then plane 1, ...
 				return (z * width * height + (y - minY) * width + (x - minX)) * FLAG_COUNT + flag;
 			}
 			throw new IndexOutOfBoundsException(x + " " + y + " " + z);
@@ -505,8 +525,7 @@ public class CollisionMapDumper
 	 * This enum contains a list of object IDs that should be treated as blocking (default)
 	 * 
 	 */
-	private enum Exclusion
-	{
+	private enum Exclusion {
 		AMETHYST_CRYSTALS_EMPTY_WALL_11393(11393),
 
 		APE_ATOLL_JAIL_DOOR_4800(4800),
@@ -606,8 +625,10 @@ public class CollisionMapDumper
 		MELZARS_MAZE_RED_DOOR_2596(2596),
 		MELZARS_MAZE_YELLOW_DOOR_2598(2598),
 
-		// MEMBERS_GATE_1727(1727), // Taverley, Falador, Brimhaven, Wilderness, Edgeville Dungeon
-		// MEMBERS_GATE_1728(1728), // Taverley, Falador, Brimhaven, Wilderness, Edgeville Dungeon
+		// MEMBERS_GATE_1727(1727), // Taverley, Falador, Brimhaven, Wilderness,
+		// Edgeville Dungeon
+		// MEMBERS_GATE_1728(1728), // Taverley, Falador, Brimhaven, Wilderness,
+		// Edgeville Dungeon
 
 		OLD_SCHOOL_MUSEUM_CURTAIN_31885(31885), // type = 9 is full blocked diagonal, type = 0 is wall
 
@@ -695,23 +716,18 @@ public class CollisionMapDumper
 		 */
 		private final boolean tile;
 
-		Exclusion(int id)
-		{
+		Exclusion(int id) {
 			this(id, FlagMap.TILE_BLOCKED);
 		}
 
-		Exclusion(int id, boolean tile)
-		{
+		Exclusion(int id, boolean tile) {
 			this.id = id;
 			this.tile = tile;
 		}
 
-		public static Boolean matches(int id)
-		{
-			for (Exclusion exclusion : values())
-			{
-				if (exclusion.id == id)
-				{
+		public static Boolean matches(int id) {
+			for (Exclusion exclusion : values()) {
+				if (exclusion.id == id) {
 					return exclusion.tile;
 				}
 			}
