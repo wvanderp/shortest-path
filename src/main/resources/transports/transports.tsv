@@ -3196,6 +3196,38 @@
 3339 3523 0	3339 3520 0	Cross Wilderness Ditch 23271						4	
 3340 3520 0	3340 3523 0	Cross Wilderness Ditch 23271						4	
 3340 3523 0	3340 3520 0	Cross Wilderness Ditch 23271						4	
+3259 3663 0	3385 10052 0	Walk-down Stairs 40388						2	
+3260 3663 0	3385 10052 0	Walk-down Stairs 40388						2	
+3384 10052 0	3259 3663 0	Exit Opening 40389						2	
+3385 10052 0	3259 3663 0	Exit Opening 40389						2	
+3386 10052 0	3259 3663 0	Exit Opening 40389						2	
+3293 3749 0	3406 10145 0	Walk-down Stairs 40390						2	
+3294 3749 0	3406 10145 0	Walk-down Stairs 40390						2	
+3405 10145 0	3294 3749 0	Exit Opening 40391						2	
+3406 10145 0	3294 3749 0	Exit Opening 40391						2	
+3407 10145 0	3294 3749 0	Exit Opening 40391						2	
+3073 3653 0	3197 10056 0	Enter Cavern 31555						2	
+3074 3653 0	3197 10056 0	Enter Cavern 31555						2	
+3075 3653 0	3197 10056 0	Enter Cavern 31555						2	
+3076 3653 0	3197 10056 0	Enter Cavern 31555						2	
+3069 3740 0	3187 10128 0	Jump-down Crevice 40386						2	
+3069 3741 0	3187 10128 0	Jump-down Crevice 40386						2	
+3069 3742 0	3187 10128 0	Jump-down Crevice 40386						2	
+3069 3743 0	3187 10128 0	Jump-down Crevice 40386						2	
+3066 3740 0	3187 10128 0	Jump-down Crevice 40386						2	
+3066 3741 0	3187 10128 0	Jump-down Crevice 40386						2	
+3066 3742 0	3187 10128 0	Jump-down Crevice 40386						2	
+3066 3743 0	3187 10128 0	Jump-down Crevice 40386						2	
+3067 3739 0	3187 10128 0	Jump-down Crevice 40386						2	
+3068 3739 0	3187 10128 0	Jump-down Crevice 40386						2	
+3067 3744 0	3187 10128 0	Jump-down Crevice 40386						2	
+3068 3744 0	3187 10128 0	Jump-down Crevice 40386						2	
+3126 3831 0	3241 10233 0	Enter Cavern 31556						2	
+3126 3832 0	3241 10233 0	Enter Cavern 31556						2	
+3126 3833 0	3241 10233 0	Enter Cavern 31556						2	
+3126 3834 0	3241 10233 0	Enter Cavern 31556						2	
+3217 10058 0	3102 3655 0	Climb-up Stairs 31558						2	
+3246 10215 0	3124 3805 0	Climb-up Stairs 43868						2	
 									
 # Nardah									
 3409 2932 0	3409 2932 1	Climb-up Ladder 10493						2	
