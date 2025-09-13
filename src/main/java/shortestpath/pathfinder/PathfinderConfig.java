@@ -387,7 +387,7 @@ public class PathfinderConfig {
                 case ALL:
                     return true;
                 case ALL_NON_CONSUMABLE:
-                    return transport.isConsumable();
+                    return !transport.isConsumable();
                 case UNLOCKED:
                 case INVENTORY:
                 case INVENTORY_AND_BANK:
