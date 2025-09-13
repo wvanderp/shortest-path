@@ -47,6 +47,7 @@ import static shortestpath.TransportType.MAGIC_CARPET;
 import static shortestpath.TransportType.MAGIC_MUSHTREE;
 import static shortestpath.TransportType.MINECART;
 import static shortestpath.TransportType.QUETZAL;
+import static shortestpath.TransportType.SEASONAL_TRANSPORTS;
 import static shortestpath.TransportType.SPIRIT_TREE;
 import static shortestpath.TransportType.TELEPORTATION_BOX;
 import static shortestpath.TransportType.TELEPORTATION_LEVER;
@@ -115,6 +116,7 @@ public class PathfinderConfig {
         useMagicMushtrees,
         useMinecarts,
         useQuetzals,
+        useSeasonalTransports,
         useSpiritTrees,
         useTeleportationBoxes,
         useTeleportationLevers,
@@ -173,6 +175,7 @@ public class PathfinderConfig {
         useMagicMushtrees = ShortestPathPlugin.override("useMagicMushtrees", config.useMagicMushtrees());
         useMinecarts = ShortestPathPlugin.override("useMinecarts", config.useMinecarts());
         useQuetzals = ShortestPathPlugin.override("useQuetzals", config.useQuetzals());
+        useSeasonalTransports = ShortestPathPlugin.override("useSeasonalTransports", config.useSeasonalTransports());
         useSpiritTrees = ShortestPathPlugin.override("useSpiritTrees", config.useSpiritTrees());
         useTeleportationItems = ShortestPathPlugin.override("useTeleportationItems", config.useTeleportationItems());
         useTeleportationBoxes = ShortestPathPlugin.override("useTeleportationBoxes", config.useTeleportationBoxes());
@@ -380,6 +383,29 @@ public class PathfinderConfig {
             return false;
         } else if (QUETZAL.equals(type) && !useQuetzals) {
             return false;
+        } else if (SEASONAL_TRANSPORTS.equals(type)) {
+            if (!useSeasonalTransports) {
+                return false;
+            }
+            switch (useTeleportationItems) {
+                case ALL:
+                    return true;
+                case ALL_NON_CONSUMABLE:
+                    return !transport.isConsumable();
+                case UNLOCKED:
+                case INVENTORY:
+                case INVENTORY_AND_BANK:
+                    break;
+                case NONE:
+                    return false;
+                case UNLOCKED_NON_CONSUMABLE:
+                case INVENTORY_NON_CONSUMABLE:
+                case INVENTORY_AND_BANK_NON_CONSUMABLE:
+                    if (transport.isConsumable()) {
+                        return false;
+                    }
+                    break;
+            }
         } else if (SPIRIT_TREE.equals(type) && !useSpiritTrees) {
             return false;
         } else if (TELEPORTATION_ITEM.equals(type)) {
@@ -450,7 +476,8 @@ public class PathfinderConfig {
 
     /** Checks if the player has all the required equipment and inventory items for the transport */
     private boolean hasRequiredItems(Transport transport) {
-        if (TransportType.TELEPORTATION_ITEM.equals(transport.getType())) {
+        if (TransportType.TELEPORTATION_ITEM.equals(transport.getType()) ||
+            TransportType.SEASONAL_TRANSPORTS.equals(transport.getType())) {
             switch (useTeleportationItems) {
                 case ALL:
                 case ALL_NON_CONSUMABLE:
