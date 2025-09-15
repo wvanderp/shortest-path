@@ -4875,6 +4875,10 @@
 1667 10051 0	1639 3673 0	Climb-up Vine ladder 28894						2	
 1639 3673 0	1666 10050 0	Investigate Statue 27785						2	
 									
+# Hosidius									
+1631 3570 0	1634 3570 0	Climb-over Stile 7527						3	
+1634 3570 0	1631 3570 0	Climb-over Stile 7527						3	
+									
 # Kharazi Jungle									
 2762 2943 0	2762 2941 0	Chop-down Jungle Bush 2892		MACHETE=1			139>49	2	
 2762 2940 0	2762 2942 0	Chop-down Jungle Bush 2892		MACHETE=1			139>49	2	
