@@ -4888,6 +4888,16 @@
 1631 3570 0	1634 3570 0	Climb-over Stile 7527						3	
 1634 3570 0	1631 3570 0	Climb-over Stile 7527						3	
 									
+# Jiggig									
+2455 3049 0	2457 3049 0	Climb-over Crushed barricade 6881				496=1		2	
+2457 3049 0	2455 3049 0	Climb-over Crushed barricade 6881				496=1		2	
+2455 3048 0	2457 3048 0	Climb-over Crushed barricade 6882				496=1		2	
+2457 3048 0	2455 3048 0	Climb-over Crushed barricade 6882				496=1		2	
+2485 3045 0	2477 9437 2	Climb-down Stairs 6841				487>10		7	
+2477 9437 2	2485 3045 0	Climb-up Stairs 6842						7	
+2486 3045 0	2477 9437 2	Climb-down Stairs 6841				487>10		7	
+2477 9438 2	2485 3045 0	Climb-up Stairs 6842						7	
+									
 # Kharazi Jungle									
 2762 2943 0	2762 2941 0	Chop-down Jungle Bush 2892		MACHETE=1			139>49	2	
 2762 2940 0	2762 2942 0	Chop-down Jungle Bush 2892		MACHETE=1			139>49	2	
