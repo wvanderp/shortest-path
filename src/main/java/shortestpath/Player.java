@@ -63,6 +63,11 @@ public class Player {
     @Getter @Setter
     private ItemContainer equipment;
     
+    // Cached inventory representation used when an ItemContainer is not available
+    // Index corresponds to inventory slot (0-27). This allows tests and callers
+    // to populate inventory slots without requiring an ItemContainer implementation.
+    private Item[] cachedInventoryItems = new Item[28];
+    
     @Getter @Setter
     private ItemContainer bank;
     
@@ -75,12 +80,87 @@ public class Player {
     public void setBoostedSkillLevel(Skill skill, int level) {
         boostedSkillLevels[skill.ordinal()] = level;
     }
+    /**
+     * Add or replace an item in a specific inventory slot in the cached inventory.
+     * If an `ItemContainer` is set on this Player, callers should prefer to update
+     * that container instead. This helper is intended for tests and for code that
+     * wants to populate inventory slots without a concrete ItemContainer.
+     *
+     * @param slot inventory slot index (0-based)
+     * @param item item to place in the slot (may be null to clear)
+     */
+    public void addInventoryItemAtSlot(int slot, Item item) {
+        if (slot < 0 || slot >= cachedInventoryItems.length) {
+            throw new IllegalArgumentException("Inventory slot out of range: " + slot);
+        }
+        cachedInventoryItems[slot] = item;
+    }
+    
+    /**
+     * Populate the cached inventory sequentially from the provided items. Any
+     * slots beyond the provided items will be cleared (set to null).
+     *
+     * @param items items to place into the cached inventory
+     */
+    public void addInventoryItems(Item... items) {
+        for (int i = 0; i < cachedInventoryItems.length; i++) {
+            cachedInventoryItems[i] = (i < items.length) ? items[i] : null;
+        }
+    }
+    
+    /**
+     * Returns the items for the player's inventory. If an `ItemContainer` is
+     * present it will be returned; otherwise the cached inventory array is
+     * returned. The returned array may contain nulls for empty slots.
+     */
+    public Item[] getInventoryItemsArray() {
+        if (inventory != null) {
+            return inventory.getItems();
+        }
+        return cachedInventoryItems;
+    }
     
     // Convenience method to get real skill level
     public int getRealSkillLevel(Skill skill) {
         return realSkillLevels[skill.ordinal()];
     }
     
+    
+    /**
+     * Add or update a single varbit value. Alias for `setVarbitValue` kept for
+     * clarity when callers mean to 'add' a varbit entry to the player's map.
+     */
+    public void addVarbit(int varbitId, int value) {
+        setVarbitValue(varbitId, value);
+    }
+    
+    /**
+     * Merge the provided varbit values into the player's varbit map. Existing
+     * entries will be overwritten by the values provided here.
+     */
+    public void addVarbits(Map<Integer, Integer> values) {
+        if (values == null) {
+            return;
+        }
+        varbitValues.putAll(values);
+    }
+    
+    /**
+     * Add or update a single varplayer value. Alias for `setVarPlayerValue`.
+     */
+    public void addVarPlayer(int varPlayerId, int value) {
+        setVarPlayerValue(varPlayerId, value);
+    }
+    
+    /**
+     * Merge the provided varplayer values into the player's varplayer map.
+     */
+    public void addVarPlayers(Map<Integer, Integer> values) {
+        if (values == null) {
+            return;
+        }
+        varPlayerValues.putAll(values);
+    }
     // Convenience method to set real skill level
     public void setRealSkillLevel(Skill skill, int level) {
         realSkillLevels[skill.ordinal()] = level;
