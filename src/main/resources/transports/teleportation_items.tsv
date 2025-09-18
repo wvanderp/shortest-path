@@ -16,8 +16,10 @@
 3683 9888 0			13113=1||13114=1		4	Morytania legs: Slime Pit	T	20	4488=1;4542<5	
 3683 9888 0			13115=1		4	Morytania legs: Slime Pit	F	20	4490=1	
 3482 3230 0			13114=1||13115=1		4	Morytania legs: Burgh de Rott	F	20	4489=1	
-# Fremennik sea boots (1,2,3 have 1 teleport per day, 4 is unlimited)										
-2643 3675 0			13129=1||13130=1||13131=1		4	Fremennik sea boots: Teleport	T	20	4491=1;5005=0	
+# Fremennik sea boots (1 has 1, 2 has 3, 3 has 5 teleports per day, 4 is unlimited)										
+2643 3675 0			13129=1		4	Fremennik sea boots: Teleport	T	20	4491=1;5005=0	
+2643 3675 0			13130=1		4	Fremennik sea boots: Teleport	T	20	4491=1;5005<3	
+2643 3675 0			13131=1		4	Fremennik sea boots: Teleport	T	20	4491=1;5005<5	
 2643 3675 0			13132=1		4	Fremennik sea boots: Teleport	F	20	4494=1	
 # Kandarin headgear (3 has 1 teleport per day, 4 is unlimited)										
 2729 3409 0			13139=1		4	Kandarin headgear 3: Teleport	T	20	4477=1;4561=0	
