@@ -126,6 +126,8 @@ public class ShortestPathPlugin extends Plugin {
     @Inject
     private WorldMapPointManager worldMapPointManager;
 
+    private PlayerService playerService;
+
     boolean drawCollisionMap;
     boolean drawMap;
     boolean drawMinimap;
@@ -174,9 +176,17 @@ public class ShortestPathPlugin extends Plugin {
     protected void startUp() {
         cacheConfigValues();
 
-        pathfinderConfig = new PathfinderConfig(client, config);
+        // Create PlayerService manually to avoid circular dependency
+        playerService = new PlayerService(client);
+        pathfinderConfig = new PathfinderConfig(client, config, playerService);
+        
+        // Initialize player service with current game state
+        playerService.updateGameState(client.getGameState());
         if (GameState.LOGGED_IN.equals(client.getGameState())) {
-            clientThread.invokeLater(pathfinderConfig::refresh);
+            clientThread.invokeLater(() -> {
+                playerService.refreshAllPlayerData();
+                pathfinderConfig.refresh();
+            });
         }
 
         overlayManager.add(pathOverlay);
@@ -277,6 +287,9 @@ public class ShortestPathPlugin extends Plugin {
 
     @Subscribe
     public void onGameStateChanged(GameStateChanged event) {
+        // Update player service with new game state
+        playerService.updateGameState(event.getGameState());
+        
         if (pathfinderConfig == null
             || !GameState.LOGGING_IN.equals(lastLastGameState)
             || !GameState.LOADING.equals(lastLastGameState = lastGameState)
@@ -286,7 +299,10 @@ public class ShortestPathPlugin extends Plugin {
             return;
         }
 
-        pendingTasks.add(new PendingTask(client.getTickCount() + 1, pathfinderConfig::refresh));
+        pendingTasks.add(new PendingTask(client.getTickCount() + 1, () -> {
+            playerService.refreshAllPlayerData();
+            pathfinderConfig.refresh();
+        }));
     }
 
     @Subscribe
@@ -319,10 +335,14 @@ public class ShortestPathPlugin extends Plugin {
             int start = (objStart instanceof WorldPoint) ? WorldPointUtil.packWorldPoint((WorldPoint) objStart)
                 : ((objStart instanceof Integer) ? ((int) objStart) : WorldPointUtil.UNDEFINED);
             if (start == WorldPointUtil.UNDEFINED) {
-                if (client.getLocalPlayer() == null) {
+                // Use PlayerService for player location if available
+                if (playerService.isLoggedIn() && playerService.getPlayer().getWorldLocation() != null) {
+                    start = WorldPointUtil.packWorldPoint(playerService.getPlayer().getWorldLocation());
+                } else if (client.getLocalPlayer() != null) {
+                    start = WorldPointUtil.packWorldPoint(client.getLocalPlayer().getWorldLocation());
+                } else {
                     return;
                 }
-                start = WorldPointUtil.packWorldPoint(client.getLocalPlayer().getWorldLocation());
             }
 
             Set<Integer> targets = new HashSet<>();
@@ -402,6 +422,11 @@ public class ShortestPathPlugin extends Plugin {
 
     @Subscribe
     public void onGameTick(GameTick tick) {
+        // Update player location in PlayerService
+        if (playerService.isLoggedIn()) {
+            playerService.updatePlayerLocation();
+        }
+        
         for (int i = 0; i < pendingTasks.size(); i++) {
             if (pendingTasks.get(i).check(client.getTickCount())) {
                 pendingTasks.remove(i--).run();
@@ -502,10 +527,15 @@ public class ShortestPathPlugin extends Plugin {
 
     @Subscribe
     public void onItemContainerChanged(ItemContainerChanged event) {
-        if (event.getContainerId() != InventoryID.BANK) {
-            return;
+        // Update PlayerService with item container changes
+        if (playerService.isLoggedIn()) {
+            playerService.refreshItemContainers();
         }
-        pathfinderConfig.bank = event.getItemContainer();
+        
+        // Keep existing bank logic for backward compatibility during transition
+        if (event.getContainerId() == InventoryID.BANK) {
+            pathfinderConfig.bank = event.getItemContainer();
+        }
     }
 
     @Subscribe
@@ -759,7 +789,13 @@ public class ShortestPathPlugin extends Plugin {
                 worldMapPointManager.add(marker);
             }
 
-            int start = WorldPointUtil.fromLocalInstance(client, localPlayer.getLocalLocation());
+            int start;
+            // Use PlayerService for player location if available
+            if (playerService.isLoggedIn() && playerService.getPlayer().getWorldLocation() != null) {
+                start = WorldPointUtil.packWorldPoint(playerService.getPlayer().getWorldLocation());
+            } else {
+                start = WorldPointUtil.fromLocalInstance(client, localPlayer.getLocalLocation());
+            }
             lastLocation = start;
             if (startPointSet && pathfinder != null) {
                 start = pathfinder.getStart();

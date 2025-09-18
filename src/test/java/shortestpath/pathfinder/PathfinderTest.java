@@ -19,6 +19,8 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import shortestpath.ItemVariations;
+import shortestpath.Player;
+import shortestpath.PlayerService;
 import shortestpath.ShortestPathConfig;
 import shortestpath.ShortestPathPlugin;
 import shortestpath.TeleportationItem;
@@ -47,6 +49,12 @@ public class PathfinderTest {
 
     @Mock
     ItemContainer equipment;
+
+    @Mock
+    PlayerService playerService;
+
+    @Mock
+    Player player;
 
     @Mock
     ShortestPathPlugin plugin;
@@ -435,7 +443,15 @@ public class PathfinderTest {
     }
 
     private void setupConfig(QuestState questState, int skillLevel, TeleportationItem useTeleportationItems) {
-        pathfinderConfig = spy(new PathfinderConfig(client, config));
+        // Setup PlayerService mock
+        when(playerService.getPlayer()).thenReturn(player);
+        when(playerService.isLoggedIn()).thenReturn(true);
+        when(playerService.getBoostedSkillLevel(any(Skill.class))).thenReturn(skillLevel);
+        when(playerService.getQuestState(any(Quest.class))).thenReturn(questState);
+        when(playerService.getInventory()).thenReturn(inventory);
+        when(playerService.getEquipment()).thenReturn(equipment);
+        
+        pathfinderConfig = spy(new PathfinderConfig(client, config, playerService));
 
         when(client.getGameState()).thenReturn(GameState.LOGGED_IN);
         when(client.getClientThread()).thenReturn(Thread.currentThread());
@@ -451,11 +467,13 @@ public class PathfinderTest {
     private void setupInventory(Item... items) {
         doReturn(inventory).when(client).getItemContainer(InventoryID.INV);
         doReturn(items).when(inventory).getItems();
+        when(playerService.getInventory()).thenReturn(inventory);
     }
 
     private void setupEquipment(Item... items) {
         doReturn(equipment).when(client).getItemContainer(InventoryID.WORN);
         doReturn(items).when(equipment).getItems();
+        when(playerService.getEquipment()).thenReturn(equipment);
     }
 
     private void testTransportLength(int expectedLength, int origin, int destination) {
