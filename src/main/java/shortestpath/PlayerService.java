@@ -29,17 +29,17 @@ public class PlayerService {
     
     // Rune pouch varbits for inventory checking
     private static final int[] RUNE_POUCH_RUNE_VARBITS = {
-        VarbitID.RUNE_POUCH_RUNE1,
-        VarbitID.RUNE_POUCH_RUNE2,
-        VarbitID.RUNE_POUCH_RUNE3,
-        VarbitID.RUNE_POUCH_RUNE4
+        VarbitID.RUNE_POUCH_TYPE_1,
+        VarbitID.RUNE_POUCH_TYPE_2,
+        VarbitID.RUNE_POUCH_TYPE_3,
+        VarbitID.RUNE_POUCH_TYPE_4
     };
     
     private static final int[] RUNE_POUCH_AMOUNT_VARBITS = {
-        VarbitID.RUNE_POUCH_AMOUNT1,
-        VarbitID.RUNE_POUCH_AMOUNT2,
-        VarbitID.RUNE_POUCH_AMOUNT3,
-        VarbitID.RUNE_POUCH_AMOUNT4
+        VarbitID.RUNE_POUCH_QUANTITY_1,
+        VarbitID.RUNE_POUCH_QUANTITY_2,
+        VarbitID.RUNE_POUCH_QUANTITY_3,
+        VarbitID.RUNE_POUCH_QUANTITY_4
     };
     
     public PlayerService(Client client) {
@@ -119,10 +119,6 @@ public class PlayerService {
                 player.setBoostedSkillLevel(skill, client.getBoostedSkillLevel(skill));
                 player.setRealSkillLevel(skill, client.getRealSkillLevel(skill));
             }
-            
-            // Update computed values
-            player.setTotalLevel(client.getTotalLevel());
-            player.setCombatLevel(calculateCombatLevel());
             
         } catch (Exception e) {
             log.error("Error refreshing skill levels", e);
@@ -229,33 +225,15 @@ public class PlayerService {
         player.setGameState(gameState);
         
         // If logging out, reset player data
-        if (gameState != GameState.LOGGED_IN) {
-            if (gameState == GameState.LOGIN_SCREEN || gameState == GameState.LOGGED_OUT) {
+        if (
+            gameState != GameState.LOGGED_IN 
+            && gameState != GameState.LOADING 
+            && gameState != GameState.HOPPING
+        ) {
                 player.reset();
-            }
         }
     }
     
-    /**
-     * Calculates the combat level based on current skill levels.
-     * This mirrors the calculation in PathfinderConfig.
-     */
-    private int calculateCombatLevel() {
-        int attack = player.getRealSkillLevel(Skill.ATTACK);
-        int strength = player.getRealSkillLevel(Skill.STRENGTH);
-        int defence = player.getRealSkillLevel(Skill.DEFENCE);
-        int hitpoints = player.getRealSkillLevel(Skill.HITPOINTS);
-        int magic = player.getRealSkillLevel(Skill.MAGIC);
-        int ranged = player.getRealSkillLevel(Skill.RANGED);
-        int prayer = player.getRealSkillLevel(Skill.PRAYER);
-        
-        double base = 0.25 * (defence + hitpoints + (prayer / 2.0));
-        double melee = (13 * (attack + strength)) / 40.0;
-        double range = (13 * ((3 * ranged) / 2.0)) / 40.0;
-        double mage = (13 * ((3 * magic) / 2.0)) / 40.0;
-        
-        return (int) Math.floor(base + Math.max(Math.max(melee, range), Math.max(melee, mage)));
-    }
     
     /**
      * Checks if the player has access to rune pouch runes.
@@ -271,8 +249,6 @@ public class PlayerService {
             EnumComposition runePouchEnum = client.getEnum(EnumID.RUNEPOUCH_RUNE);
             if (runePouchEnum != null) {
                 for (int i = 0; i < RUNE_POUCH_RUNE_VARBITS.length; i++) {
-                    int runeEnumId = player.getVarbitValue(RUNE_POUCH_RUNE_VARBITS[i]);
-                    int runeId = runePouchEnum.getIntValue(runeEnumId);
                     int runeAmount = player.getVarbitValue(RUNE_POUCH_AMOUNT_VARBITS[i]);
                     
                     if (runeAmount > 0) {
@@ -286,138 +262,5 @@ public class PlayerService {
         }
         
         return false;
-    }
-    
-    /**
-     * Gets the current game state.
-     */
-    public GameState getGameState() {
-        return player.getGameState();
-    }
-    
-    /**
-     * Checks if the player is currently logged in.
-     */
-    public boolean isLoggedIn() {
-        return player.isLoggedIn();
-    }
-    
-    /**
-     * Gets a boosted skill level.
-     */
-    public int getBoostedSkillLevel(Skill skill) {
-        return player.getBoostedSkillLevel(skill);
-    }
-    
-    /**
-     * Gets a real skill level.
-     */
-    public int getRealSkillLevel(Skill skill) {
-        return player.getRealSkillLevel(skill);
-    }
-    
-    /**
-     * Gets the total level.
-     */
-    public int getTotalLevel() {
-        return player.getTotalLevel();
-    }
-    
-    /**
-     * Gets the combat level.
-     */
-    public int getCombatLevel() {
-        return player.getCombatLevel();
-    }
-    
-    /**
-     * Gets the quest points.
-     */
-    public int getQuestPoints() {
-        return player.getQuestPoints();
-    }
-    
-    /**
-     * Gets a quest state.
-     */
-    public QuestState getQuestState(Quest quest) {
-        return player.getQuestState(quest);
-    }
-    
-    /**
-     * Gets a varbit value.
-     */
-    public int getVarbitValue(int varbitId) {
-        return player.getVarbitValue(varbitId);
-    }
-    
-    /**
-     * Gets a varplayer value.
-     */
-    public int getVarPlayerValue(int varPlayerId) {
-        return player.getVarPlayerValue(varPlayerId);
-    }
-    
-    /**
-     * Gets the inventory container.
-     */
-    public ItemContainer getInventory() {
-        return player.getInventory();
-    }
-    
-    /**
-     * Gets the equipment container.
-     */
-    public ItemContainer getEquipment() {
-        return player.getEquipment();
-    }
-    
-    /**
-     * Gets the bank container.
-     */
-    public ItemContainer getBank() {
-        return player.getBank();
-    }
-    
-    /**
-     * Checks if the player has a specific item in inventory.
-     */
-    public boolean hasItem(int itemId) {
-        return player.hasItem(itemId);
-    }
-    
-    /**
-     * Checks if the player has a specific item in equipment.
-     */
-    public boolean hasItemInEquipment(int itemId) {
-        return player.hasItemInEquipment(itemId);
-    }
-    
-    /**
-     * Checks if the player has a specific item in bank.
-     */
-    public boolean hasItemInBank(int itemId) {
-        return player.hasItemInBank(itemId);
-    }
-    
-    /**
-     * Gets the quantity of a specific item in inventory.
-     */
-    public int getItemQuantity(int itemId) {
-        return player.getItemQuantity(itemId);
-    }
-    
-    /**
-     * Gets the quantity of a specific item in equipment.
-     */
-    public int getItemQuantityInEquipment(int itemId) {
-        return player.getItemQuantityInEquipment(itemId);
-    }
-    
-    /**
-     * Gets the quantity of a specific item in bank.
-     */
-    public int getItemQuantityInBank(int itemId) {
-        return player.getItemQuantityInBank(itemId);
     }
 }

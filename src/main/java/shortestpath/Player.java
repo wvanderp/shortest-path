@@ -35,11 +35,16 @@ public class Player {
     private final int[] realSkillLevels = new int[Skill.values().length];
     
     // Additional computed values that are commonly needed
-    @Getter @Setter
-    private int totalLevel;
-    
-    @Getter @Setter
-    private int combatLevel;
+    // `totalLevel` is computed on-the-fly from `realSkillLevels`.
+    public int getTotalLevel()
+    {
+        int total = 0;
+        for (int lvl : realSkillLevels)
+        {
+            total += lvl;
+        }
+        return total;
+    }
     
     @Getter @Setter
     private int questPoints;
@@ -214,6 +219,27 @@ public class Player {
         }
         return quantity;
     }
+
+    /**
+     * Calculates the combat level based on current skill levels.
+     * This mirrors the calculation in PathfinderConfig.
+     */
+    public int getCombatLevel() {
+        int attack = this.getRealSkillLevel(Skill.ATTACK);
+        int strength = this.getRealSkillLevel(Skill.STRENGTH);
+        int defence = this.getRealSkillLevel(Skill.DEFENCE);
+        int hitpoints = this.getRealSkillLevel(Skill.HITPOINTS);
+        int magic = this.getRealSkillLevel(Skill.MAGIC);
+        int ranged = this.getRealSkillLevel(Skill.RANGED);
+        int prayer = this.getRealSkillLevel(Skill.PRAYER);
+        
+        double base = 0.25 * (defence + hitpoints + (prayer / 2.0));
+        double melee = (13 * (attack + strength)) / 40.0;
+        double range = (13 * ((3 * ranged) / 2.0)) / 40.0;
+        double mage = (13 * ((3 * magic) / 2.0)) / 40.0;
+        
+        return (int) Math.floor(base + Math.max(Math.max(melee, range), Math.max(melee, mage)));
+    }
     
     // Check if player is logged in
     public boolean isLoggedIn() {
@@ -231,8 +257,7 @@ public class Player {
             realSkillLevels[i] = 0;
         }
         
-        totalLevel = 0;
-        combatLevel = 0;
+        // totalLevel is computed dynamically; nothing to reset.
         questPoints = 0;
         
         // Clear collections

@@ -336,7 +336,7 @@ public class ShortestPathPlugin extends Plugin {
                 : ((objStart instanceof Integer) ? ((int) objStart) : WorldPointUtil.UNDEFINED);
             if (start == WorldPointUtil.UNDEFINED) {
                 // Use PlayerService for player location if available
-                if (playerService.isLoggedIn() && playerService.getPlayer().getWorldLocation() != null) {
+                if (playerService.getPlayer().isLoggedIn() && playerService.getPlayer().getWorldLocation() != null) {
                     start = WorldPointUtil.packWorldPoint(playerService.getPlayer().getWorldLocation());
                 } else if (client.getLocalPlayer() != null) {
                     start = WorldPointUtil.packWorldPoint(client.getLocalPlayer().getWorldLocation());
@@ -423,7 +423,7 @@ public class ShortestPathPlugin extends Plugin {
     @Subscribe
     public void onGameTick(GameTick tick) {
         // Update player location in PlayerService
-        if (playerService.isLoggedIn()) {
+        if (playerService.getPlayer().isLoggedIn()) {
             playerService.updatePlayerLocation();
         }
         
@@ -528,7 +528,7 @@ public class ShortestPathPlugin extends Plugin {
     @Subscribe
     public void onItemContainerChanged(ItemContainerChanged event) {
         // Update PlayerService with item container changes
-        if (playerService.isLoggedIn()) {
+        if (playerService.getPlayer().isLoggedIn()) {
             playerService.refreshItemContainers();
         }
         
@@ -791,7 +791,7 @@ public class ShortestPathPlugin extends Plugin {
 
             int start;
             // Use PlayerService for player location if available
-            if (playerService.isLoggedIn() && playerService.getPlayer().getWorldLocation() != null) {
+            if (playerService.getPlayer().isLoggedIn() && playerService.getPlayer().getWorldLocation() != null) {
                 start = WorldPointUtil.packWorldPoint(playerService.getPlayer().getWorldLocation());
             } else {
                 start = WorldPointUtil.fromLocalInstance(client, localPlayer.getLocalLocation());

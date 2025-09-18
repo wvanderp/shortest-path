@@ -53,7 +53,6 @@ public class PathfinderTest {
     @Mock
     PlayerService playerService;
 
-    @Mock
     Player player;
 
     @Mock
@@ -66,6 +65,13 @@ public class PathfinderTest {
     public void before() {
         when(config.calculationCutoff()).thenReturn(30);
         when(config.currencyThreshold()).thenReturn(10000000);
+    }
+
+    // Use a real PlayerService backed by the mocked Client
+    private void ensureRealPlayerService() {
+        if (playerService == null || !(playerService instanceof shortestpath.PlayerService)) {
+            playerService = new shortestpath.PlayerService(client);
+        }
     }
 
     @Test
@@ -443,20 +449,30 @@ public class PathfinderTest {
     }
 
     private void setupConfig(QuestState questState, int skillLevel, TeleportationItem useTeleportationItems) {
-        // Setup PlayerService mock
-        when(playerService.getPlayer()).thenReturn(player);
-        when(playerService.isLoggedIn()).thenReturn(true);
-        when(playerService.getBoostedSkillLevel(any(Skill.class))).thenReturn(skillLevel);
-        when(playerService.getQuestState(any(Quest.class))).thenReturn(questState);
-        when(playerService.getInventory()).thenReturn(inventory);
-        when(playerService.getEquipment()).thenReturn(equipment);
-        
-        pathfinderConfig = spy(new PathfinderConfig(client, config, playerService));
+        ensureRealPlayerService();
 
+        // Ensure client is in the expected state for PlayerService to populate the Player
         when(client.getGameState()).thenReturn(GameState.LOGGED_IN);
         when(client.getClientThread()).thenReturn(Thread.currentThread());
         when(client.getBoostedSkillLevel(any(Skill.class))).thenReturn(skillLevel);
         when(config.useTeleportationItems()).thenReturn(useTeleportationItems);
+
+        // Populate the real Player instance from the mocked Client and ensure it's logged in
+        playerService.refreshAllPlayerData();
+        if (playerService.getPlayer() != null) {
+            playerService.getPlayer().setGameState(GameState.LOGGED_IN);
+            // set boosted and real skill levels to the provided skill level
+            for (Skill s : Skill.values()) {
+                playerService.getPlayer().setBoostedSkillLevel(s, skillLevel);
+                playerService.getPlayer().setRealSkillLevel(s, skillLevel);
+            }
+            // quest states will be accessed via PathfinderConfig.getQuestState stubs below
+            playerService.getPlayer().setInventory(inventory);
+            playerService.getPlayer().setEquipment(equipment);
+        }
+
+        pathfinderConfig = spy(new PathfinderConfig(client, config, playerService));
+
         doReturn(true).when(pathfinderConfig).varbitChecks(any(Transport.class));
         doReturn(true).when(pathfinderConfig).varPlayerChecks(any(Transport.class));
         doReturn(questState).when(pathfinderConfig).getQuestState(any(Quest.class));
@@ -465,15 +481,22 @@ public class PathfinderTest {
     }
 
     private void setupInventory(Item... items) {
-        doReturn(inventory).when(client).getItemContainer(InventoryID.INV);
-        doReturn(items).when(inventory).getItems();
-        when(playerService.getInventory()).thenReturn(inventory);
+        when(client.getItemContainer(InventoryID.INV)).thenReturn(inventory);
+        when(inventory.getItems()).thenReturn(items);
+        ensureRealPlayerService();
+        // If the Player is already populated, make sure it has the inventory
+        if (playerService.getPlayer() != null) {
+            playerService.getPlayer().setInventory(inventory);
+        }
     }
 
     private void setupEquipment(Item... items) {
-        doReturn(equipment).when(client).getItemContainer(InventoryID.WORN);
-        doReturn(items).when(equipment).getItems();
-        when(playerService.getEquipment()).thenReturn(equipment);
+        when(client.getItemContainer(InventoryID.WORN)).thenReturn(equipment);
+        when(equipment.getItems()).thenReturn(items);
+        ensureRealPlayerService();
+        if (playerService.getPlayer() != null) {
+            playerService.getPlayer().setEquipment(equipment);
+        }
     }
 
     private void testTransportLength(int expectedLength, int origin, int destination) {
