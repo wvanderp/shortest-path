@@ -10,6 +10,7 @@ import net.runelite.api.Quest;
 import net.runelite.api.QuestState;
 import net.runelite.api.Skill;
 import net.runelite.api.coords.WorldPoint;
+import net.runelite.api.Client;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -189,6 +190,10 @@ public class Player {
             questStates.putAll(states);
         }
     }
+
+    public boolean hasFinishedQuest(Quest quest) {
+        return QuestState.FINISHED.equals(this.getQuestState(quest));
+    }
     
     // Varbit management
     public int getVarbitValue(int varbitId) {
@@ -229,6 +234,10 @@ public class Player {
             varPlayerValues.putAll(values);
         }
     }
+
+    // Optional client reference for tests that need direct client behaviour
+    @Getter @Setter
+    private Client client;
     
     // Utility methods for inventory checks
     public boolean hasItem(int itemId) {

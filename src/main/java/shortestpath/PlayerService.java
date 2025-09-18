@@ -45,6 +45,17 @@ public class PlayerService {
         this.client = client;
         this.player = new Player();
     }
+
+    /**
+     * Construct a PlayerService backed by an existing Player instance.
+     * This is primarily useful for tests where the Player can be populated
+     * via setters and no RuneLite `Client` is required or mocked.
+     */
+    public PlayerService(Player player)
+    {
+        this.client = null;
+        this.player = player == null ? new Player() : player;
+    }
     
     /**
      * Sets the client instance. This is called by the plugin during injection.

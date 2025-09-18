@@ -12,15 +12,12 @@ import net.runelite.api.Client;
 import net.runelite.api.Constants;
 import net.runelite.api.EnumComposition;
 import net.runelite.api.EnumID;
-import net.runelite.api.GameState;
 import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
 import net.runelite.api.Quest;
 import net.runelite.api.QuestState;
 import net.runelite.api.Skill;
-import net.runelite.api.gameval.InventoryID;
 import net.runelite.api.gameval.ItemID;
-import net.runelite.api.gameval.VarPlayerID;
 import net.runelite.api.gameval.VarbitID;
 import shortestpath.TeleportationItem;
 import shortestpath.ShortestPathConfig;
@@ -150,11 +147,6 @@ public class PathfinderConfig {
         this.destinations = allDestinations;
     }
 
-    // Keep old constructor for backward compatibility during transition
-    public PathfinderConfig(Client client, ShortestPathConfig config) {
-        this(client, config, null);
-    }
-
     public CollisionMap getMap() {
         return map.get();
     }
@@ -194,7 +186,7 @@ public class PathfinderConfig {
         useWildernessObelisks = ShortestPathPlugin.override("useWildernessObelisks", config.useWildernessObelisks());
         currencyThreshold = ShortestPathPlugin.override("currencyThreshold", config.currencyThreshold());
 
-    if (playerService != null && playerService.getPlayer() != null && playerService.getPlayer().isLoggedIn()) {
+        if ( playerService.getPlayer().isLoggedIn()) {
             // Use PlayerService for skill levels and quest points
             int i = 0;
             for (; i < Skill.values().length; i++) {
@@ -203,37 +195,10 @@ public class PathfinderConfig {
             boostedSkillLevelsAndMore[i++] = playerService.getPlayer().getTotalLevel(); // skill total level
             boostedSkillLevelsAndMore[i++] = playerService.getPlayer().getCombatLevel(); // combat level
             boostedSkillLevelsAndMore[i++] = playerService.getPlayer().getQuestPoints(); // quest points
-        } else if (GameState.LOGGED_IN.equals(client.getGameState())) {
-            // Fallback to direct client calls for backward compatibility
-            int i = 0;
-            for (; i < Skill.values().length; i++) {
-                boostedSkillLevelsAndMore[i] = client.getBoostedSkillLevel(Skill.values()[i]);
-            }
-            // Compute total level from client's real skill levels
-            int totalLevel = 0;
-            for (Skill s : Skill.values()) {
-                totalLevel += client.getRealSkillLevel(s);
-            }
-            boostedSkillLevelsAndMore[i++] = totalLevel; // skill total level
-            // Compute combat level from client's real skill levels
-            int attack = client.getRealSkillLevel(Skill.ATTACK);
-            int strength = client.getRealSkillLevel(Skill.STRENGTH);
-            int defence = client.getRealSkillLevel(Skill.DEFENCE);
-            int hitpoints = client.getRealSkillLevel(Skill.HITPOINTS);
-            int magic = client.getRealSkillLevel(Skill.MAGIC);
-            int ranged = client.getRealSkillLevel(Skill.RANGED);
-            int prayer = client.getRealSkillLevel(Skill.PRAYER);
-            double base = 0.25 * (defence + hitpoints + (prayer / 2.0));
-            double melee = (13 * (attack + strength)) / 40.0;
-            double range = (13 * ((3 * ranged) / 2.0)) / 40.0;
-            double mage = (13 * ((3 * magic) / 2.0)) / 40.0;
-            int combatLevel = (int) Math.floor(base + Math.max(Math.max(melee, range), Math.max(melee, mage)));
-            boostedSkillLevelsAndMore[i++] = combatLevel; // combat level
-            boostedSkillLevelsAndMore[i++] = client.getVarpValue(VarPlayerID.QP); // quest points
-        }
+        } 
 
         // Refresh transports if player is logged in (regardless of data source)
-    if ((playerService != null && playerService.getPlayer() != null && playerService.getPlayer().isLoggedIn()) || GameState.LOGGED_IN.equals(client.getGameState())) {
+        if (playerService.getPlayer().isLoggedIn()) {
             refreshTransports();
         }
 
@@ -310,19 +275,13 @@ public class PathfinderConfig {
             return; // Has to run on the client thread; data will be refreshed when path finding commences
         }
 
-        // Use PlayerService for varbit values if available, otherwise fall back to client
-        int fairyQuestVarbit = playerService != null ? 
-            playerService.getPlayer().getVarbitValue(VarbitID.FAIRY2_QUEENCURE_QUEST) : 
-            client.getVarbitValue(VarbitID.FAIRY2_QUEENCURE_QUEST);
-        int lumbridgeDiaryVarbit = playerService != null ?
-            playerService.getPlayer().getVarbitValue(VarbitID.LUMBRIDGE_DIARY_ELITE_COMPLETE) :
-            client.getVarbitValue(VarbitID.LUMBRIDGE_DIARY_ELITE_COMPLETE);
-            
-        useFairyRings &= ((fairyQuestVarbit > 39)
-            && (lumbridgeDiaryVarbit == 1 || hasRequiredItems(DRAMEN_STAFF)));
-        useGnomeGliders &= QuestState.FINISHED.equals(getQuestState(Quest.THE_GRAND_TREE));
-        useMagicMushtrees &= QuestState.FINISHED.equals(getQuestState(Quest.BONE_VOYAGE));
-        useSpiritTrees &= QuestState.FINISHED.equals(getQuestState(Quest.TREE_GNOME_VILLAGE));
+        int fairyQuestVarbit = playerService.getPlayer().getVarbitValue(VarbitID.FAIRY2_QUEENCURE_QUEST);
+        int lumbridgeDiaryVarbit = playerService.getPlayer().getVarbitValue(VarbitID.LUMBRIDGE_DIARY_ELITE_COMPLETE);
+
+        useFairyRings &= ((fairyQuestVarbit > 39) && (lumbridgeDiaryVarbit == 1 || hasRequiredItems(DRAMEN_STAFF)));
+        useGnomeGliders &= playerService.getPlayer().hasFinishedQuest(Quest.THE_GRAND_TREE);
+        useMagicMushtrees &= playerService.getPlayer().hasFinishedQuest(Quest.BONE_VOYAGE);
+        useSpiritTrees &= playerService.getPlayer().hasFinishedQuest(Quest.TREE_GNOME_VILLAGE);
 
         transports.clear();
         transportsPacked.clear();
@@ -339,15 +298,11 @@ public class PathfinderConfig {
                 }
 
                 for (TransportVarbit varbitRequirement : transport.getVarbits()) {
-                    int varbitValue = playerService != null ?
-                        playerService.getPlayer().getVarbitValue(varbitRequirement.getId()) :
-                        client.getVarbitValue(varbitRequirement.getId());
+                    int varbitValue = playerService.getPlayer().getVarbitValue(varbitRequirement.getId());
                     varbitValues.put(varbitRequirement.getId(), varbitValue);
                 }
                 for (TransportVarPlayer varPlayerRequirement : transport.getVarPlayers()) {
-                    int varPlayerValue = playerService != null ?
-                        playerService.getPlayer().getVarPlayerValue(varPlayerRequirement.getId()) :
-                        client.getVarpValue(varPlayerRequirement.getId());
+                    int varPlayerValue = playerService.getPlayer().getVarPlayerValue(varPlayerRequirement.getId());
                     varPlayerValues.put(varPlayerRequirement.getId(), varPlayerValue);
                 }
 
@@ -375,9 +330,7 @@ public class PathfinderConfig {
     }
 
     public QuestState getQuestState(Quest quest) {
-        return playerService != null ?
-            playerService.getPlayer().getQuestState(quest) :
-            quest.getState(client);
+        return playerService.getPlayer().getQuestState(quest);
     }
 
     private boolean completedQuests(Transport transport) {
@@ -555,13 +508,8 @@ public class PathfinderConfig {
         }
         itemsAndQuantities.clear();
 
-        // Use PlayerService if available, otherwise fall back to client
-        ItemContainer inventory = playerService != null ? 
-            playerService.getPlayer().getInventory() : 
-            client.getItemContainer(InventoryID.INV);
-        ItemContainer equipment = playerService != null ?
-            playerService.getPlayer().getEquipment() :
-            client.getItemContainer(InventoryID.WORN);
+        ItemContainer inventory = playerService.getPlayer().getInventory();
+        ItemContainer equipment = playerService.getPlayer().getEquipment();
 
         if (inventory != null) {
             Item[] invItems = inventory.getItems();
@@ -601,14 +549,14 @@ public class PathfinderConfig {
         
         if (RUNE_POUCHES.stream().anyMatch(runePouch -> itemsAndQuantities.containsKey(runePouch))) {
             EnumComposition runePouchEnum = client.getEnum(EnumID.RUNEPOUCH_RUNE);
+ 
             for (int i = 0; i < RUNE_POUCH_RUNE_VARBITS.length; i++) {
-                int runeEnumId = playerService != null ?
-                    playerService.getPlayer().getVarbitValue(RUNE_POUCH_RUNE_VARBITS[i]) :
-                    client.getVarbitValue(RUNE_POUCH_RUNE_VARBITS[i]);
-                int runeId = runeEnumId > 0 ? runePouchEnum.getIntValue(runeEnumId) : 0;
-                int runeAmount = playerService != null ?
-                    playerService.getPlayer().getVarbitValue(RUNE_POUCH_AMOUNT_VARBITS[i]) :
-                    client.getVarbitValue(RUNE_POUCH_AMOUNT_VARBITS[i]);
+                int runeEnumId = playerService.getPlayer().getVarbitValue(RUNE_POUCH_RUNE_VARBITS[i]);
+                int runeId = 0;
+                if (runeEnumId > 0) {
+                        runeId = runePouchEnum.getIntValue(runeEnumId);
+                }
+                int runeAmount = playerService.getPlayer().getVarbitValue(RUNE_POUCH_AMOUNT_VARBITS[i]);
                 if (runeId > 0 && runeAmount > 0) {
                     itemsAndQuantities.put(runeId, runeAmount);
                 }

@@ -67,10 +67,15 @@ public class PathfinderTest {
         when(config.currencyThreshold()).thenReturn(10000000);
     }
 
-    // Use a real PlayerService backed by the mocked Client
+    // Use a real PlayerService backed by a real Player which holds the mocked Client
     private void ensureRealPlayerService() {
-        if (playerService == null || !(playerService instanceof shortestpath.PlayerService)) {
-            playerService = new shortestpath.PlayerService(client);
+        if (player == null) {
+            player = new shortestpath.Player();
+            player.setClient(client);
+        }
+        // Replace any mocked PlayerService with a real one backed by our Player instance
+        if (playerService == null || playerService.getClass() != shortestpath.PlayerService.class) {
+            playerService = new shortestpath.PlayerService(player);
         }
     }
 
