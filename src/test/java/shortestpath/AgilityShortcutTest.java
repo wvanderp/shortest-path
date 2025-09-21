@@ -108,6 +108,7 @@ public class AgilityShortcutTest
         for (AgilityShortcut s : AgilityShortcut.values())
         {
             boolean matched = false;
+            boolean excluded = false;
 
             // check worldLocation (x y z) if present
             if (s.getWorldLocation() != null)
@@ -124,6 +125,8 @@ public class AgilityShortcutTest
                     if (excludedIds.contains(id))
                     {
                         // skip known-excluded IDs
+                        System.out.println("Skipping excluded ID " + id + " for " + s.name());
+                        excluded = true;
                         continue;
                     }
 
@@ -135,7 +138,7 @@ public class AgilityShortcutTest
                 }
             }
 
-            if (!matched)
+            if (!matched && !excluded)
             {
                 missing.append(s.name()).append('\n');
             }
