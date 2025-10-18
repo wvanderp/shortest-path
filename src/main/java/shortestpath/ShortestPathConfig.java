@@ -288,7 +288,8 @@ public interface ShortestPathConfig extends Config {
     @ConfigItem(
         keyName = "includeBankPath",
         name = "Include path to bank",
-        description = "Whether to include the path to the closest bank when suggesting teleports from the bank",
+        description = "Whether to include the path to the closest bank<br>" +
+            "when suggesting teleports from the bank",
         position = 24,
         section = sectionSettings
     )
@@ -406,8 +407,10 @@ public interface ShortestPathConfig extends Config {
 
     @ConfigSection(
         name = "Transport Thresholds",
-        description = "Set customizable thresholds for how much faster a transportation method must be to be preferred over other methods",
-        position = 33
+        description = "Set customizable thresholds for how much faster a transportation<br>"+
+            "method must be to be preferred over other methods",
+        position = 33,
+        closedByDefault = true
     )
     String sectionThresholds = "sectionThresholds";
 
@@ -418,7 +421,8 @@ public interface ShortestPathConfig extends Config {
     @ConfigItem(
         keyName = "costAgilityShortcuts",
         name = "Agility shortcut threshold",
-        description = "How many extra tiles an agility shortcut must save to be preferred over walking or other transports",
+        description = "How many extra tiles an agility shortcut must save<br>" +
+            "to be preferred over walking or other transports",
         position = 34,
         section = sectionThresholds
     )
@@ -433,7 +437,8 @@ public interface ShortestPathConfig extends Config {
     @ConfigItem(
         keyName = "costGrappleShortcuts",
         name = "Grapple shortcut threshold",
-        description = "How many extra tiles a grapple shortcut must save to be preferred over walking or other transports",
+        description = "How many extra tiles a grapple shortcut must save<br>" +
+            "to be preferred over walking or other transports",
         position = 35,
         section = sectionThresholds
     )
@@ -448,7 +453,8 @@ public interface ShortestPathConfig extends Config {
     @ConfigItem(
         keyName = "costBoats",
         name = "Boat threshold",
-        description = "How many extra tiles a small boat must save to be preferred over walking or other transports",
+        description = "How many extra tiles a small boat must save<br>" +
+            "to be preferred over walking or other transports",
         position = 36,
         section = sectionThresholds
     )
@@ -463,8 +469,9 @@ public interface ShortestPathConfig extends Config {
     @ConfigItem(
         keyName = "costCanoes",
         name = "Canoe threshold",
-        description = "How many extra tiles a canoe must save to be preferred over walking or other transports",
-        position = 373,
+        description = "How many extra tiles a canoe must save<br>" +
+            "to be preferred over walking or other transports",
+        position = 37,
         section = sectionThresholds
     )
     default int costCanoes() {
@@ -478,7 +485,8 @@ public interface ShortestPathConfig extends Config {
     @ConfigItem(
         keyName = "costCharterShips",
         name = "Charter ship threshold",
-        description = "How many extra tiles a charter ship must save to be preferred over walking or other transports",
+        description = "How many extra tiles a charter ship must save<br>" +
+            "to be preferred over walking or other transports",
         position = 38,
         section = sectionThresholds
     )
@@ -493,7 +501,8 @@ public interface ShortestPathConfig extends Config {
     @ConfigItem(
         keyName = "costShips",
         name = "Ship threshold",
-        description = "How many extra tiles a passenger ship must save to be preferred over walking or other transports",
+        description = "How many extra tiles a passenger ship must save<br>" +
+            "to be preferred over walking or other transports",
         position = 39,
         section = sectionThresholds
     )
@@ -508,7 +517,8 @@ public interface ShortestPathConfig extends Config {
     @ConfigItem(
         keyName = "costFairyRings",
         name = "Fairy ring threshold",
-        description = "How many extra tiles a fairy ring must save to be preferred over walking or other transports",
+        description = "How many extra tiles a fairy ring must save<br>" +
+            "to be preferred over walking or other transports",
         position = 40,
         section = sectionThresholds
     )
@@ -523,7 +533,8 @@ public interface ShortestPathConfig extends Config {
     @ConfigItem(
         keyName = "costGnomeGliders",
         name = "Gnome glider threshold",
-        description = "How many extra tiles a gnome glider must save to be preferred over walking or other transports",
+        description = "How many extra tiles a gnome glider must save<br>" +
+            "to be preferred over walking or other transports",
         position = 41,
         section = sectionThresholds
     )
@@ -538,7 +549,8 @@ public interface ShortestPathConfig extends Config {
     @ConfigItem(
         keyName = "costHotAirBalloons",
         name = "Hot air balloon threshold",
-        description = "How many extra tiles a hot air balloon must save to be preferred over walking or other transports",
+        description = "How many extra tiles a hot air balloon must save<br>" +
+            "to be preferred over walking or other transports",
         position = 42,
         section = sectionThresholds
     )
@@ -553,7 +565,8 @@ public interface ShortestPathConfig extends Config {
     @ConfigItem(
         keyName = "costMagicCarpets",
         name = "Magic carpets threshold",
-        description = "How many extra tiles a magic carpet must save to be preferred over walking or other transports",
+        description = "How many extra tiles a magic carpet must save<br>" +
+            "to be preferred over walking or other transports",
         position = 43,
         section = sectionThresholds
     )
@@ -568,7 +581,8 @@ public interface ShortestPathConfig extends Config {
     @ConfigItem(
         keyName = "costMagicMushtrees",
         name = "Magic mushtrees threshold",
-        description = "How many extra tiles a magic mushtree must save to be preferred over walking or other transports",
+        description = "How many extra tiles a magic mushtree must save<br>" +
+            "to be preferred over walking or other transports",
         position = 44,
         section = sectionThresholds
     )
@@ -583,7 +597,8 @@ public interface ShortestPathConfig extends Config {
     @ConfigItem(
         keyName = "costMinecarts",
         name = "Minecart threshold",
-        description = "How many extra tiles a minecart must save to be preferred over walking or other transports",
+        description = "How many extra tiles a minecart must save<br>" +
+            "to be preferred over walking or other transports",
         position = 45,
         section = sectionThresholds
     )
@@ -598,7 +613,8 @@ public interface ShortestPathConfig extends Config {
     @ConfigItem(
         keyName = "costQuetzals",
         name = "Quetzal threshold",
-        description = "How many extra tiles a quetzal must save to be preferred over walking or other transports",
+        description = "How many extra tiles a quetzal must save<br>" +
+            "to be preferred over walking or other transports",
         position = 46,
         section = sectionThresholds
     )
@@ -613,7 +629,8 @@ public interface ShortestPathConfig extends Config {
     @ConfigItem(
         keyName = "costSpiritTrees",
         name = "Spirit tree threshold",
-        description = "How many extra tiles a spirit tree must save to be preferred over walking or other transports",
+        description = "How many extra tiles a spirit tree must save<br>" +
+            "to be preferred over walking or other transports",
         position = 47,
         section = sectionThresholds
     )
@@ -628,7 +645,8 @@ public interface ShortestPathConfig extends Config {
     @ConfigItem(
         keyName = "costNonConsumableTeleportationItems",
         name = "Teleportation item (non-consumable) threshold",
-        description = "How many extra tiles a non-consumable teleportation item must save to be preferred over walking or other transports",
+        description = "How many extra tiles a non-consumable (permanent) teleportation item<br>" +
+            "must save to be preferred over walking or other transports",
         position = 48,
         section = sectionThresholds
     )
@@ -643,7 +661,8 @@ public interface ShortestPathConfig extends Config {
     @ConfigItem(
         keyName = "costConsumableTeleportationItems",
         name = "Teleportation item (consumable) threshold",
-        description = "How many extra tiles a consumable teleportation item must save to be preferred over walking or other transports",
+        description = "How many extra tiles a consumable (non-permanent) teleportation item<br>" +
+            "must save to be preferred over walking or other transports",
         position = 49,
         section = sectionThresholds
     )
@@ -658,7 +677,8 @@ public interface ShortestPathConfig extends Config {
     @ConfigItem(
         keyName = "costTeleportationBoxes",
         name = "Teleportation box threshold",
-        description = "How many extra tiles a teleportation box must save to be preferred over walking or other transports",
+        description = "How many extra tiles a teleportation box must save<br>" +
+            "to be preferred over walking or other transports",
         position = 50,
         section = sectionThresholds
     )
@@ -673,7 +693,8 @@ public interface ShortestPathConfig extends Config {
     @ConfigItem(
         keyName = "costTeleportationLevers",
         name = "Teleportation lever threshold",
-        description = "How many extra tiles a teleportation lever must save to be preferred over walking or other transports",
+        description = "How many extra tiles a teleportation lever must save<br>" +
+            "to be preferred over walking or other transports",
         position = 51,
         section = sectionThresholds
     )
@@ -688,7 +709,8 @@ public interface ShortestPathConfig extends Config {
     @ConfigItem(
         keyName = "costTeleportationPortals",
         name = "Teleportation portal threshold",
-        description = "How many extra tiles a teleportation portal must save to be preferred over walking or other transports",
+        description = "How many extra tiles a teleportation portal must save<br>" +
+            "to be preferred over walking or other transports",
         position = 52,
         section = sectionThresholds
     )
@@ -703,7 +725,8 @@ public interface ShortestPathConfig extends Config {
     @ConfigItem(
         keyName = "costTeleportationSpells",
         name = "Teleportation spell threshold",
-        description = "How many extra tiles a teleportation spell must save to be preferred over walking or other transports",
+        description = "How many extra tiles a teleportation spell must save<br>" +
+            "to be preferred over walking or other transports",
         position = 53,
         section = sectionThresholds
     )
@@ -718,7 +741,8 @@ public interface ShortestPathConfig extends Config {
     @ConfigItem(
         keyName = "costTeleportationMinigames",
         name = "Teleportation to minigame threshold",
-        description = "How many extra tiles a minigame teleport must save to be preferred over walking or other transports",
+        description = "How many extra tiles a minigame teleport must save<br>" +
+            "to be preferred over walking or other transports",
         position = 54,
         section = sectionThresholds
     )
@@ -733,7 +757,8 @@ public interface ShortestPathConfig extends Config {
     @ConfigItem(
         keyName = "costWildernessObelisks",
         name = "Wilderness obelisk threshold",
-        description = "How many extra tiles a wilderness obelisk must save to be preferred over walking or other transports",
+        description = "How many extra tiles a wilderness obelisk must save<br>" +
+            "to be preferred over walking or other transports",
         position = 55,
         section = sectionThresholds
     )
@@ -748,7 +773,8 @@ public interface ShortestPathConfig extends Config {
     @ConfigItem(
         keyName = "costSeasonalTransports",
         name = "Seasonal transport threshold",
-        description = "How many extra tiles a seasonal transport must save to be preferred over walking or other transports",
+        description = "How many extra tiles a seasonal transport must save<br>" +
+            "to be preferred over walking or other transports",
         position = 56,
         section = sectionThresholds
     )
