@@ -54,7 +54,9 @@ import net.runelite.client.events.PluginMessage;
 import net.runelite.client.game.SpriteManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.client.ui.ClientToolbar;
 import net.runelite.client.ui.JagexColors;
+import net.runelite.client.ui.NavigationButton;
 import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.ui.overlay.worldmap.WorldMapPoint;
 import net.runelite.client.ui.overlay.worldmap.WorldMapPointManager;
@@ -108,6 +110,9 @@ public class ShortestPathPlugin extends Plugin {
     private OverlayManager overlayManager;
 
     @Inject
+    private ClientToolbar clientToolbar;
+
+    @Inject
     private PathTileOverlay pathOverlay;
 
     @Inject
@@ -123,10 +128,15 @@ public class ShortestPathPlugin extends Plugin {
     private DebugOverlayPanel debugOverlayPanel;
 
     @Inject
+    private LocationPanel locationPanel;
+
+    @Inject
     private SpriteManager spriteManager;
 
     @Inject
     private WorldMapPointManager worldMapPointManager;
+
+    private NavigationButton locationNavButton;
 
     boolean drawCollisionMap;
     boolean drawMap;
@@ -189,6 +199,16 @@ public class ShortestPathPlugin extends Plugin {
         if (config.drawDebugPanel()) {
             overlayManager.add(debugOverlayPanel);
         }
+
+        if (config.showLocationPanel()) {
+            locationNavButton = NavigationButton.builder()
+                .tooltip("Location")
+                .icon(ImageUtil.loadImageResource(ShortestPathPlugin.class, "/marker.png"))
+                .priority(10)
+                .panel(locationPanel)
+                .build();
+            clientToolbar.addNavigation(locationNavButton);
+        }
     }
 
     @Override
@@ -198,6 +218,10 @@ public class ShortestPathPlugin extends Plugin {
         overlayManager.remove(pathMapOverlay);
         overlayManager.remove(pathMapTooltipOverlay);
         overlayManager.remove(debugOverlayPanel);
+        
+        if (locationNavButton != null) {
+            clientToolbar.removeNavigation(locationNavButton);
+        }
 
         if (pathfindingExecutor != null) {
             pathfindingExecutor.shutdownNow();
@@ -265,6 +289,24 @@ public class ShortestPathPlugin extends Plugin {
                 overlayManager.add(debugOverlayPanel);
             } else {
                 overlayManager.remove(debugOverlayPanel);
+            }
+            return;
+        }
+
+        if ("showLocationPanel".equals(event.getKey())) {
+            if (config.showLocationPanel()) {
+                locationNavButton = NavigationButton.builder()
+                    .tooltip("Location")
+                    .icon(ImageUtil.loadImageResource(ShortestPathPlugin.class, "/marker.png"))
+                    .priority(10)
+                    .panel(locationPanel)
+                    .build();
+                clientToolbar.addNavigation(locationNavButton);
+            } else {
+                if (locationNavButton != null) {
+                    clientToolbar.removeNavigation(locationNavButton);
+                    locationNavButton = null;
+                }
             }
             return;
         }

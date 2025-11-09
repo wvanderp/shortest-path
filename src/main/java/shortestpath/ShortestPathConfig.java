@@ -943,10 +943,21 @@ public interface ShortestPathConfig extends Config {
     }
 
     @ConfigItem(
+        keyName = "showLocationPanel",
+        name = "Show location panel",
+        description = "Toggles displaying the current location panel",
+        position = 72,
+        section = sectionDebug
+    )
+    default boolean showLocationPanel() {
+        return false;
+    }
+
+    @ConfigItem(
         keyName = "postTransports",
         name = "Post transports",
         description = "Whether to post the transports used in the current path as a PluginMessage event",
-        position = 72,
+        position = 73,
         section = sectionDebug
     )
     default boolean postTransports() {
