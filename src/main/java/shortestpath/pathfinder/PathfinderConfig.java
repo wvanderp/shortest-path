@@ -26,6 +26,7 @@ import static shortestpath.transport.TransportType.TELEPORTATION_ITEM;
 import static shortestpath.transport.TransportType.TELEPORTATION_LEVER;
 import static shortestpath.transport.TransportType.TELEPORTATION_MINIGAME;
 import static shortestpath.transport.TransportType.TELEPORTATION_PORTAL;
+import static shortestpath.transport.TransportType.TELEPORTATION_PORTAL_POH;
 import static shortestpath.transport.TransportType.TELEPORTATION_SPELL;
 import static shortestpath.transport.TransportType.WILDERNESS_OBELISK;
 
@@ -128,6 +129,7 @@ public class PathfinderConfig {
         useTeleportationLevers,
         useTeleportationMinigames,
         useTeleportationPortals,
+        useTeleportationPortalsPoh,
         useTeleportationSpells,
         useWildernessObelisks,
         includeBankPath;
@@ -191,6 +193,7 @@ public class PathfinderConfig {
         useTeleportationLevers = ShortestPathPlugin.override("useTeleportationLevers", config.useTeleportationLevers());
         useTeleportationMinigames = ShortestPathPlugin.override("useTeleportationMinigames", config.useTeleportationMinigames());
         useTeleportationPortals = ShortestPathPlugin.override("useTeleportationPortals", config.useTeleportationPortals());
+        useTeleportationPortalsPoh = ShortestPathPlugin.override("useTeleportationPortalsPoh", config.useTeleportationPortalsPoh());
         useTeleportationSpells = ShortestPathPlugin.override("useTeleportationSpells", config.useTeleportationSpells());
         useWildernessObelisks = ShortestPathPlugin.override("useWildernessObelisks", config.useWildernessObelisks());
         currencyThreshold = ShortestPathPlugin.override("currencyThreshold", config.currencyThreshold());
@@ -500,6 +503,8 @@ public class PathfinderConfig {
         } else if (TELEPORTATION_MINIGAME.equals(type) && !useTeleportationMinigames) {
             return false;
         } else if (TELEPORTATION_PORTAL.equals(type) && !useTeleportationPortals) {
+            return false;
+        } else if (TELEPORTATION_PORTAL_POH.equals(type) && !useTeleportationPortalsPoh) {
             return false;
         } else if (TELEPORTATION_SPELL.equals(type) && !useTeleportationSpells) {
             return false;
