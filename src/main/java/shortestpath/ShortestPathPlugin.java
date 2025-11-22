@@ -415,7 +415,7 @@ public class ShortestPathPlugin extends Plugin {
             return;
         }
 
-        int currentLocation = WorldPointUtil.fromLocalInstance(client, localPlayer.getLocalLocation());
+        int currentLocation = WorldPointUtil.fromLocalInstance(client, localPlayer);
         for (int target : pathfinder.getTargets()) {
             if (WorldPointUtil.distanceBetween(currentLocation, target) < config.reachedDistance()) {
                 setTarget(WorldPointUtil.UNDEFINED);
@@ -761,7 +761,7 @@ public class ShortestPathPlugin extends Plugin {
                 worldMapPointManager.add(marker);
             }
 
-            int start = WorldPointUtil.fromLocalInstance(client, localPlayer.getLocalLocation());
+            int start = WorldPointUtil.fromLocalInstance(client, localPlayer);
             lastLocation = start;
             if (startPointSet && pathfinder != null) {
                 start = pathfinder.getStart();
