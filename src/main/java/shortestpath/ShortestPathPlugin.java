@@ -9,7 +9,6 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -46,7 +45,6 @@ import net.runelite.api.widgets.ComponentID;
 import net.runelite.api.gameval.InterfaceID;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.worldmap.WorldMap;
-import net.runelite.client.RuneLite;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
@@ -92,7 +90,6 @@ public class ShortestPathPlugin extends Plugin {
     private static final String TARGET = ColorUtil.wrapWithColorTag("Target", JagexColors.MENU_TARGET);
     private static final BufferedImage MARKER_IMAGE = ImageUtil.loadImageResource(ShortestPathPlugin.class, "/marker.png");
     private static final Pattern TRANSPORT_OPTIONS_REGEX = Pattern.compile("^(avoidWilderness|includeBankPath|currencyThreshold|use\\w+|cost\\w+)$");
-    private static final File PLUGIN_DIRECTORY = new File(RuneLite.RUNELITE_DIR, "shortest-path");
 
     @Inject
     private Client client;
@@ -177,8 +174,6 @@ public class ShortestPathPlugin extends Plugin {
 
     @Override
     protected void startUp() {
-        PLUGIN_DIRECTORY.mkdirs();
-
         cacheConfigValues();
 
         pathfinderConfig = new PathfinderConfig(client, config);
