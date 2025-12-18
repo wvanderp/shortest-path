@@ -3296,8 +3296,8 @@
 3314 2753 1	3314 2755 0	Climb-down Ladder 20354						2	
 3315 2796 0	2800 5160 0	Climb-down Ladder 20275						2	
 2799 5160 0	3315 2796 0	Climb-up Ladder 20277						2	
-2800 5160 0	3318 9273 2	Climb-down Ladder 20278						2	
-3318 9273 2	2800 5160 0	Climb-up Ladder 20281						2	
+2800 5160 0	2166 4409 2	Climb-down Ladder 20278						2	
+2166 4409 2	2800 5160 0	Climb-up Ladder 20281						2	
 3286 9275 2	3286 9273 0	Climb-down Ladder 20285						2	
 3286 9273 0	3286 9275 2	Climb-up Ladder 20284						2	
 3323 9240 0	3323 9242 2	Climb-up Ladder 20284						2	
