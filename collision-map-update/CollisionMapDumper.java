@@ -704,6 +704,11 @@ public class CollisionMapDumper
 		HOSIDIUS_VINES_46381(46381),
 		HOSIDIUS_VINES_46382(46382),
 
+		// The invisible walls are placed all over the map. Their purpose is unknown.
+		// They dont seem to block player movement.
+		// Most annoyingly they block the entrance to the Death Plateau.
+		INVISIBLE_WALL_38848(38848, FlagMap.TILE_DEFAULT),
+
 		KENDAL_STANDING_SPEARS_5860(5860),
 
 		KRUKS_DUNGEON_WALL_28681(28681),
@@ -807,11 +812,6 @@ public class CollisionMapDumper
 		YANILLE_MAGIC_GUILD_DOOR_1733(1733),
 
 		ZANARIS_SHED_DOOR_2406(2406),
-		
-		// The invisible walls are placed all over the map. There purpose is unknown.
-		// They dont seem to block player movement.
-		// Most anoyingly they block the entrance to the death plateau.
-		INVISIBLE_WALL_38848(38848, FlagMap.TILE_DEFAULT)
 		;
 
 		/**
