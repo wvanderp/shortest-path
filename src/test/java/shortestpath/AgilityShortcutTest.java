@@ -5,7 +5,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import shortestpath.transport.Transport;
 import shortestpath.transport.TransportLoader;
-import shortestpath.transport.TransportType;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -16,15 +15,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * This test checks every AgilityShortcut enum constant against the list of shortcuts
- * in the agility_shortcuts.tsv resource file, to ensure that our list is complete.
+ * This test checks every AgilityShortcut enum constant against the list of all transports
+ * in the resource files, to ensure that our list is complete.
  * <p>
  * This test should only fail when a new AgilityShortcut enum constant is added
  * without a corresponding entry in the TSV file.
  * <p>
  * There are some known exceptions where an AgilityShortcut cannot be matched to a TSV entry,
  * for example when the Object ID changes as the result of "unlocking" the shortcut via a quest.
- * These exceptions can be added to the {@link #getExcludedObjectIds()} method. Use this sparingly.
+ * These exceptions can be added to the {@link #createExcludedIds()} method. Use this sparingly.
  */
 public class AgilityShortcutTest {
     private static final Pattern OBJECT_ID_PATTERN = Pattern.compile("\\d+");
@@ -71,7 +70,7 @@ public class AgilityShortcutTest {
     }
 
     /**
-     * Extracts coordinate and object ID data from agility-related transports.
+     * Extracts coordinate and object ID data from all transports.
      */
     private TransportData extractTransportData(Map<Integer, Set<Transport>> allTransports) {
         Set<String> coordinates = new HashSet<>();
@@ -79,24 +78,12 @@ public class AgilityShortcutTest {
 
         for (Set<Transport> transportSet : allTransports.values()) {
             for (Transport transport : transportSet) {
-                if (!isAgilityRelatedTransport(transport)) {
-                    continue;
-                }
-
                 addCoordinatesFromTransport(transport, coordinates);
                 addObjectIdsFromTransport(transport, objectIds);
             }
         }
 
         return new TransportData(coordinates, objectIds);
-    }
-
-    /**
-     * Checks if a transport is agility-related (includes grapple shortcuts).
-     */
-    private boolean isAgilityRelatedTransport(Transport transport) {
-        TransportType type = transport.getType();
-        return TransportType.AGILITY_SHORTCUT.equals(type) || TransportType.GRAPPLE_SHORTCUT.equals(type);
     }
 
     /**
