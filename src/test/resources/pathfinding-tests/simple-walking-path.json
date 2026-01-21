@@ -1,0 +1,51 @@
+{
+  "name": "Simple walking path - Lumbridge to nearby",
+  "description": "Basic test that verifies simple walking pathfinding works. No transports enabled.",
+  "setup": {
+    "skills": {
+      "AGILITY": 1
+    },
+    "pathfinder": {
+      "avoidWilderness": true
+    }
+  },
+  "test": {
+    "start": [
+      3222,
+      3218,
+      0
+    ],
+    "end": [
+      3225,
+      3218,
+      0
+    ]
+  },
+  "expected": {
+    "update": false,
+    "pathLength": 4,
+    "path": [
+      [
+        3222,
+        3218,
+        0
+      ],
+      [
+        3223,
+        3218,
+        0
+      ],
+      [
+        3224,
+        3218,
+        0
+      ],
+      [
+        3225,
+        3218,
+        0
+      ]
+    ],
+    "pathFound": true
+  }
+}

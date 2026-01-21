@@ -1,0 +1,67 @@
+{
+  "name": "Gnome glider transport",
+  "description": "Tests that gnome gliders are correctly used when enabled. Gnome gliders don\u0027t require any items.",
+  "setup": {
+    "skills": {
+      "AGILITY": 99
+    },
+    "pathfinder": {
+      "avoidWilderness": true,
+      "useGnomeGliders": true
+    }
+  },
+  "test": {
+    "start": [
+      2465,
+      3501,
+      3
+    ],
+    "end": [
+      2545,
+      2971,
+      0
+    ]
+  },
+  "expected": {
+    "update": false,
+    "pathLength": 7,
+    "path": [
+      [
+        2465,
+        3501,
+        3
+      ],
+      [
+        2550,
+        2970,
+        0
+      ],
+      [
+        2549,
+        2970,
+        0
+      ],
+      [
+        2548,
+        2970,
+        0
+      ],
+      [
+        2547,
+        2970,
+        0
+      ],
+      [
+        2546,
+        2970,
+        0
+      ],
+      [
+        2545,
+        2971,
+        0
+      ]
+    ],
+    "pathFound": true
+  }
+}

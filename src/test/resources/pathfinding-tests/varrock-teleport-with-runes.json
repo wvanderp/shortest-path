@@ -1,0 +1,47 @@
+{
+  "name": "Teleportation spell with runes",
+  "description": "Tests that Varrock teleport spell is used when player has required runes and teleportation spells are enabled",
+  "setup": {
+    "inventory": {
+      "563": 1,
+      "556": 3,
+      "554": 1
+    },
+    "skills": {
+      "MAGIC": 99
+    },
+    "pathfinder": {
+      "avoidWilderness": true,
+      "useTeleportationSpells": true
+    }
+  },
+  "test": {
+    "start": [
+      3216,
+      3424,
+      0
+    ],
+    "end": [
+      3213,
+      3424,
+      0
+    ]
+  },
+  "expected": {
+    "update": false,
+    "pathLength": 2,
+    "path": [
+      [
+        3216,
+        3424,
+        0
+      ],
+      [
+        3213,
+        3424,
+        0
+      ]
+    ],
+    "pathFound": true
+  }
+}
