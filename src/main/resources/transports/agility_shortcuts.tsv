@@ -538,3 +538,9 @@
 1274 3002 0	1270 3002 0	Climb Rock 57604	43 Agility					4	
 1820 9947 0	1820 9945 0	Jump-over Strange floor 34834	63 Agility					2
 1820 9945 0	1820 9947 0	Jump-over Strange floor 34834	63 Agility					2
+
+3046 10326 0	3048 10336 0	Use Crevice 17030	46 Agility			6312=1		6
+2449 3155 0	2444 3165 0	Cross Stepping stone 10662	47 Agility				328=15	5
+
+2444 3165 0	2449 3155 0	open Door 255277	23 Agility;28 Strength;24 Ranged		Observatory Quest			5
+2449 3155 0	2444 3165 0	Climb Rope 31849	23 Agility;28 Strength;24 Ranged		Observatory Quest			5
