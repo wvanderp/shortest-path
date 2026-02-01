@@ -35,6 +35,9 @@ public class PathMapOverlay extends Overlay {
         drawAfterLayer(ComponentID.WORLD_MAP_MAPVIEW);
     }
 
+    private static final Color COLOR_AVAILABLE = Color.WHITE;
+    private static final Color COLOR_UNAVAILABLE = Color.ORANGE;
+
     @Override
     public Dimension render(Graphics2D graphics) {
         if (!plugin.drawMap) {
@@ -96,7 +99,7 @@ public class PathMapOverlay extends Overlay {
                     }
 
                     boolean isAvailable = availableAtOrigin.contains(b);
-                    graphics.setColor(isAvailable ? Color.WHITE : Color.ORANGE);
+                    graphics.setColor(isAvailable ? COLOR_AVAILABLE : COLOR_UNAVAILABLE);
                     graphics.drawLine(mapAX, mapAY, mapBX, mapBY);
                 }
             }

@@ -957,7 +957,7 @@ public interface ShortestPathConfig extends Config {
         keyName = "postTransports",
         name = "Post transports",
         description = "Whether to post the transports used in the current path as a PluginMessage event",
-        position = 74,
+        position = 73,
         section = sectionDebug
     )
     default boolean postTransports() {
