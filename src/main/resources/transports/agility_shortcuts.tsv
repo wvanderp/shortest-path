@@ -126,7 +126,6 @@
 3300 3192 3	3299 3194 0	Jump Gap 14399	20 Agility				2	
 3142 3513 0	3137 3516 0	Climb-into Underwall tunnel 16530	21 Agility				7	
 3137 3516 0	3142 3513 0	Climb-into Underwall tunnel 16529	21 Agility				7	
-2449 3155 0	2444 3165 0	Grapple Rocks 31850	23 Agility					
 1369 3294 0	1369 3296 0	Climb-over Broken wall 56996	24 Agility				2	
 1369 3296 0	1369 3294 0	Climb-over Broken wall 56996	24 Agility				2	
 1389 3309 0	1391 3309 0	Climb-over Broken wall 56997	24 Agility				2	
@@ -548,3 +547,4 @@
 1609 10061 0 	1613 10070 0 	Jump-to Stone 28893	28 Agility					
 3212 3137 0	3214 3132 0	Jump-to Stepping stone 16513	66 Agility				3	
 3214 3132 0	3212 3137 0	Jump-to Stepping stone 16513	66 Agility				3	
+3228 3470 0	3228 3471 0	Climb Trellis 2149	35 Agility				5	Garden of Tranquillity
