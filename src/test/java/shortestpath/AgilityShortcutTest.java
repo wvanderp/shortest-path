@@ -51,6 +51,9 @@ public class AgilityShortcutTest {
         // Somehow not found in tsv
         excluded.add(23568);
         excluded.add(23569);
+
+        // The rocks in the rock cab cave is not found because the coordinate is one off. but this is where you land
+        excluded.add(31697);
         
         return excluded;
     }
@@ -144,7 +147,7 @@ public class AgilityShortcutTest {
 
         for (AgilityShortcut shortcut : AgilityShortcut.values()) {
             if (!isShortcutMatched(shortcut, transportData)) {
-                missing.add(shortcut.name());
+                missing.add(shortcut.name() + " " + shortcut.getLevel() + " " + shortcut.getWorldLocation() + " " + shortcut.getObstacleIds());
             }
         }
 
