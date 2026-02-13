@@ -86,6 +86,9 @@
 3240 3334 0	3240 3335 0	Jump-over Fence 16518	13 Agility				2	
 3219 9618 0	3221 9618 0	Squeeze-through Hole 6905	13 Agility		532>3		3	
 3221 9618 0	3219 9618 0	Squeeze-through Hole 6905	13 Agility		532>3		3	
+2926 3522 0	2928 3520 0	Manoeuvre-past Tight-gap 16468	14 Agility		4462=1		5	
+2927 3523 0	2928 3520 0	Manoeuvre-past Tight-gap 16468	14 Agility		4462=1		5	
+2928 3520 0	2927 3523 0	Manoeuvre-past Tight-gap 16468	14 Agility		4462=1		5	
 2820 3635 0	2822 3635 0	Climb Rocks 3748	15 Agility	CLIMBING_BOOTS=1				
 2857 3611 0	2857 3613 0	Climb Rocks 3748	15 Agility	CLIMBING_BOOTS=1				
 2856 3611 0	2856 3613 0	Climb Rocks 3748	15 Agility	CLIMBING_BOOTS=1				
@@ -95,12 +98,18 @@
 2791 2978 0	2795 2978 0	Climb Rocks 2231	15 Agility				5	
 2791 2979 0	2795 2979 0	Climb Rocks 2231	15 Agility				5	
 2791 2980 0	2795 2980 0	Climb Rocks 2231	15 Agility				5	
+1981 8994 1	1981 8998 1	Jump-to Pillar 31809	15 Agility			6076=1	5	
+1981 8998 1	1981 8994 1	Jump-to Pillar 31809	15 Agility			6076=1	5	
+3120 9963 0	3120 9970 0	Swing across Monkeybars 23566	15 Agility				8	
+3120 9970 0	3120 9963 0	Swing across Monkeybars 23566	15 Agility				8	
 2575 3107 0	2575 3112 0	Climb-under Castle wall 16519	16 Agility					
 2575 3112 0	2575 3107 0	Climb-into Hole 16520	16 Agility					
 1706 10078 0	1716 10056 0	Squeeze-through Crack 28892	17 Agility				2	
 1716 10056 0	1706 10078 0	Squeeze-through Crack 28892	17 Agility				2	
 1647 10010 0	1645 10000 0	Squeeze-through Crack 28892	17 Agility					
 1645 10000 0	1647 10010 0	Squeeze-through Crack 28892	17 Agility					
+1647 10010 0 	1645 10000 0 	Squeeze-through Crack 28892	17 Agility					
+1645 10000 0 	1647 10010 0 	Squeeze-through Crack 28892	17 Agility					
 3444 3533 0	3442 3531 0	Climb-through Broken window 2173	18 Agility				4	
 3442 3531 0	3444 3533 0	Climb-through Broken window 2173	18 Agility				4	
 2548 3119 0	2548 3117 1	Climb-up Trellis 20056	18 Agility				3	
@@ -110,6 +119,8 @@
 1702 9800 0	1708 9800 0	Cross Stepping stone 31699	18 Agility				8	
 1689 9801 0	1687 9801 0	Climb Rock 31679	18 Agility				4	
 1687 9801 0	1689 9801 0	Climb Rock 31679	18 Agility				4	
+3442 3531 0	3444 3533 0	Climb-through Broken window 57679	18 Agility				4	
+3444 3533 0	3442 3531 0	Climb-through Broken window 57679	18 Agility				4	
 2603 3477 0	2598 3477 0	Walk-across Log balance 23274	20 Agility					
 2599 3478 0	2603 3477 0	Walk-across Log balance 23274	20 Agility					
 2602 3478 0	2598 3477 0	Walk-across Log balance 23274	20 Agility					
@@ -126,6 +137,8 @@
 3300 3192 3	3299 3194 0	Jump Gap 14399	20 Agility				2	
 3142 3513 0	3137 3516 0	Climb-into Underwall tunnel 16530	21 Agility				7	
 3137 3516 0	3142 3513 0	Climb-into Underwall tunnel 16529	21 Agility				7	
+2444 3165 0	2449 3155 0	open Door 255277	23 Agility;28 Strength;24 Ranged				5	Observatory Quest
+2449 3155 0	2444 3165 0	Climb Rope 31849	23 Agility;28 Strength;24 Ranged				5	Observatory Quest
 1369 3294 0	1369 3296 0	Climb-over Broken wall 56996	24 Agility				2	
 1369 3296 0	1369 3294 0	Climb-over Broken wall 56996	24 Agility				2	
 1389 3309 0	1391 3309 0	Climb-over Broken wall 56997	24 Agility				2	
@@ -138,6 +151,8 @@
 2948 3313 0	2948 3309 0	Climb-into Underwall tunnel 16528	26 Agility					
 1613 10070 0	1609 10061 0	Jump-to Stone 28893	28 Agility					
 1609 10061 0	1613 10070 0	Jump-to Stone 28893	28 Agility					
+1613 10070 0 	1609 10061 0 	Jump-to Stone 28893	28 Agility					
+1609 10061 0 	1613 10070 0 	Jump-to Stone 28893	28 Agility					
 1324 3777 0	1324 3785 0	Climb Rocks 34397	29 Agility				8	
 1324 3785 0	1324 3777 0	Climb Rocks 34397	29 Agility				8	
 2485 2898 0	2489 2898 0	Climb-down Rocks 31759	30 Agility			176=10		
@@ -194,6 +209,7 @@
 1368 3323 0	1368 3327 0	Climb-into Tunnel 56989	33 Agility				5	
 2552 3558 0	2552 3561 0	Squeeze-through Obstacle pipe 20210	35 Agility				5	
 2552 3561 0	2552 3558 0	Squeeze-through Obstacle pipe 20210	35 Agility				5	
+3228 3470 0	3228 3471 0	Climb Trellis 2149	35 Agility				5	Garden of Tranquillity
 1393 3309 0	1399 3309 0	Cross Stepping stone 56988	36 Agility				7	
 1399 3309 0	1393 3309 0	Cross Stepping stone 56988	36 Agility				7	
 2841 3427 0	2841 3433 0	Grapple Crossbow Tree 17062	36 Agility;39 Ranged;22 Strength	CROSSBOW=1&MITH_GRAPPLE=1				
@@ -220,6 +236,8 @@
 3480 3484 2	3489 3476 3	Vault Pole-vault 14894	40 Agility				10	
 3502 3476 3	3510 3476 2	Jump Gap 14847	40 Agility				4	
 3510 3482 2	3510 3485 0	Jump Gap 14897	40 Agility				4	
+1283 3147 0	1283 3138 0	Walk-across Log balance 57593	40 Agility				10	
+1283 3138 0	1283 3147 0	Walk-across Log balance 57593	40 Agility				10	
 2872 3671 0	2869 3671 0	Climb Rocks 16521	41 Agility					
 2869 3671 0	2872 3671 0	Climb Rocks 16521	41 Agility					
 1391 3323 0	1396 3323 0	Climb Rocks 56994	41 Agility				6	
@@ -236,6 +254,8 @@
 2884 3684 0	2886 3684 0	Climb Rocks 3804	43 Agility					
 2886 3683 0	2884 3683 0	Climb Rocks 3803	43 Agility					
 2884 3683 0	2886 3683 0	Climb Rocks 3803	43 Agility					
+1270 3002 0	1274 3002 0	Climb Rock 57604	43 Agility				4	
+1274 3002 0	1270 3002 0	Climb Rock 57604	43 Agility				4	
 2907 3682 0	2909 3684 0	Climb Rocks 16523	44 Agility					
 2909 3684 0	2907 3682 0	Climb Rocks 16523	44 Agility					
 1720 3551 0	1724 3551 0	Cross Stepping stone 29728	45 Agility				2	
@@ -256,12 +276,14 @@
 1586 3261 0	1591 3257 0	Climb Rock 56983	45 Agility					
 2400 4402 0	2400 4404 0	Squeeze-past Jutting wall 17002	46 Agility				2	
 2400 4404 0	2400 4402 0	Squeeze-past Jutting wall 17002	46 Agility				2	
+3046 10326 0	3048 10336 0	Use Crevice 17030	46 Agility		6312=1		6	
 2900 3680 0	2903 3680 0	Climb Rocks 16524	47 Agility					
 2903 3680 0	2900 3680 0	Climb Rocks 16524	47 Agility					
 2901 3679 0	2903 3680 0	Climb Rocks 16524	47 Agility					
 2902 3681 0	2900 3680 0	Climb Rocks 16524	47 Agility					
 1465 3128 0	1455 3128 0	Climb Rocks 51931	47 Agility				8	
 1455 3128 0	1465 3128 0	Climb Rocks 51931	47 Agility				8	
+2449 3155 0	2444 3165 0	Cross Stepping stone 10662	47 Agility			328=15	5	
 2722 3592 0	2722 3596 0	Walk-across Log balance 16542	48 Agility				4	
 2722 3596 0	2722 3592 0	Walk-across Log balance 16540	48 Agility				4	
 1776 3884 0	1776 3880 0	Jump Boulder 27990	49 Agility				4	
@@ -314,6 +336,8 @@
 2874 3127 0	2874 3133 0	Grapple Strong Tree 17074	53 Agility;42 Ranged;21 Strength	CROSSBOW=1&MITH_GRAPPLE=1				
 2874 3136 0	2874 3142 0	Grapple Strong Tree 17074	53 Agility;42 Ranged;21 Strength	CROSSBOW=1&MITH_GRAPPLE=1				
 2874 3142 0	2874 3136 0	Grapple Strong Tree 17074	53 Agility;42 Ranged;21 Strength	CROSSBOW=1&MITH_GRAPPLE=1				
+1343 2917 0	1338 2917 0	Climb Rock 54776	54 Agility				4	
+1338 2917 0	1343 2917 0	Climb Rock 54776	54 Agility				4	
 2573 3859 0	2575 3861 0	Cross Stepping stone 11768	55 Agility					
 2575 3861 0	2573 3859 0	Cross Stepping stone 11768	55 Agility					
 2682 9548 0	2690 9547 0	Cross Stepping stone 19040	56 Agility				4	
@@ -428,6 +452,8 @@
 3672 3374 0	3670 3375 0	Climb Wall 39541	63 Agility		10450=1			
 1820 9946 0	1820 9944 0	Jump-over Strange floor 3483	63 Agility				4	
 1820 9944 0	1820 9946 0	Jump-over Strange floor 3483	63 Agility				4	
+1820 9947 0	1820 9945 0	Jump-over Strange floor 34834	63 Agility				2	
+1820 9945 0	1820 9947 0	Jump-over Strange floor 34834	63 Agility				2	
 2915 3672 0	2918 3672 0	Climb Rocks 16545	64 Agility					
 2918 3672 0	2915 3672 0	Climb Rocks 16545	64 Agility					
 2921 3672 0	2924 3673 0	Climb Rocks 16545	64 Agility					
@@ -447,6 +473,8 @@
 2409 4400 0	2409 4402 0	Squeeze-past Jutting wall 17002	66 Agility				2	
 2409 4402 0	2409 4400 0	Squeeze-past Jutting wall 17002	66 Agility				2	
 2946 3439 0	2943 3439 0	Climb-up Climbing rocks 53255	66 Agility				1	
+3212 3137 0	3214 3132 0	Jump-to Stepping stone 16513	66 Agility				3	
+3214 3132 0	3212 3137 0	Jump-to Stepping stone 16513	66 Agility				3	
 2615 9503 0	2616 9571 0	Climb-down Pile of rubble 23564	67 Agility				3	
 2616 9503 0	2616 9571 0	Climb-down Pile of rubble 23564	67 Agility				3	
 2614 9504 0	2616 9571 0	Climb-down Pile of rubble 23564	67 Agility				3	
@@ -537,26 +565,3 @@
 2547 3744 0	2547 3749 0	Climb Rocks 53254	85 Agility				5	
 3500 9510 2	3506 9505 2	Squeeze-through Crevice 16465	86 Agility					
 3506 9505 2	3500 9510 2	Squeeze-through Crevice 16465	86 Agility					
-2926 3522 0	2928 3520 0	Manoeuvre-past Tight-gap 16468	14 Agility		4462=1		5	
-2927 3523 0	2928 3520 0	Manoeuvre-past Tight-gap 16468	14 Agility		4462=1		5	
-2928 3520 0	2927 3523 0	Manoeuvre-past Tight-gap 16468	14 Agility		4462=1		5	
-1647 10010 0 	1645 10000 0 	Squeeze-through Crack 28892	17 Agility					
-1645 10000 0 	1647 10010 0 	Squeeze-through Crack 28892	17 Agility					
-2449 3155 0	2444 3165 0	Grapple Rocks 31850	23 Agility	CROSSBOW=1&MITH_GRAPPLE=1				Observatory Quest 
-1613 10070 0 	1609 10061 0 	Jump-to Stone 28893	28 Agility					
-1609 10061 0 	1613 10070 0 	Jump-to Stone 28893	28 Agility					
-3212 3137 0	3214 3132 0	Jump-to Stepping stone 16513	66 Agility				3	
-3214 3132 0	3212 3137 0	Jump-to Stepping stone 16513	66 Agility				3	
-3228 3470 0	3228 3471 0	Climb Trellis 2149	35 Agility				5	Garden of Tranquillity
-1981 8994 1	1981 8998 1	Jump-to Pillar 31809	15 Agility			6076=1		5
-1981 8998 1	1981 8994 1	Jump-to Pillar 31809	15 Agility			6076=1		5
-3120 9963 0	3120 9970 0	Swing across Monkeybars 23566	15 Agility					8
-3120 9970 0	3120 9963 0	Swing across Monkeybars 23566	15 Agility					8
-3442 3531 0	3444 3533 0	Climb-through Broken window 57679	18 Agility					4
-3444 3533 0	3442 3531 0	Climb-through Broken window 57679	18 Agility					4
-1283 3147 0	1283 3138 0	Walk-across Log balance 57593	40 Agility					10
-1283 3138 0	1283 3147 0	Walk-across Log balance 57593	40 Agility					10
-1343 2917 0	1338 2917 0	Climb Rock 54776	54 Agility					4
-1338 2917 0	1343 2917 0	Climb Rock 54776	54 Agility					4
-1270 3002 0	1274 3002 0	Climb Rock 57604	43 Agility					4
-1274 3002 0	1270 3002 0	Climb Rock 57604	43 Agility					4
