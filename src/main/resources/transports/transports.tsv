@@ -3201,18 +3201,35 @@
 3074 3653 0	3197 10056 0	Enter Cavern 31555						2	
 3075 3653 0	3197 10056 0	Enter Cavern 31555						2	
 3076 3653 0	3197 10056 0	Enter Cavern 31555						2	
-3069 3740 0	3187 10128 0	Jump-down Crevice 40386						2	
-3069 3741 0	3187 10128 0	Jump-down Crevice 40386						2	
-3069 3742 0	3187 10128 0	Jump-down Crevice 40386						2	
-3069 3743 0	3187 10128 0	Jump-down Crevice 40386						2	
-3066 3740 0	3187 10128 0	Jump-down Crevice 40386						2	
-3066 3741 0	3187 10128 0	Jump-down Crevice 40386						2	
-3066 3742 0	3187 10128 0	Jump-down Crevice 40386						2	
-3066 3743 0	3187 10128 0	Jump-down Crevice 40386						2	
-3067 3739 0	3187 10128 0	Jump-down Crevice 40386						2	
-3068 3739 0	3187 10128 0	Jump-down Crevice 40386						2	
-3067 3744 0	3187 10128 0	Jump-down Crevice 40386						2	
-3068 3744 0	3187 10128 0	Jump-down Crevice 40386						2	
+
+# Revenant Caves
+
+3069 3740 0	3187 10127 0	Jump-down Crevice 40386						2	
+3069 3741 0	3187 10127 0	Jump-down Crevice 40386						2	
+3069 3742 0	3187 10127 0	Jump-down Crevice 40386						2	
+3069 3743 0	3187 10127 0	Jump-down Crevice 40386						2	
+3066 3740 0	3187 10127 0	Jump-down Crevice 40386						2	
+3066 3741 0	3187 10127 0	Jump-down Crevice 40386						2	
+3066 3742 0	3187 10127 0	Jump-down Crevice 40386						2	
+3066 3743 0	3187 10127 0	Jump-down Crevice 40386						2	
+3067 3739 0	3187 10127 0	Jump-down Crevice 40386						2	
+3068 3739 0	3187 10127 0	Jump-down Crevice 40386						2	
+3067 3744 0	3187 10127 0	Jump-down Crevice 40386						2	
+3068 3744 0	3187 10127 0	Jump-down Crevice 40386						2	
+
+3220 10088 0	3220 10084 0	Jump-to Pillar 31561	65 Agility					4
+3220 10084 0	3220 10088 0	Jump-to Pillar 31561	65 Agility					4
+
+3198 10136 0	3202 10132 0	Jump-to Pillar 31562						4
+3202 10132 0	3198 10136 0	Jump-to Pillar 31562						4
+
+3200 10196 0	3204 10196 0	Jump-to Pillar 31561						4
+3204 10196 0	3200 10196 0	Jump-to Pillar 31561						4
+
+3180 10211 0	3180 10207 0	Jump-to Pillar 31561						4
+3180 10207 0	3180 10211 0	Jump-to Pillar 31561						4
+
+
 3126 3831 0	3241 10233 0	Enter Cavern 31556						2	
 3126 3832 0	3241 10233 0	Enter Cavern 31556						2	
 3126 3833 0	3241 10233 0	Enter Cavern 31556						2	
@@ -5323,3 +5340,9 @@
 3615 9484 0	3615 9482 0	Quick-pass Barrier 43700						5	
 3616 9484 0	3616 9482 0	Quick-pass Barrier 43700						5	
 3617 9484 0	3617 9482 0	Quick-pass Barrier 43700						5	
+
+2775 10003 0	2773 10003 0	Jump-over Strange floor 16544	43 Agility					10
+2773 10003 0	2775 10003 0	Jump-over Strange floor 16544	43 Agility					10
+
+2770 10002 0	2768 10002 0	Jump-over Strange floor 16544	43 Agility					10
+2768 10002 0	2770 10002 0	Jump-over Strange floor 16544	43 Agility					10
