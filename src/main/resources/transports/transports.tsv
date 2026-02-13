@@ -5052,7 +5052,7 @@
 									
 # Tomb of Bervirius									
 2762 2989 0	2760 9389 0	Search Well stacked rocks 2234						15	
-2764 9376 0	2765 2976 0	Climb Climbing rocks 2236						15										
+2764 9376 0	2765 2976 0	Climb Climbing rocks 2236						15	
 									
 # Ice Queen's lair - Rock formations									
 2840 3516 0	2836 3517 0	Mine Rock slide 2634	50 Mining	PICKAXE=1				10	
@@ -5277,3 +5277,49 @@
 # Nature Altar									
 3035 4842 0	2400 4844 0	Exit-through Nature rift 25382							 
 2400 4835 0	2865 3022 0	Use Portal 34756						1	
+									
+# Wintertodt									
+									
+1633 4023 0	1631 4023 0	Jump Gap 29326	60 Agility					2	
+1631 4023 0	1629 4023 0	Jump Gap 29326	60 Agility					2	
+1629 4023 0	1627 4023 0	Jump Gap 29326	60 Agility					2	
+									
+1631 4023 0	1633 4023 0	Jump Gap 29326	60 Agility					2	
+1629 4023 0	1631 4023 0	Jump Gap 29326	60 Agility					2	
+1627 4023 0	1629 4023 0	Jump Gap 29326	60 Agility					2	
+									
+									
+									
+1627 3963 0	1630 3979 0	Enter Door of Dinh 29322	50 Firemaking					1	
+1628 3963 0	1630 3979 0	Enter Door of Dinh 29322	50 Firemaking					1	
+1629 3963 0	1630 3979 0	Enter Door of Dinh 29322	50 Firemaking					1	
+1630 3963 0	1630 3979 0	Enter Door of Dinh 29322	50 Firemaking					1	
+1631 3963 0	1630 3979 0	Enter Door of Dinh 29322	50 Firemaking					1	
+1632 3963 0	1630 3979 0	Enter Door of Dinh 29322	50 Firemaking					1	
+1633 3963 0	1630 3979 0	Enter Door of Dinh 29322	50 Firemaking					1	
+									
+									
+1627 3963 0	1630 3958 0	Enter Door of Dinh 29322						1	
+1628 3963 0	1630 3958 0	Enter Door of Dinh 29322						1	
+1629 3963 0	1630 3958 0	Enter Door of Dinh 29322						1	
+1630 3963 0	1630 3958 0	Enter Door of Dinh 29322						1	
+1631 3963 0	1630 3958 0	Enter Door of Dinh 29322						1	
+1632 3963 0	1630 3958 0	Enter Door of Dinh 29322						1	
+1633 3963 0	1630 3958 0	Enter Door of Dinh 29322						1	
+									
+									
+# Temple of the eye									
+									
+3633 9503 0	3637 9503 0	Climb Rubble 43724						5	
+3637 9503 0	3633 9503 0	Climb Rubble 43726						5	
+									
+3613 9482 0	3613 9484 0	Quick-pass Barrier 43700						5	
+3614 9482 0	3614 9484 0	Quick-pass Barrier 43700						5	
+3615 9482 0	3615 9484 0	Quick-pass Barrier 43700						5	
+3616 9482 0	3616 9484 0	Quick-pass Barrier 43700						5	
+3617 9482 0	3617 9484 0	Quick-pass Barrier 43700						5	
+3613 9484 0	3613 9482 0	Quick-pass Barrier 43700						5	
+3614 9484 0	3614 9482 0	Quick-pass Barrier 43700						5	
+3615 9484 0	3615 9482 0	Quick-pass Barrier 43700						5	
+3616 9484 0	3616 9482 0	Quick-pass Barrier 43700						5	
+3617 9484 0	3617 9482 0	Quick-pass Barrier 43700						5	
