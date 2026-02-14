@@ -248,6 +248,23 @@ public class PathfinderTest {
     }
 
     @Test
+    public void testLovakenjMinecartNetworkReverseNotUsableWithoutCoinsBeforeQuest() {
+        // Before The Forsaken Tower completion (varbit 7796 < 11), reverse minecart travel
+        // should still require payment and therefore not be a direct 2-step transport with 0 coins.
+        when(config.useMinecarts()).thenReturn(true);
+        setupInventory();
+        Map<Integer, Integer> varbits = new HashMap<>();
+        varbits.put(7796, 0);
+        setupConfig(QuestState.FINISHED, 99, TeleportationItem.NONE, varbits);
+
+        int shayzienWest = WorldPointUtil.packWorldPoint(1415, 3577, 0);
+        int arceuus = WorldPointUtil.packWorldPoint(1670, 3833, 0);
+
+        assertTrue("Reverse Lovakengj minecart route should not be directly usable without coins before quest",
+            calculatePathLength(shayzienWest, arceuus) > 2);
+    }
+
+    @Test
     public void testQuetzals() {
         when(config.useQuetzals()).thenReturn(true);
         testTransportLength(2, TransportType.QUETZAL);
