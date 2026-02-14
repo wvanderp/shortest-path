@@ -492,7 +492,6 @@ public class PathfinderTest {
         when(client.getClientThread()).thenReturn(Thread.currentThread());
         when(client.getBoostedSkillLevel(any(Skill.class))).thenReturn(skillLevel);
         when(config.useTeleportationItems()).thenReturn(useTeleportationItems);
-        when(config.usePoh()).thenReturn(false); // Default POH to disabled
         doReturn(true).when(pathfinderConfig).varbitChecks(any(Transport.class));
         doReturn(true).when(pathfinderConfig).varPlayerChecks(any(Transport.class));
         doReturn(questState).when(pathfinderConfig).getQuestState(any(Quest.class));
@@ -541,8 +540,9 @@ public class PathfinderTest {
         setupConfig(questState, skillLevel, useTeleportationItems);
 
         int counter = 0;
-        for (int origin : transports.keySet()) {
-            for (Transport transport : transports.get(origin)) {
+        Map<Integer, Set<Transport>> activeTransports = pathfinderConfig.getTransports();
+        for (int origin : activeTransports.keySet()) {
+            for (Transport transport : activeTransports.get(origin)) {
                 if (transportType.equals(transport.getType())) {
                     counter++;
                     assertEquals(transport.toString(), expectedLength, calculateTransportLength(transport));
