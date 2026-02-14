@@ -1,5 +1,6 @@
 package shortestpath.pathfinder;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import net.runelite.api.Client;
@@ -28,6 +29,7 @@ import shortestpath.transport.Transport;
 import shortestpath.transport.TransportItems;
 import shortestpath.transport.TransportLoader;
 import shortestpath.transport.TransportType;
+import shortestpath.transport.TransportVarbit;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -198,6 +200,51 @@ public class PathfinderTest {
         when(config.useMinecarts()).thenReturn(true);
         setupInventory(new Item(ItemID.COINS, 1000));
         testTransportLength(2, TransportType.MINECART);
+    }
+
+    @Test
+    public void testLovakenjMinecartNetworkPaidBeforeQuest() {
+        // Before The Forsaken Tower quest completion (varbit 7796 < 11),
+        // Lovakengj minecart rides cost 20 coins
+        when(config.useMinecarts()).thenReturn(true);
+        setupInventory(new Item(ItemID.COINS, 20));
+        when(client.getVarbitValue(7796)).thenReturn(0);
+        Map<Integer, Integer> varbits = new HashMap<>();
+        varbits.put(7796, 0);
+        setupConfig(QuestState.FINISHED, 99, TeleportationItem.NONE, varbits);
+
+        /*
+         * Info:
+         * single_minecart_origin_locations * (number_of_minecart_destinations)
+         * - self_pairs_with_distance_0
+         *   1 * 12   // Arceuus (1 origin tile, no self-pair)
+         * + 2 * 12 - 1   // Farming Guild (2 origin tiles, 1 self-pair)
+         * + 2 * 12 - 1   // Hosidius South
+         * + 2 * 12 - 1   // Hosidius West
+         * + 2 * 12 - 1   // Kingstown
+         * + 1 * 12 - 1   // Kourend Woodland (1 origin tile, 1 self-pair)
+         * + 2 * 12 - 1   // Lovakengj
+         * + 2 * 12 - 1   // Mount Quidamortem
+         * + 1 * 12 - 1   // Northern Tundras (Wintertodt)
+         * + 2 * 12 - 1   // Port Piscarilius
+         * + 2 * 12 - 1   // Shayzien East
+         * + 2 * 12 - 1   // Shayzien West
+         * = 252 - 11 = 241
+         */
+        assertEquals(241, countLovakenjMinecarts());
+    }
+
+    @Test
+    public void testLovakenjMinecartNetworkFreeAfterQuest() {
+        // After The Forsaken Tower quest completion (varbit 7796 = 11),
+        // rides are free (no coins required)
+        when(config.useMinecarts()).thenReturn(true);
+        setupInventory();
+        Map<Integer, Integer> varbits = new HashMap<>();
+        varbits.put(7796, 11);
+        setupConfig(QuestState.FINISHED, 99, TeleportationItem.NONE, varbits);
+
+        assertEquals(241, countLovakenjMinecarts());
     }
 
     @Test
@@ -499,6 +546,22 @@ public class PathfinderTest {
         pathfinderConfig.refresh();
     }
 
+    private void setupConfig(QuestState questState, int skillLevel, TeleportationItem useTeleportationItems, Map<Integer, Integer> varbitValues) {
+        pathfinderConfig = spy(new PathfinderConfig(client, config));
+
+        when(client.getGameState()).thenReturn(GameState.LOGGED_IN);
+        when(client.getClientThread()).thenReturn(Thread.currentThread());
+        when(client.getBoostedSkillLevel(any(Skill.class))).thenReturn(skillLevel);
+        when(config.useTeleportationItems()).thenReturn(useTeleportationItems);
+        for (Map.Entry<Integer, Integer> entry : varbitValues.entrySet()) {
+            when(client.getVarbitValue(entry.getKey())).thenReturn(entry.getValue());
+        }
+        doReturn(true).when(pathfinderConfig).varPlayerChecks(any(Transport.class));
+        doReturn(questState).when(pathfinderConfig).getQuestState(any(Quest.class));
+
+        pathfinderConfig.refresh();
+    }
+
     private void setupInventory(Item... items) {
         doReturn(inventory).when(client).getItemContainer(InventoryID.INV);
         doReturn(items).when(inventory).getItems();
@@ -598,6 +661,29 @@ public class PathfinderTest {
                         }
                     }
                 }
+            }
+        }
+        return false;
+    }
+
+    /** Counts the number of Lovakengj Minecart Network transports in the active transport set.
+     * These are identified by having varbit 7796 among their requirements. */
+    private int countLovakenjMinecarts() {
+        int count = 0;
+        for (Set<Transport> set : pathfinderConfig.getTransports().values()) {
+            for (Transport t : set) {
+                if (TransportType.MINECART.equals(t.getType()) && hasVarbit(t, 7796)) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    private boolean hasVarbit(Transport transport, int varbitId) {
+        for (TransportVarbit varbit : transport.getVarbits()) {
+            if (varbit.getId() == varbitId) {
+                return true;
             }
         }
         return false;
