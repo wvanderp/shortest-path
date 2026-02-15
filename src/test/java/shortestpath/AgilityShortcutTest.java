@@ -147,7 +147,7 @@ public class AgilityShortcutTest {
 
         for (AgilityShortcut shortcut : AgilityShortcut.values()) {
             if (!isShortcutMatched(shortcut, transportData)) {
-                missing.add(shortcut.name() + " " + shortcut.getLevel() + " " + shortcut.getWorldLocation() + " " + shortcut.getObstacleIds());
+                missing.add(shortcut.name() + " - " + shortcut.getLevel() + " - " + shortcut.getWorldLocation());
             }
         }
 

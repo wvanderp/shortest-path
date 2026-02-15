@@ -13,18 +13,21 @@ Wanted: DaemonRequestContext{jvmCriteria=C:\Program Files\Eclipse Adoptium\jdk-1
 Actual: DefaultDaemonContext[uid=d82e5333-06bd-4275-a97b-d0b3c2ddd9a8,javaHome=C:\Users\woute\.vscode\extensions\redhat.java-1.51.0-win32-x64\jre\21.0.9-win32-x86_64,javaVersion=21,javaVendor=Eclipse Adoptium,daemonRegistryDir=C:\Users\woute\.gradle\daemon,pid=175788,idleTimeout=10800000,priority=NORMAL,applyInstrumentationAgent=true,nativeServicesMode=ENABLED,daemonOpts=--add-opens=java.base/java.util=ALL-UNNAMED,--add-opens=java.base/java.lang=ALL-UNNAMED,--add-opens=java.base/java.lang.invoke=ALL-UNNAMED,--add-opens=java.prefs/java.util.prefs=ALL-UNNAMED,--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED,--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED,--add-opens=java.base/java.nio.charset=ALL-UNNAMED,--add-opens=java.base/java.net=ALL-UNNAMED,--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED,-XX:MaxMetaspaceSize=384m,-XX:+HeapDumpOnOutOfMemoryError,-Xms256m,-Xmx512m,-Dfile.encoding=UTF-8,-Duser.country=GB,-Duser.language=en,-Duser.variant]
 
   Looking for a different daemon...
-Found daemon DaemonInfo{pid=3644, address=[06008d7b-57b2-470a-ae0d-44ab8a2ff1dd port:21503, addresses:[/127.0.0.1]], state=Idle, lastBusy=1771015963580, context=DefaultDaemonContext[uid=e51a0ef7-abd0-4412-adea-061a2fb3c0b6,javaHome=C:\Users\woute\.vscode\extensions\redhat.java-1.52.0-win32-x64\jre\21.0.9-win32-x86_64,javaVersion=21,javaVendor=Eclipse Adoptium,daemonRegistryDir=C:\Users\woute\.gradle\daemon,pid=3644,idleTimeout=10800000,priority=NORMAL,applyInstrumentationAgent=true,nativeServicesMode=ENABLED,daemonOpts=--add-opens=java.base/java.util=ALL-UNNAMED,--add-opens=java.base/java.lang=ALL-UNNAMED,--add-opens=java.base/java.lang.invoke=ALL-UNNAMED,--add-opens=java.prefs/java.util.prefs=ALL-UNNAMED,--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED,--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED,--add-opens=java.base/java.nio.charset=ALL-UNNAMED,--add-opens=java.base/java.net=ALL-UNNAMED,--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED,-XX:MaxMetaspaceSize=384m,-XX:+HeapDumpOnOutOfMemoryError,-Xms256m,-Xmx512m,-Dfile.encoding=UTF-8,-Duser.country=GB,-Duser.language=en,-Duser.variant]} however its context does not match the desired criteria.
+Found daemon DaemonInfo{pid=442808, address=[488a3bb0-e23c-458c-8c79-d6fded93536d port:53567, addresses:[/127.0.0.1]], state=Idle, lastBusy=1771159211356, context=DefaultDaemonContext[uid=94683a7c-3959-40b6-9afa-52815436ada1,javaHome=C:\Users\woute\.vscode\extensions\redhat.java-1.52.0-win32-x64\jre\21.0.9-win32-x86_64,javaVersion=21,javaVendor=Eclipse Adoptium,daemonRegistryDir=C:\Users\woute\.gradle\daemon,pid=442808,idleTimeout=10800000,priority=NORMAL,applyInstrumentationAgent=true,nativeServicesMode=ENABLED,daemonOpts=--add-opens=java.base/java.util=ALL-UNNAMED,--add-opens=java.base/java.lang=ALL-UNNAMED,--add-opens=java.base/java.lang.invoke=ALL-UNNAMED,--add-opens=java.prefs/java.util.prefs=ALL-UNNAMED,--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED,--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED,--add-opens=java.base/java.nio.charset=ALL-UNNAMED,--add-opens=java.base/java.net=ALL-UNNAMED,--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED,-XX:MaxMetaspaceSize=384m,-XX:+HeapDumpOnOutOfMemoryError,-Xms256m,-Xmx512m,-Dfile.encoding=UTF-8,-Duser.country=GB,-Duser.language=en,-Duser.variant]} however its context does not match the desired criteria.
 JVM is incompatible.
 Wanted: DaemonRequestContext{jvmCriteria=C:\Program Files\Eclipse Adoptium\jdk-17.0.17.10-hotspot (no JDK specified, using current Java home), daemonOpts=[--add-opens=java.base/java.util=ALL-UNNAMED, --add-opens=java.base/java.lang=ALL-UNNAMED, --add-opens=java.base/java.lang.invoke=ALL-UNNAMED, --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED, --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED, --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED, --add-opens=java.base/java.nio.charset=ALL-UNNAMED, --add-opens=java.base/java.net=ALL-UNNAMED, --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED, -XX:MaxMetaspaceSize=384m, -XX:+HeapDumpOnOutOfMemoryError, -Xms256m, -Xmx512m, -Dfile.encoding=windows-1252, -Duser.country=GB, -Duser.language=en, -Duser.variant], applyInstrumentationAgent=true, nativeServicesMode=ENABLED, priority=NORMAL}
-Actual: DefaultDaemonContext[uid=e51a0ef7-abd0-4412-adea-061a2fb3c0b6,javaHome=C:\Users\woute\.vscode\extensions\redhat.java-1.52.0-win32-x64\jre\21.0.9-win32-x86_64,javaVersion=21,javaVendor=Eclipse Adoptium,daemonRegistryDir=C:\Users\woute\.gradle\daemon,pid=3644,idleTimeout=10800000,priority=NORMAL,applyInstrumentationAgent=true,nativeServicesMode=ENABLED,daemonOpts=--add-opens=java.base/java.util=ALL-UNNAMED,--add-opens=java.base/java.lang=ALL-UNNAMED,--add-opens=java.base/java.lang.invoke=ALL-UNNAMED,--add-opens=java.prefs/java.util.prefs=ALL-UNNAMED,--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED,--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED,--add-opens=java.base/java.nio.charset=ALL-UNNAMED,--add-opens=java.base/java.net=ALL-UNNAMED,--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED,-XX:MaxMetaspaceSize=384m,-XX:+HeapDumpOnOutOfMemoryError,-Xms256m,-Xmx512m,-Dfile.encoding=UTF-8,-Duser.country=GB,-Duser.language=en,-Duser.variant]
+Actual: DefaultDaemonContext[uid=94683a7c-3959-40b6-9afa-52815436ada1,javaHome=C:\Users\woute\.vscode\extensions\redhat.java-1.52.0-win32-x64\jre\21.0.9-win32-x86_64,javaVersion=21,javaVendor=Eclipse Adoptium,daemonRegistryDir=C:\Users\woute\.gradle\daemon,pid=442808,idleTimeout=10800000,priority=NORMAL,applyInstrumentationAgent=true,nativeServicesMode=ENABLED,daemonOpts=--add-opens=java.base/java.util=ALL-UNNAMED,--add-opens=java.base/java.lang=ALL-UNNAMED,--add-opens=java.base/java.lang.invoke=ALL-UNNAMED,--add-opens=java.prefs/java.util.prefs=ALL-UNNAMED,--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED,--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED,--add-opens=java.base/java.nio.charset=ALL-UNNAMED,--add-opens=java.base/java.net=ALL-UNNAMED,--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED,-XX:MaxMetaspaceSize=384m,-XX:+HeapDumpOnOutOfMemoryError,-Xms256m,-Xmx512m,-Dfile.encoding=UTF-8,-Duser.country=GB,-Duser.language=en,-Duser.variant]
 
   Looking for a different daemon...
-The client will now receive all logging from the daemon (pid: 170568). The daemon log file: C:\Users\woute\.gradle\daemon\8.10\daemon-170568.out.log
-Starting 2nd build in daemon [uptime: 15 mins 44.968 secs, performance: 100%, GC rate: 0.00/s, heap usage: 0% of 512 MiB, non-heap usage: 13% of 384 MiB]
+Found daemon DaemonInfo{pid=443180, address=[49272e1b-1600-4230-be81-e4f06efe9250 port:53569, addresses:[/127.0.0.1]], state=Idle, lastBusy=1771159243507, context=DefaultDaemonContext[uid=aec772b0-612d-4924-83ff-f168622037ca,javaHome=C:\Program Files\Eclipse Adoptium\jdk-17.0.17.10-hotspot,javaVersion=17,javaVendor=Eclipse Adoptium,daemonRegistryDir=C:\Users\woute\.gradle\daemon,pid=443180,idleTimeout=10800000,priority=NORMAL,applyInstrumentationAgent=true,nativeServicesMode=ENABLED,daemonOpts=--add-opens=java.base/java.util=ALL-UNNAMED,--add-opens=java.base/java.lang=ALL-UNNAMED,--add-opens=java.base/java.lang.invoke=ALL-UNNAMED,--add-opens=java.prefs/java.util.prefs=ALL-UNNAMED,--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED,--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED,--add-opens=java.base/java.nio.charset=ALL-UNNAMED,--add-opens=java.base/java.net=ALL-UNNAMED,--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED,-XX:MaxMetaspaceSize=384m,-XX:+HeapDumpOnOutOfMemoryError,-Xms256m,-Xmx512m,-Dfile.encoding=utf8,-Duser.country=GB,-Duser.language=en,-Duser.variant]} however its context does not match the desired criteria.
+At least one daemon option is different.
+Wanted: DaemonRequestContext{jvmCriteria=C:\Program Files\Eclipse Adoptium\jdk-17.0.17.10-hotspot (no JDK specified, using current Java home), daemonOpts=[--add-opens=java.base/java.util=ALL-UNNAMED, --add-opens=java.base/java.lang=ALL-UNNAMED, --add-opens=java.base/java.lang.invoke=ALL-UNNAMED, --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED, --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED, --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED, --add-opens=java.base/java.nio.charset=ALL-UNNAMED, --add-opens=java.base/java.net=ALL-UNNAMED, --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED, -XX:MaxMetaspaceSize=384m, -XX:+HeapDumpOnOutOfMemoryError, -Xms256m, -Xmx512m, -Dfile.encoding=windows-1252, -Duser.country=GB, -Duser.language=en, -Duser.variant], applyInstrumentationAgent=true, nativeServicesMode=ENABLED, priority=NORMAL}
+Actual: DefaultDaemonContext[uid=aec772b0-612d-4924-83ff-f168622037ca,javaHome=C:\Program Files\Eclipse Adoptium\jdk-17.0.17.10-hotspot,javaVersion=17,javaVendor=Eclipse Adoptium,daemonRegistryDir=C:\Users\woute\.gradle\daemon,pid=443180,idleTimeout=10800000,priority=NORMAL,applyInstrumentationAgent=true,nativeServicesMode=ENABLED,daemonOpts=--add-opens=java.base/java.util=ALL-UNNAMED,--add-opens=java.base/java.lang=ALL-UNNAMED,--add-opens=java.base/java.lang.invoke=ALL-UNNAMED,--add-opens=java.prefs/java.util.prefs=ALL-UNNAMED,--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED,--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED,--add-opens=java.base/java.nio.charset=ALL-UNNAMED,--add-opens=java.base/java.net=ALL-UNNAMED,--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED,-XX:MaxMetaspaceSize=384m,-XX:+HeapDumpOnOutOfMemoryError,-Xms256m,-Xmx512m,-Dfile.encoding=utf8,-Duser.country=GB,-Duser.language=en,-Duser.variant]
+
+  Looking for a different daemon...
+The client will now receive all logging from the daemon (pid: 418560). The daemon log file: C:\Users\woute\.gradle\daemon\8.10\daemon-418560.out.log
+Starting 2nd build in daemon [uptime: 6 mins 50.647 secs, performance: 100%, GC rate: 0.00/s, heap usage: 0% of 512 MiB, non-heap usage: 14% of 384 MiB]
 Using 16 worker leases.
-Invalidating in-memory cache of C:\Users\woute\Code\fork\shortest-path\.gradle\8.10\fileHashes\fileHashes.bin
-Invalidating in-memory cache of C:\Users\woute\Code\fork\shortest-path\.gradle\buildOutputCleanup\outputFiles.bin
-Invalidating in-memory cache of C:\Users\woute\Code\fork\shortest-path\.gradle\8.10\fileHashes\resourceHashesCache.bin
 Now considering [C:\Users\woute\Code\fork\shortest-path] as hierarchies to watch
 Watching the file system is configured to be enabled if available
 File system watching is active
@@ -41,31 +44,27 @@ Selected primary task 'test' from project :
 Tasks to be executed: [task ':compileJava', task ':processResources', task ':classes', task ':compileTestJava', task ':processTestResources', task ':testClasses', task ':test']
 Tasks that were excluded: []
 Resolve mutations for :compileJava (Thread[Execution worker,5,main]) started.
-:compileJava (Thread[Execution worker,5,main]) started.
-Invalidating in-memory cache of C:\Users\woute\Code\fork\shortest-path\.gradle\8.10\executionHistory\executionHistory.bin
+:compileJava (Thread[Execution worker Thread 14,5,main]) started.
 
 > Task :compileJava UP-TO-DATE
-Invalidating in-memory cache of C:\Users\woute\.gradle\caches\journal-1\file-access.bin
-Invalidating in-memory cache of C:\Users\woute\.gradle\caches\8.10\fileHashes\fileHashes.bin
-Invalidating in-memory cache of C:\Users\woute\.gradle\caches\8.10\fileHashes\resourceHashesCache.bin
 Caching disabled for task ':compileJava' because:
   Build cache is disabled
 Skipping task ':compileJava' as it is up-to-date.
-Resolve mutations for :processResources (Thread[Execution worker,5,main]) started.
-:processResources (Thread[Execution worker,5,main]) started.
+Resolve mutations for :processResources (Thread[Execution worker Thread 14,5,main]) started.
+:processResources (Thread[Execution worker Thread 14,5,main]) started.
 
 > Task :processResources UP-TO-DATE
 Caching disabled for task ':processResources' because:
   Build cache is disabled
   Not worth caching
 Skipping task ':processResources' as it is up-to-date.
-Resolve mutations for :classes (Thread[Execution worker,5,main]) started.
-:classes (Thread[Execution worker,5,main]) started.
+Resolve mutations for :classes (Thread[Execution worker Thread 14,5,main]) started.
+:classes (Thread[Execution worker Thread 14,5,main]) started.
 
 > Task :classes UP-TO-DATE
 Skipping task ':classes' as it has no actions.
-Resolve mutations for :compileTestJava (Thread[Execution worker,5,main]) started.
-:compileTestJava (Thread[Execution worker,5,main]) started.
+Resolve mutations for :compileTestJava (Thread[Execution worker Thread 9,5,main]) started.
+:compileTestJava (Thread[Execution worker Thread 9,5,main]) started.
 
 > Task :compileTestJava
 Caching disabled for task ':compileTestJava' because:
@@ -73,24 +72,24 @@ Caching disabled for task ':compileTestJava' because:
 Task ':compileTestJava' is not up-to-date because:
   Input property 'stableSources' file C:\Users\woute\Code\fork\shortest-path\src\test\java\shortestpath\AgilityShortcutTest.java has changed.
 Compilation mode: in-process compilation
-Created classpath snapshot for incremental compilation in 0.073 secs.
+Created classpath snapshot for incremental compilation in 0.069 secs.
 Compiling with toolchain 'C:\Program Files\Eclipse Adoptium\jdk-17.0.17.10-hotspot'.
 Compiling with JDK Java compiler API.
-Incremental compilation of 2 classes completed in 0.918 secs.
-Class dependency analysis for incremental compilation took 0.018 secs.
-Resolve mutations for :processTestResources (Thread[Execution worker,5,main]) started.
-:processTestResources (Thread[Execution worker,5,main]) started.
+Incremental compilation of 2 classes completed in 0.84 secs.
+Class dependency analysis for incremental compilation took 0.014 secs.
+Resolve mutations for :processTestResources (Thread[Execution worker Thread 9,5,main]) started.
+:processTestResources (Thread[Execution worker Thread 9,5,main]) started.
 
 > Task :processTestResources NO-SOURCE
 Skipping task ':processTestResources' as it has no source files and no previous output files.
-Resolve mutations for :testClasses (Thread[Execution worker,5,main]) started.
-:testClasses (Thread[Execution worker Thread 14,5,main]) started.
+Resolve mutations for :testClasses (Thread[Execution worker Thread 9,5,main]) started.
+:testClasses (Thread[Execution worker Thread 9,5,main]) started.
 
 > Task :testClasses
 Skipping task ':testClasses' as it has no actions.
-Resolve mutations for :test (Thread[Execution worker Thread 14,5,main]) started.
-:test (Thread[Execution worker Thread 14,5,main]) started.
-Gradle Test Executor 1 started executing tests.
+Resolve mutations for :test (Thread[Execution worker Thread 9,5,main]) started.
+:test (Thread[Execution worker Thread 9,5,main]) started.
+Gradle Test Executor 2 started executing tests.
 
 > Task :test
 Custom actions are attached to task ':test'.
@@ -98,8 +97,8 @@ Caching disabled for task ':test' because:
   Build cache is disabled
 Task ':test' is not up-to-date because:
   Task has failed previously.
-Starting process 'Gradle Test Executor 1'. Working directory: C:\Users\woute\Code\fork\shortest-path Command: C:\Program Files\Eclipse Adoptium\jdk-17.0.17.10-hotspot\bin\java.exe -Dorg.gradle.internal.worker.tmpdir=C:\Users\woute\Code\fork\shortest-path\build\tmp\test\work -javaagent:C:\Users\woute\Code\fork\shortest-path\build\tmp\.cache\expanded\zip_cde35f471dab581134460fc9a50e2c59\jacocoagent.jar=destfile=build/jacoco/test.exec,append=true,inclnolocationclasses=false,dumponexit=true,output=file,jmx=false @C:\Users\woute\.gradle\.tmp\gradle-worker-classpath189847846978484890txt -Xms1g -Xmx8g -Dfile.encoding=windows-1252 -Duser.country=GB -Duser.language=en -Duser.variant -ea worker.org.gradle.process.internal.worker.GradleWorkerMain 'Gradle Test Executor 1'
-Successfully started process 'Gradle Test Executor 1'
+Starting process 'Gradle Test Executor 2'. Working directory: C:\Users\woute\Code\fork\shortest-path Command: C:\Program Files\Eclipse Adoptium\jdk-17.0.17.10-hotspot\bin\java.exe -Dorg.gradle.internal.worker.tmpdir=C:\Users\woute\Code\fork\shortest-path\build\tmp\test\work -javaagent:C:\Users\woute\Code\fork\shortest-path\build\tmp\.cache\expanded\zip_cde35f471dab581134460fc9a50e2c59\jacocoagent.jar=destfile=build/jacoco/test.exec,append=true,inclnolocationclasses=false,dumponexit=true,output=file,jmx=false @C:\Users\woute\.gradle\.tmp\gradle-worker-classpath16672253373284063751txt -Xms1g -Xmx8g -Dfile.encoding=windows-1252 -Duser.country=GB -Duser.language=en -Duser.variant -ea worker.org.gradle.process.internal.worker.GradleWorkerMain 'Gradle Test Executor 2'
+Successfully started process 'Gradle Test Executor 2'
 
 AgilityShortcutTest > everyEnumHasTsvEntry STANDARD_OUT
     Skipping excluded ID 46815 for WEISS_BROKEN_FENCE
@@ -109,59 +108,59 @@ AgilityShortcutTest > everyEnumHasTsvEntry STANDARD_OUT
     Skipping excluded ID 23569 for KARAMJA_MOSS_GIANT_SWING
     Skipping excluded ID 31697 for CRABCLAW_CAVES_ROCKS
     Missing TSV entries for the following AgilityShortcut enum constants:
-    DEEP_WILDERNESS_DUNGEON_CREVICE_NORTH 46 WorldPoint(x=3047, y=10335, plane=0) [I@807c1e8
-    DEEP_WILDERNESS_DUNGEON_CREVICE_SOUTH 46 WorldPoint(x=3045, y=10327, plane=0) [I@2419a5db
-    TONALI_CAVERN_STEPPING_STONE 46 null [I@52bb3dcd
-    TONALI_CAVERN_LOG_BALANCE 46 null [I@654db80b
-    GREAT_CONCH_CLIFF_SHORTCUT_TOWN 50 WorldPoint(x=3180, y=2433, plane=0) [I@516037be
-    ANGLERS_RETREAT_SHORTCUT 52 WorldPoint(x=2475, y=2729, plane=0) [I@383e6734
-    GREAT_CONCH_CLIFF_SHORTCUT_EAST_1 52 WorldPoint(x=3235, y=2388, plane=0) [I@336070ab
-    MOTHERLODE_MINE_WALL_EAST 54 WorldPoint(x=3124, y=9703, plane=0) [I@3be50b2c
-    MOTHERLODE_MINE_WALL_WEST 54 WorldPoint(x=3118, y=9702, plane=0) [I@6be80629
-    GREAT_CONCH_CLIFF_SHORTCUT_SOUTHEAST_BOTTOM 55 WorldPoint(x=3272, y=2330, plane=0) [I@20a4cba7
-    GREAT_CONCH_CLIFF_SHORTCUT_EAST_2 57 WorldPoint(x=3256, y=2397, plane=0) [I@10f10230
-    ASGARNIA_ICE_DUNGEON_TUNNEL_WEST 60 WorldPoint(x=2968, y=9549, plane=0) [I@3dec769
-    GREAT_CONCH_STEPPING_STONE 61 WorldPoint(x=3208, y=2394, plane=0) [I@282c5075
-    LAGUNA_AURORAE_SHORTCUT_1 61 WorldPoint(x=1152, y=2804, plane=0) [I@2ed35f24
-    LAGUNA_AURORAE_SHORTCUT_2 61 WorldPoint(x=1142, y=2803, plane=0) [I@362b384c
-    HEROES_GUILD_TUNNEL_EAST 67 WorldPoint(x=2898, y=9901, plane=0) [I@433b546f
-    HEROES_GUILD_TUNNEL_WEST 67 WorldPoint(x=2913, y=9895, plane=0) [I@9de1b85
-    FENKENSTRAIN_MAUSOLEUM_BRIDGE 69 WorldPoint(x=3504, y=3560, plane=0) [I@3d405fe5
-    GU_TANOTH_CRUMBLING_WALL 71 WorldPoint(x=2545, y=3032, plane=0) [I@52c6e959
-    ASGARNIA_ICE_DUNGEON_BASIC_SOUTH 72 WorldPoint(x=3033, y=9559, plane=0) [I@4b475742
-    BARROWS_WALL_JUMP 72 WorldPoint(x=3544, y=3282, plane=0) [I@323c6f9c
-    COF_PLATFORM_TOP 73 WorldPoint(x=1438, y=10098, plane=2) [I@dbca149
-    COF_PLATFORM_MID 73 WorldPoint(x=1443, y=10097, plane=1) [I@68550d86
-    MEIYERDITCH_LAB_TUNNELS_NORTH 74 WorldPoint(x=3623, y=9747, plane=0) [I@19d9ba89
-    MEIYERDITCH_LAB_TUNNELS_SOUTH 74 WorldPoint(x=3618, y=9722, plane=0) [I@484876a1
-    FOSSIL_ISLAND_ZIPLINE 74 WorldPoint(x=3764, y=3883, plane=0) [I@20163008
-    MOKHAIOTL_PIT_JUMP 75 null [I@60ef30b1
-    DARKFROST_CLIFF_SCRAMBLE 76 WorldPoint(x=1477, y=3307, plane=0) [I@3436d3d7
-    WILDERNESS_SLAYER_CAVE_CREVICE_NORTH_EAST 77 WorldPoint(x=3433, y=10093, plane=0) [I@3f40568e
-    WILDERNESS_SLAYER_CAVE_CREVICE_SOUTH_EAST 77 WorldPoint(x=3434, y=10115, plane=0) [I@2e47a71e
-    WILDERNESS_SLAYER_CAVE_CREVICE_NORTH_WEST 77 WorldPoint(x=3341, y=10149, plane=0) [I@37b470df
-    WILDERNESS_SLAYER_CAVE_CREVICE_SOUTH_WEST 77 WorldPoint(x=3333, y=10119, plane=0) [I@359ea595
-    IORWERTHS_DUNGEON_NORTHERN_SHORTCUT_EAST 78 WorldPoint(x=3221, y=12441, plane=0) [I@8d7718e
-    IORWERTHS_DUNGEON_NORTHERN_SHORTCUT_WEST 78 WorldPoint(x=3215, y=12441, plane=0) [I@1bbb48dd
-    KHARAZI_JUNGLE_VINE_CLIMB 79 WorldPoint(x=2897, y=2939, plane=0) [I@f9de1fd
-    SLAYER_TOWER_IVY 81 WorldPoint(x=3417, y=3533, plane=0) [I@4fef4f96
-    SLAYER_TOWER_TOP_WINDOW 81 WorldPoint(x=3419, y=3534, plane=0) [I@7c871ce4
-    WATERBIRTH_DUNGEON_CREVICE 81 WorldPoint(x=2604, y=10070, plane=0) [I@3d3b4e09
-    ASGARNIA_ICE_DUNGEON_ADEPT_EAST 82 WorldPoint(x=3022, y=9553, plane=0) [I@5dc9d25a
-    COF_SHORTCUT_TOP 83 WorldPoint(x=1436, y=10075, plane=2) [I@686fb58a
-    GRIMSTONE_SHORTCUT_SOUTH 83 WorldPoint(x=2901, y=10454, plane=0) [I@2c4be45f
-    IORWERTHS_DUNGEON_SOUTHERN_SHORTCUT_EAST 84 WorldPoint(x=3241, y=12420, plane=0) [I@4be7acd9
-    IORWERTHS_DUNGEON_SOUTHERN_SHORTCUT_WEST 84 WorldPoint(x=3231, y=12420, plane=0) [I@58afecfd
-    DEEPFIN_CAVE_SHORTCUT 84 WorldPoint(x=2081, y=9203, plane=0) [I@4d79d187
-    DEEPFIN_CAVE_SHORTCUT_ICON 84 WorldPoint(x=2075, y=9203, plane=0) [I@3e63bd6b
-    BRIMHAVEN_DUNGEON_VINE_EAST 87 WorldPoint(x=2672, y=9582, plane=0) [I@48144f1a
-    BRIMHAVEN_DUNGEON_VINE_WEST 87 WorldPoint(x=2606, y=9584, plane=0) [I@6f7b8ae1
-    MOUNT_KARUULM_PIPE_SOUTH 88 WorldPoint(x=1316, y=10214, plane=0) [I@6c8d8b60
-    MOUNT_KARUULM_PIPE_NORTH 88 WorldPoint(x=1345, y=10230, plane=0) [I@4fa6fb7f
-    VIYELDI_ROCK_CLIMB 91 null [I@2520010e
-    MEIYERDITCH_LAB_ADVANCED_TUNNELS_WEST 93 WorldPoint(x=3499, y=9738, plane=0) [I@163fbbc9
-    MEIYERDITCH_LAB_ADVANCED_TUNNELS_MIDDLE 93 WorldPoint(x=3597, y=9704, plane=0) [I@1669f4e5
-    MEIYERDITCH_LAB_ADVANCED_TUNNELS_EAST 93 WorldPoint(x=3604, y=9708, plane=0) [I@6e6c8854
+    DEEP_WILDERNESS_DUNGEON_CREVICE_NORTH - 46 - WorldPoint(x=3047, y=10335, plane=0)
+    DEEP_WILDERNESS_DUNGEON_CREVICE_SOUTH - 46 - WorldPoint(x=3045, y=10327, plane=0)
+    TONALI_CAVERN_STEPPING_STONE - 46 - null
+    TONALI_CAVERN_LOG_BALANCE - 46 - null
+    GREAT_CONCH_CLIFF_SHORTCUT_TOWN - 50 - WorldPoint(x=3180, y=2433, plane=0)
+    ANGLERS_RETREAT_SHORTCUT - 52 - WorldPoint(x=2475, y=2729, plane=0)
+    GREAT_CONCH_CLIFF_SHORTCUT_EAST_1 - 52 - WorldPoint(x=3235, y=2388, plane=0)
+    MOTHERLODE_MINE_WALL_EAST - 54 - WorldPoint(x=3124, y=9703, plane=0)
+    MOTHERLODE_MINE_WALL_WEST - 54 - WorldPoint(x=3118, y=9702, plane=0)
+    GREAT_CONCH_CLIFF_SHORTCUT_SOUTHEAST_BOTTOM - 55 - WorldPoint(x=3272, y=2330, plane=0)
+    GREAT_CONCH_CLIFF_SHORTCUT_EAST_2 - 57 - WorldPoint(x=3256, y=2397, plane=0)
+    ASGARNIA_ICE_DUNGEON_TUNNEL_WEST - 60 - WorldPoint(x=2968, y=9549, plane=0)
+    GREAT_CONCH_STEPPING_STONE - 61 - WorldPoint(x=3208, y=2394, plane=0)
+    LAGUNA_AURORAE_SHORTCUT_1 - 61 - WorldPoint(x=1152, y=2804, plane=0)
+    LAGUNA_AURORAE_SHORTCUT_2 - 61 - WorldPoint(x=1142, y=2803, plane=0)
+    HEROES_GUILD_TUNNEL_EAST - 67 - WorldPoint(x=2898, y=9901, plane=0)
+    HEROES_GUILD_TUNNEL_WEST - 67 - WorldPoint(x=2913, y=9895, plane=0)
+    FENKENSTRAIN_MAUSOLEUM_BRIDGE - 69 - WorldPoint(x=3504, y=3560, plane=0)
+    GU_TANOTH_CRUMBLING_WALL - 71 - WorldPoint(x=2545, y=3032, plane=0)
+    ASGARNIA_ICE_DUNGEON_BASIC_SOUTH - 72 - WorldPoint(x=3033, y=9559, plane=0)
+    BARROWS_WALL_JUMP - 72 - WorldPoint(x=3544, y=3282, plane=0)
+    COF_PLATFORM_TOP - 73 - WorldPoint(x=1438, y=10098, plane=2)
+    COF_PLATFORM_MID - 73 - WorldPoint(x=1443, y=10097, plane=1)
+    MEIYERDITCH_LAB_TUNNELS_NORTH - 74 - WorldPoint(x=3623, y=9747, plane=0)
+    MEIYERDITCH_LAB_TUNNELS_SOUTH - 74 - WorldPoint(x=3618, y=9722, plane=0)
+    FOSSIL_ISLAND_ZIPLINE - 74 - WorldPoint(x=3764, y=3883, plane=0)
+    MOKHAIOTL_PIT_JUMP - 75 - null
+    DARKFROST_CLIFF_SCRAMBLE - 76 - WorldPoint(x=1477, y=3307, plane=0)
+    WILDERNESS_SLAYER_CAVE_CREVICE_NORTH_EAST - 77 - WorldPoint(x=3433, y=10093, plane=0)
+    WILDERNESS_SLAYER_CAVE_CREVICE_SOUTH_EAST - 77 - WorldPoint(x=3434, y=10115, plane=0)
+    WILDERNESS_SLAYER_CAVE_CREVICE_NORTH_WEST - 77 - WorldPoint(x=3341, y=10149, plane=0)
+    WILDERNESS_SLAYER_CAVE_CREVICE_SOUTH_WEST - 77 - WorldPoint(x=3333, y=10119, plane=0)
+    IORWERTHS_DUNGEON_NORTHERN_SHORTCUT_EAST - 78 - WorldPoint(x=3221, y=12441, plane=0)
+    IORWERTHS_DUNGEON_NORTHERN_SHORTCUT_WEST - 78 - WorldPoint(x=3215, y=12441, plane=0)
+    KHARAZI_JUNGLE_VINE_CLIMB - 79 - WorldPoint(x=2897, y=2939, plane=0)
+    SLAYER_TOWER_IVY - 81 - WorldPoint(x=3417, y=3533, plane=0)
+    SLAYER_TOWER_TOP_WINDOW - 81 - WorldPoint(x=3419, y=3534, plane=0)
+    WATERBIRTH_DUNGEON_CREVICE - 81 - WorldPoint(x=2604, y=10070, plane=0)
+    ASGARNIA_ICE_DUNGEON_ADEPT_EAST - 82 - WorldPoint(x=3022, y=9553, plane=0)
+    COF_SHORTCUT_TOP - 83 - WorldPoint(x=1436, y=10075, plane=2)
+    GRIMSTONE_SHORTCUT_SOUTH - 83 - WorldPoint(x=2901, y=10454, plane=0)
+    IORWERTHS_DUNGEON_SOUTHERN_SHORTCUT_EAST - 84 - WorldPoint(x=3241, y=12420, plane=0)
+    IORWERTHS_DUNGEON_SOUTHERN_SHORTCUT_WEST - 84 - WorldPoint(x=3231, y=12420, plane=0)
+    DEEPFIN_CAVE_SHORTCUT - 84 - WorldPoint(x=2081, y=9203, plane=0)
+    DEEPFIN_CAVE_SHORTCUT_ICON - 84 - WorldPoint(x=2075, y=9203, plane=0)
+    BRIMHAVEN_DUNGEON_VINE_EAST - 87 - WorldPoint(x=2672, y=9582, plane=0)
+    BRIMHAVEN_DUNGEON_VINE_WEST - 87 - WorldPoint(x=2606, y=9584, plane=0)
+    MOUNT_KARUULM_PIPE_SOUTH - 88 - WorldPoint(x=1316, y=10214, plane=0)
+    MOUNT_KARUULM_PIPE_NORTH - 88 - WorldPoint(x=1345, y=10230, plane=0)
+    VIYELDI_ROCK_CLIMB - 91 - null
+    MEIYERDITCH_LAB_ADVANCED_TUNNELS_WEST - 93 - WorldPoint(x=3499, y=9738, plane=0)
+    MEIYERDITCH_LAB_ADVANCED_TUNNELS_MIDDLE - 93 - WorldPoint(x=3597, y=9704, plane=0)
+    MEIYERDITCH_LAB_ADVANCED_TUNNELS_EAST - 93 - WorldPoint(x=3604, y=9708, plane=0)
 
 AgilityShortcutTest > everyEnumHasTsvEntry FAILED
     java.lang.AssertionError: Missing TSV entries for AgilityShortcut enum constants (see stdout for list)
@@ -217,7 +216,7 @@ PathfinderTest > testPathViaOtherPlane STANDARD_OUT
     Successfully completed transport length test from (2864, 10199, 0) to (2894, 10199, 0)
 
 PathfinderTest > testFairyRingsUsedWithDramenStaffWornInHand FAILED
-    java.lang.AssertionError: (2027, 5700, 0) to (1429, 3324, 0) expected:<2> but was:<272>
+    java.lang.AssertionError: (2027, 5700, 0) to (2412, 4434, 0) expected:<2> but was:<272>
         at org.junit.Assert.fail(Assert.java:89)
         at org.junit.Assert.failNotEquals(Assert.java:835)
         at org.junit.Assert.assertEquals(Assert.java:647)
@@ -226,7 +225,7 @@ PathfinderTest > testFairyRingsUsedWithDramenStaffWornInHand FAILED
         at shortestpath.pathfinder.PathfinderTest.testFairyRingsUsedWithDramenStaffWornInHand(PathfinderTest.java:161)
 
 PathfinderTest > testFairyRingsUsedWithLumbridgeDiaryCompleteWithoutDramenStaff FAILED
-    java.lang.AssertionError: (2027, 5700, 0) to (1429, 3324, 0) expected:<2> but was:<272>
+    java.lang.AssertionError: (2027, 5700, 0) to (2412, 4434, 0) expected:<2> but was:<272>
         at org.junit.Assert.fail(Assert.java:89)
         at org.junit.Assert.failNotEquals(Assert.java:835)
         at org.junit.Assert.assertEquals(Assert.java:647)
@@ -266,7 +265,7 @@ PathfinderTest > testAgilityShortcutAndTeleportItem STANDARD_OUT
     Successfully completed transport length test from (3149, 3363, 0) to (3154, 3363, 0)
 
 PathfinderTest > testSpiritTrees FAILED
-    java.lang.AssertionError: (2007, 5700, 0) to (2461, 3444, 0) expected:<2> but was:<217>
+    java.lang.AssertionError: (2007, 5700, 0) to (2488, 2850, 0) expected:<2> but was:<217>
         at org.junit.Assert.fail(Assert.java:89)
         at org.junit.Assert.failNotEquals(Assert.java:835)
         at org.junit.Assert.assertEquals(Assert.java:647)
@@ -294,7 +293,7 @@ PathfinderTest > testMinecarts STANDARD_OUT
     Successfully completed 255 MINECART transport length tests
 
 PathfinderTest > testFairyRings FAILED
-    java.lang.AssertionError: (2027, 5700, 0) to (1429, 3324, 0) expected:<2> but was:<272>
+    java.lang.AssertionError: (2027, 5700, 0) to (2412, 4434, 0) expected:<2> but was:<272>
         at org.junit.Assert.fail(Assert.java:89)
         at org.junit.Assert.failNotEquals(Assert.java:835)
         at org.junit.Assert.assertEquals(Assert.java:647)
@@ -327,17 +326,17 @@ TransportDataLintTest > testNoDuplicateOriginDestinationPairs FAILED
         at shortestpath.transport.TransportDataLintTest.testNoDuplicateOriginDestinationPairs(TransportDataLintTest.java:98)
 
 TransportLoaderTest > testMalformedData STANDARD_OUT
-    2026-02-13 23:08:38 CET [Test worker] ERROR shortestpath.transport.Transport - Invalid level and skill: invalid skill
-    2026-02-13 23:08:38 CET [Test worker] ERROR shortestpath.transport.Transport - Invalid item or quantity: INVALID=ITEMS
-    2026-02-13 23:08:38 CET [Test worker] ERROR shortestpath.transport.Transport - Invalid tick duration: invalid_duration
-    2026-02-13 23:08:38 CET [Test worker] ERROR shortestpath.transport.Transport - Invalid wilderness level: invalid_wilderness
+    2026-02-15 14:05:11 CET [Test worker] ERROR shortestpath.transport.Transport - Invalid level and skill: invalid skill
+    2026-02-15 14:05:11 CET [Test worker] ERROR shortestpath.transport.Transport - Invalid item or quantity: INVALID=ITEMS
+    2026-02-15 14:05:11 CET [Test worker] ERROR shortestpath.transport.Transport - Invalid tick duration: invalid_duration
+    2026-02-15 14:05:11 CET [Test worker] ERROR shortestpath.transport.Transport - Invalid wilderness level: invalid_wilderness
 
-Gradle Test Executor 1 finished executing tests.
+Gradle Test Executor 2 finished executing tests.
 
 > Task :test FAILED
-Finished generating test XML results (0.023 secs) into: C:\Users\woute\Code\fork\shortest-path\build\test-results\test
+Finished generating test XML results (0.009 secs) into: C:\Users\woute\Code\fork\shortest-path\build\test-results\test
 Generating HTML test report...
-Finished generating test html results (0.033 secs) into: C:\Users\woute\Code\fork\shortest-path\build\reports\tests\test
+Finished generating test html results (0.013 secs) into: C:\Users\woute\Code\fork\shortest-path\build\reports\tests\test
 
 Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
 
