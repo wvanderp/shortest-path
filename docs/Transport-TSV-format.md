@@ -79,7 +79,7 @@ Other columns (for example, `menuOption menuTarget objectID`) may appear and are
 - Format: one or more quest names separated by `;` (e.g., `Plague City;Song of the Elves`).
 - Notes: quest names must match the client’s `Quest` enum names exactly. Avoid leading/trailing spaces around names.
 
-You may find the Enums in the [Quest.java](https://github.com/runelite/runelite/blob/master/runelite-api/src/main/java/net/runelite/api/Quest.java) on the RuneLite GitHub repo.
+You can find the quest names in RuneLite’s `Quest` enum in [Quest.java](https://github.com/runelite/runelite/blob/master/runelite-api/src/main/java/net/runelite/api/Quest.java) on the RuneLite GitHub repo.
 
 ### Duration
 
