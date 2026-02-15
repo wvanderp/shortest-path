@@ -5277,3 +5277,14 @@
 # Nature Altar									
 3035 4842 0	2400 4844 0	Exit-through Nature rift 25382							 
 2400 4835 0	2865 3022 0	Use Portal 34756						1	
+									
+3066 10143 3	3062 10130 0	Use Crevice 26767						2	
+3062 10130 0	3066 10143 3	Use Crevice 26767						2	
+									
+3017 3740 0	2065 10159 3	Enter Cave 26766						3	
+2065 10159 3	3017 3740 0	Enter Cave 26766						3	
+									
+2055 10165 3	3052 10165 3	Move Boulder 6621	60 Strength					10	
+3052 10165 3	2055 10165 3	Move Boulder 6621	60 Strength					10	
+									
+3050 10165 3	3034 10158 0	Use Crevice 26767						5	
