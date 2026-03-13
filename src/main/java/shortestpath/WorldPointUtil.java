@@ -260,7 +260,7 @@ public class WorldPointUtil {
     public static int fromLocalInstance(Client client, Player localPlayer) {
         WorldView worldView = localPlayer.getWorldView();
         int worldViewId = worldView.getId();
-        boolean isOnBoat = worldViewId != -1;
+        boolean isOnBoat = worldViewId != WorldView.TOPLEVEL;
         if (isOnBoat) {
             WorldEntity worldEntity = client.getTopLevelWorldView().worldEntities().byIndex(worldViewId);
             return fromLocalInstance(client, worldEntity.getLocalLocation());
