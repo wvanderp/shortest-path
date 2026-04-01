@@ -1,8 +1,15 @@
 # Origin	Destination	menuOption menuTarget objectID	Skills	Items	Quests	Duration	Display info
 # Port Sarim, Musa Point							
-3029 3217 0	2956 3146 0	Pay-fare Captain Tobias 3644		COINS=30		10	
+3029 3217 0	2956 3146 0	Musa Point Captain Tobias 14978		COINS=30		10	
+3029 3217 0	2956 3146 0	Musa Point Captain Tobias 14978		KARAMJA_GLOVES=1&COINS=15		10	
+3029 3217 0	2956 3146 0	Musa Point Captain Tobias 14978		RING_OF_CHAROS_UNLOCKED=1		10	
+2956 3146 0	0 0 0	The Pandemonium Captain Tobias 14978		COINS=30		10
+2956 3146 0	0 0 0	The Pandemonium Captain Tobias 14978		RING_OF_CHAROS_UNLOCKED=1		1
+
 2956 3146 0	3029 3217 0	Pay-Fare Customs officer 3648		COINS=30		10	
-							
+2956 3146 0	3029 3217 0	Pay-Fare Customs officer 3648		KARAMJA_GLOVES=1&COINS=15		10
+2956 3146 0	3029 3217 0	Pay-Fare Customs officer 3648		RING_OF_CHAROS_UNLOCKED=1		10
+
 # Ardougne, Brimhaven, Rimmington							
 2683 3271 0	2772 3234 0	Brimhaven Captain Barnaby 9250		COINS=30		6	Brimhaven
 2683 3271 0	2915 3225 0	Rimmington Captain Barnaby 9250		COINS=30		6	Rimmington
