@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Build coordinate dumps for HEAD and its merge-base, then write a JSON file
-# containing only coordinates introduced on the current branch.
+# Build coordinate dumps for the PR head and its merge-base, then write a JSON
+# file containing only coordinates introduced on the current branch.
 #
 # This script is used by the coordinate preview GitHub workflow so the logic for
 # worktree setup, base-task detection, and output generation stays out of YAML.
@@ -9,15 +9,19 @@
 
 set -euo pipefail
 
-if [ $# -ne 2 ]; then
-  echo "Usage: compute_changed_coordinates.sh <base-ref> <github-output>" >&2
+if [ $# -lt 2 ] || [ $# -gt 3 ]; then
+  echo "Usage: compute_changed_coordinates.sh <base-ref> <github-output> [pr-head-sha]" >&2
   exit 1
 fi
 
 BASE_REF="$1"
 GITHUB_OUTPUT_PATH="$2"
+# Optional: explicit PR head SHA.  When the workflow checks out master (for
+# security) and overlays only the data files, HEAD is master — pass the PR
+# head SHA here so git merge-base finds the right common ancestor.
+PR_HEAD="${3:-HEAD}"
 
-MERGE_BASE="$(git merge-base "origin/${BASE_REF}" HEAD)"
+MERGE_BASE="$(git merge-base "origin/${BASE_REF}" "${PR_HEAD}")"
 BASE_DIR="$(mktemp -d)"
 BASE_COORDINATES_PATH="$(mktemp)"
 

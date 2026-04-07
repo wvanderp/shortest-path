@@ -2,11 +2,12 @@ name: Coordinate Preview
 
 # Post a visual coordinate preview comment on pull requests.
 #
-# Uses pull_request_target (not pull_request) so that the workflow runs in the
-# base-repo context with pull-requests:write even for PRs from forks.  We
-# explicitly check out the PR head SHA so we run against the contributor's
-# changes; since we only grant pull-requests:write, the worst-case impact of a
-# modified script is posting a comment.
+# Uses pull_request_target so the workflow runs in the base-repo context with
+# pull-requests:write even for PRs from forks.  The default checkout gives us
+# the base branch (master), so all scripts always come from trusted master
+# code.  The PR's src/main/resources files are overlaid via a separate
+# git-fetch step, and the PR head SHA is passed to the compute script so
+# git merge-base can still find the correct common ancestor.
 #
 # Steps:
 # 1. Compute the set of coordinates introduced by the PR (vs. the merge-base).
@@ -28,10 +29,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          # Explicitly check out the PR head so we validate the contributor's
-          # changes.  fetch-depth: 0 is required for git merge-base / worktree.
-          ref: ${{ github.event.pull_request.head.sha }}
+          # Default checkout for pull_request_target is the base branch
+          # (master).  Scripts therefore always come from master, not the PR.
+          # fetch-depth: 0 is required for git merge-base / worktree.
           fetch-depth: 0
+
+      - name: Fetch and overlay PR resource files
+        run: |
+          # refs/pull/<N>/head is available on the base repo for all PRs,
+          # including those from forks.  Fetching it gives git enough history
+          # to resolve the merge-base without checking out untrusted scripts.
+          git fetch origin refs/pull/${{ github.event.pull_request.number }}/head
+          git checkout FETCH_HEAD -- src/main/resources/
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -43,7 +52,10 @@ jobs:
         shell: bash
         run: |
           chmod +x scripts/compute_changed_coordinates.sh
-          scripts/compute_changed_coordinates.sh "${{ github.base_ref }}" "$GITHUB_OUTPUT"
+          # Pass the PR head SHA explicitly so the script can find the correct
+          # merge-base even though HEAD is master (not the PR head).
+          PR_HEAD=$(git rev-parse FETCH_HEAD)
+          scripts/compute_changed_coordinates.sh "${{ github.base_ref }}" "$GITHUB_OUTPUT" "$PR_HEAD"
 
       - name: Render coordinate previews
         if: steps.compute.outputs.has_changes == 'true'
