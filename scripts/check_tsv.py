@@ -228,19 +228,29 @@ def check_tsv(filepath):
     col_count_errors = 0
     for lineno, line in enumerate(lines[1:], start=2):
         line = line.rstrip("\n")
-        if not line or line.startswith("#"):
+        if not line:
             continue
 
         cols = line.split("\t")
 
-        # Check 3: column count
+        # Check 3: column count (also checked for comment lines, since
+        # external linters like csvlint treat every line as a record)
         if len(cols) != num_cols:
             col_count_errors += 1
             if col_count_errors <= 5:
+                diff = num_cols - len(cols)
+                if diff > 0:
+                    tab_info = f"missing {diff} tab(s)"
+                else:
+                    tab_info = f"{-diff} extra tab(s)"
                 issues.append(
-                    f"  line {lineno}: expected {num_cols} cols, got {len(cols)}"
+                    f"  line {lineno}: expected {num_cols} columns, found {len(cols)} ({tab_info})"
                 )
             continue  # skip per-cell validation when structure is wrong
+
+        # Skip per-cell validation for comment lines
+        if line.startswith("#"):
+            continue
 
         # Check 4-11: per-cell validators
         for col_idx, (col_val, validator) in enumerate(zip(cols, validators)):
