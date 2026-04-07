@@ -110,6 +110,7 @@ public class PathfinderConfig {
     private final Map<Integer, Integer> varPlayerValues = new HashMap<>();
 
     public ItemContainer bank = null;
+    public Set<String> availableSpiritTrees = null;
 
     public PathfinderConfig(Client client, ShortestPathConfig config) {
         this.client = client;
@@ -458,6 +459,32 @@ public class PathfinderConfig {
             return false;
         }
 
+        if (TransportType.SPIRIT_TREE.equals(type)) {
+            if (!checkPlantedSpiritTrees(transport)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private boolean checkPlantedSpiritTrees(Transport transport) {
+        int originX = WorldPointUtil.unpackWorldX(transport.getOrigin());
+        int originY = WorldPointUtil.unpackWorldY(transport.getOrigin());
+
+        // Check planted spirit tree origins (travel FROM a planted tree)
+        if (!isPlantedSpiritTreeAllowed(originX, originY)) {
+            return false;
+        }
+
+        // Check planted spirit tree destinations (travel TO a planted tree)
+        int destX = WorldPointUtil.unpackWorldX(transport.getDestination());
+        int destY = WorldPointUtil.unpackWorldY(transport.getDestination());
+
+        if (!isPlantedSpiritTreeAllowed(destX, destY)) {
+            return false;
+        }
+
         return true;
     }
 
@@ -750,6 +777,26 @@ public class PathfinderConfig {
         double mage = (13 * ((3 * magic) / 2)) / 40.0;
         int combatLevel = (int) Math.floor(base + Math.max(Math.max(melee, range), Math.max(melee, mage)));
         return combatLevel;
+    }
+
+    static String getPlantedSpiritTreeName(int x, int y) {
+        if (x >= 3058 && x <= 3062 && y >= 3256 && y <= 3260) return "Port Sarim";
+        if (x >= 2611 && x <= 2615 && y >= 3855 && y <= 3860) return "Etceteria";
+        if (x >= 2800 && x <= 2804 && y >= 3201 && y <= 3205) return "Brimhaven";
+        if (x >= 1691 && x <= 1695 && y >= 3540 && y <= 3544) return "Hosidius";
+        if (x >= 1251 && x <= 1255 && y >= 3748 && y <= 3752) return "Farming Guild";
+        return null;
+    }
+
+    private boolean isPlantedSpiritTreeAllowed(int x, int y) {
+        String treeName = getPlantedSpiritTreeName(x, y);
+        if (treeName == null) {
+            return true; // Not a planted tree, always allowed
+        }
+        if (availableSpiritTrees == null) {
+            return false; // Cache not populated yet, default to disallowed
+        }
+        return availableSpiritTrees.contains(treeName);
     }
 }
 

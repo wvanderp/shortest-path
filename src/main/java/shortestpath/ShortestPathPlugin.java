@@ -21,6 +21,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadFactory;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.Getter;
 import net.runelite.api.Client;
@@ -521,6 +522,77 @@ public class ShortestPathPlugin extends Plugin {
     public void onWidgetLoaded(WidgetLoaded event) {
         if (pathfinder != null && event.getGroupId() == InterfaceID.FAIRYRINGS_LOG) {
             scrollFairyRingPanel();
+        }
+
+        // Populate spirit tree cache, but only once.
+        // The values here almost never change, we only need to load it once.
+        if (pathfinderConfig.availableSpiritTrees == null) {
+            switch (event.getGroupId()) {
+                case InterfaceID.MENU:
+                    clientThread.invokeLater(() -> parseSpiritTreeWidget(false));
+                    break;
+                case InterfaceID.MENU_NEW:
+                    clientThread.invokeLater(() -> parseSpiritTreeWidget(true));
+                    break;
+            }
+        }
+    }
+
+    private static final Pattern SPIRIT_TREE_LABEL_PATTERN_MENU = Pattern.compile("<col=735a28>(.+)</col>: (<col=5f5f5f>)?(.+)");
+    private static final Pattern SPIRIT_TREE_LABEL_PATTERN_MENU_NEW = Pattern.compile("<col=ffffff>(.+)</col>: (<col=5f5f5f>)?(.+)");
+
+    private void parseSpiritTreeWidget(boolean useNewMenu) {
+        // Referencing
+        // https://github.com/trs/runelite-teleport-maps/blob/e006270494500ab8e4826903b377bb945ca9fc96/src/main/java/com/mjhylkema/TeleportMaps/components/adventureLog/SpiritTreeMap.java#L141
+
+        Widget container;
+        if (useNewMenu) {
+            container = client.getWidget(InterfaceID.MENU_NEW, 9);
+        } else {
+            container = client.getWidget(InterfaceID.MENU, 3);
+        }
+
+        if (container == null) {
+            return;
+        }
+
+        Widget[] children = container.getDynamicChildren();
+        if (children == null || children.length == 0) {
+            return;
+        }
+
+        // Tree Gnome Village is always the first row and always available;
+        // quick length check before running the regex
+        // Expected (old): "<col=735a28>1</col>: Tree Gnome Village" (length 39)
+        // Expected (new): "<col=ffffff>1</col>: Tree Gnome Village" (length 39)
+        String firstText = children[0].getText();
+        if (firstText == null || firstText.length() != 39) {
+            return;
+        }
+
+        Pattern pattern = useNewMenu ? SPIRIT_TREE_LABEL_PATTERN_MENU_NEW : SPIRIT_TREE_LABEL_PATTERN_MENU;
+
+        Set<String> available = new HashSet<>();
+
+        for (Widget child : children) {
+            Matcher matcher = pattern.matcher(child.getText());
+            if (!matcher.matches()) {
+                continue;
+            }
+
+            // Group 2 is the disabled color tag; if present, the tree is unavailable
+            if (matcher.group(2) != null) {
+                continue;
+            }
+
+            // Group 3 is spirit tree name
+            available.add(matcher.group(3));
+        }
+
+        pathfinderConfig.availableSpiritTrees = available;
+
+        if (pathfinder != null) {
+            restartPathfinding(pathfinder.getStart(), pathfinder.getTargets());
         }
     }
 
