@@ -2,23 +2,17 @@ name: Coordinate Preview
 
 # Post a visual coordinate preview comment on pull requests.
 #
-# Uses pull_request_target so the workflow runs in the base-repo context with
-# pull-requests:write even for PRs from forks.  The default checkout gives us
-# the base branch (master), so all scripts always come from trusted master
-# code.  The PR's src/main/resources files are overlaid via a separate
-# git-fetch step, and the PR head SHA is passed to the compute script so
-# git merge-base can still find the correct common ancestor.
+# Uses `pull_request` (not `pull_request_target`) so the PR branch version of
+# scripts and workflow YAML is used — changes to compute_changed_coordinates.sh
+# or this workflow can be tested in PRs.  Comment posting is handled by the
+# separate coordinate-preview-comment.yml workflow_run workflow.
 #
 # Steps:
 # 1. Compute the set of coordinates introduced by the PR (vs. the merge-base).
 # 2. Send only newly introduced coordinates to the remote renderer.
-# 3. Build a PR comment from the rendered manifest and post (or update) it.
+# 3. Upload the rendered manifest as an artifact for the comment workflow.
 on:
-  pull_request_target:
-
-permissions:
-  pull-requests: write   # post / update comments on PRs (including from forks)
-  contents: read         # checkout
+  pull_request:
 
 jobs:
   preview:
@@ -29,18 +23,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          # Default checkout for pull_request_target is the base branch
-          # (master).  Scripts therefore always come from master, not the PR.
-          # fetch-depth: 0 is required for git merge-base / worktree.
           fetch-depth: 0
-
-      - name: Fetch and overlay PR resource files
-        run: |
-          # refs/pull/<N>/head is available on the base repo for all PRs,
-          # including those from forks.  Fetching it gives git enough history
-          # to resolve the merge-base without checking out untrusted scripts.
-          git fetch origin refs/pull/${{ github.event.pull_request.number }}/head
-          git checkout FETCH_HEAD -- src/main/resources/
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -52,10 +35,7 @@ jobs:
         shell: bash
         run: |
           chmod +x scripts/compute_changed_coordinates.sh
-          # Pass the PR head SHA explicitly so the script can find the correct
-          # merge-base even though HEAD is master (not the PR head).
-          PR_HEAD=$(git rev-parse FETCH_HEAD)
-          scripts/compute_changed_coordinates.sh "${{ github.base_ref }}" "$GITHUB_OUTPUT" "$PR_HEAD"
+          scripts/compute_changed_coordinates.sh "${{ github.event.pull_request.base.ref }}" "$GITHUB_OUTPUT"
 
       - name: Render coordinate previews
         if: steps.compute.outputs.has_changes == 'true'
@@ -67,69 +47,18 @@ jobs:
           github-token: ${{ github.token }}
           output-dir: build/preview
 
-      - name: Post PR comment
+      - name: Save PR metadata
         if: steps.compute.outputs.has_changes == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
-          PR_NUMBER="${{ github.event.pull_request.number }}"
+          mkdir -p artifact
+          cp build/preview/manifest.json artifact/
+          echo "${{ github.event.number }}" > artifact/pr-number.txt
+          echo "true" > artifact/has-changes.txt
 
-          # Build the comment body from the rendered manifest.  The logic here
-          # mirrors comment.ts in mpickering/osrs-coord-preview-action so the
-          # output is identical to what the action would post directly.
-          python3 - <<'PYEOF'
-          import json
-
-          with open("build/preview/manifest.json") as f:
-              manifest = json.load(f)
-
-          MARKER = "<!-- osrs-coordinate-preview -->"
-          IMAGE_WIDTH = 220
-
-          lines = [
-              MARKER,
-              "## OSRS coordinate previews",
-              "",
-              f"Rendered {manifest['renderCount']} preview(s); {manifest['failedCount']} failure(s).",
-              "",
-              "| Preview | Item | Coordinate | Source |",
-              "| --- | --- | --- | --- |",
-          ]
-
-          def esc_cell(s):
-              return str(s).replace("|", "\\|").replace("\n", " ")
-
-          def esc_attr(s):
-              return str(s).replace('"', "&quot;")
-
-          for item in manifest["items"]:
-              title = item.get("label") or item["id"]
-              source = item.get("source") or ""
-              coord = item.get("coordinate", "")
-              if item["status"] == "success" and item.get("imageUrl"):
-                  url = item["imageUrl"]
-                  preview = f'<a href="{url}"><img src="{url}" alt="{esc_attr(title)}" width="{IMAGE_WIDTH}" /></a>'
-              elif item["status"] == "failure":
-                  preview = esc_cell(f"failed: {item.get('error', '')}")
-              else:
-                  preview = ""
-              lines.append(f"| {preview} | {esc_cell(title)} | {esc_cell(coord)} | {esc_cell(source)} |")
-
-          with open("build/comment-body.json", "w") as f:
-              json.dump({"body": "\n".join(lines)}, f)
-          PYEOF
-
-          # Post or update the comment, identified by the marker string.
-          REPO="${GITHUB_REPOSITORY}"
-          EXISTING_ID=$(gh api \
-            "repos/$REPO/issues/$PR_NUMBER/comments" \
-            --jq '[.[] | select(.body | contains("<!-- osrs-coordinate-preview -->"))] | first | .id // empty' \
-          )
-          if [ -n "$EXISTING_ID" ]; then
-            gh api "repos/$REPO/issues/comments/$EXISTING_ID" \
-              -X PATCH --input build/comment-body.json
-          else
-            gh api "repos/$REPO/issues/$PR_NUMBER/comments" \
-              -X POST --input build/comment-body.json
-          fi
+      - name: Upload preview results
+        if: steps.compute.outputs.has_changes == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coordinate-preview-results
+          path: artifact/

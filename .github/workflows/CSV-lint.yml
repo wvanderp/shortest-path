@@ -1,17 +1,16 @@
 name: CSV Lint
+
+# Runs the TSV consistency checker and csvlint against the PR's own code.
+# Uses `pull_request` (not `pull_request_target`) so the PR branch version of
+# scripts and workflow YAML is used — changes to check_tsv.py or this workflow
+# can be tested in PRs.  Comment posting is handled by the separate
+# csv-lint-comment.yml workflow_run workflow.
 on:
   push:
     branches: [master]
-  # pull_request_target (not pull_request) runs in the base-repo context, so
-  # the token has pull-requests:write even for PRs from forks.  The default
-  # checkout is the base branch (master), which ensures check_tsv.py always
-  # comes from master.  We then overlay the PR's resource files via git fetch.
-  pull_request_target:
+  pull_request:
     branches: [master]
   workflow_dispatch:
-
-permissions:
-  pull-requests: write   # post / update comments on PRs (including from forks)
 
 jobs:
   csv-lint:
@@ -20,17 +19,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        # For pull_request_target the default checkout is the base branch
-        # (master).  Scripts (check_tsv.py) therefore always come from master,
-        # even for PRs whose branches predate the script.
-
-      - name: Overlay PR resource files
-        if: github.event_name == 'pull_request_target'
-        run: |
-          # Fetch the PR head and overwrite only src/main/resources so we lint
-          # the contributor's data files while keeping master's scripts.
-          git fetch origin ${{ github.event.pull_request.head.sha }}
-          git checkout FETCH_HEAD -- src/main/resources/
 
       - name: TSV Consistency Check
         id: tsv-check
@@ -40,108 +28,21 @@ jobs:
           python3 scripts/check_tsv.py ./src/main/resources 2>&1 | tee tsv-output.txt
           exit ${PIPESTATUS[0]}
 
-      - name: Post TSV check comment
-        if: github.event_name == 'pull_request_target'
-        uses: actions/github-script@v7
+      - name: Save PR metadata
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          mkdir -p artifact
+          cp tsv-output.txt artifact/
+          echo "${{ steps.tsv-check.outcome }}" > artifact/outcome.txt
+          echo "${{ github.event.number }}" > artifact/pr-number.txt
+
+      - name: Upload lint results
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
         with:
-          script: |
-            const fs   = require('fs');
-            const outcome = '${{ steps.tsv-check.outcome }}';
-            const raw     = fs.readFileSync('tsv-output.txt', 'utf8');
-
-            const MARKER = '<!-- tsv-consistency-check -->';
-
-            function buildBody(raw, outcome) {
-              if (outcome === 'success') {
-                return `${MARKER}\n## \u2705 TSV Consistency Check\n\nAll transport data files are consistent.`;
-              }
-
-              const lines = raw.split('\n');
-              const failedFiles = {};
-              const passedFiles = [];
-              let cur = null;
-
-              for (const line of lines) {
-                if (line.startsWith('FAIL  ')) {
-                  cur = line.slice(6).trim();
-                  failedFiles[cur] = [];
-                } else if (line.startsWith('ok    ')) {
-                  passedFiles.push(line.slice(6).trim());
-                  cur = null;
-                } else if (cur && line.startsWith('  ')) {
-                  failedFiles[cur].push(line.trim());
-                } else {
-                  cur = null;
-                }
-              }
-
-              const failCount  = Object.keys(failedFiles).length;
-              const issueCount = Object.values(failedFiles).reduce((n, a) => n + a.length, 0);
-
-              // The script errored before it could produce any FAIL/ok output
-              // (e.g. the TSV path was wrong, or a script-level exception).
-              // Return null to signal "don't post a comment".
-              if (failCount === 0 && issueCount === 0) return null;
-              const shorten    = f => f.replace(/^.*\/src\/main\/resources\//, '');
-
-              let body =
-                `${MARKER}\n## \u274c TSV Consistency Check\n\n` +
-                `Found **${issueCount} issue${issueCount !== 1 ? 's' : ''}** ` +
-                `in **${failCount} file${failCount !== 1 ? 's' : ''}**:\n\n`;
-
-              for (const [file, errors] of Object.entries(failedFiles)) {
-                body += `**\`${shorten(file)}\`**\n\`\`\`\n${errors.join('\n')}\n\`\`\`\n\n`;
-              }
-
-              if (passedFiles.length > 0) {
-                const n = passedFiles.length;
-                body +=
-                  `<details>\n<summary>${n} file${n !== 1 ? 's' : ''} passed \u2705</summary>\n\n` +
-                  passedFiles.map(f => `- \`${shorten(f)}\``).join('\n') +
-                  `\n\n</details>`;
-              }
-
-              return body;
-            }
-
-            const body     = buildBody(raw, outcome);
-            if (body === null) {
-              core.warning('TSV check failed with no parseable output (script error?) — skipping comment.');
-              return;
-            }
-            const prNumber = context.payload.pull_request.number;
-
-            const { data: comments } = await github.rest.issues.listComments({
-              owner:        context.repo.owner,
-              repo:         context.repo.repo,
-              issue_number: prNumber,
-            });
-
-            const existing = comments.find(c => c.body && c.body.includes(MARKER));
-
-            // No failures and no previous comment to update — nothing to do.
-            if (outcome === 'success' && !existing) {
-              core.info('TSV check passed and no prior failure comment — skipping.');
-              return;
-            }
-
-            if (existing) {
-              await github.rest.issues.updateComment({
-                owner:      context.repo.owner,
-                repo:       context.repo.repo,
-                comment_id: existing.id,
-                body,
-              });
-              core.info(`Updated comment #${existing.id} on PR #${prNumber}.`);
-            } else {
-              await github.rest.issues.createComment({
-                owner:        context.repo.owner,
-                repo:         context.repo.repo,
-                issue_number: prNumber,
-                body,
-              });
-              core.info(`Created new comment on PR #${prNumber}.`);
-            }
+          name: tsv-lint-results
+          path: artifact/
 
       - name: Fail if TSV check failed
         if: steps.tsv-check.outcome == 'failure'
