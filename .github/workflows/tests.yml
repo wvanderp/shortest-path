@@ -21,13 +21,11 @@ jobs:
           distribution: "temurin"
           java-version: "11"
 
-      - name: Make Gradle wrapper executable
-        run: chmod +x gradlew
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Run tests
-        run: |
-          ./gradlew --version
-          ./gradlew test jacocoTestReport --no-daemon --stacktrace
+        run: ./gradlew test jacocoTestReport --stacktrace
         shell: bash
       - name: Upload JUnit XML results
         if: always()
