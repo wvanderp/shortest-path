@@ -670,6 +670,16 @@ public class ShortestPathPlugin extends Plugin {
             return;
         }
 
+        codeWidget.setTextColor(0x00FF00);
+        String codeWidgetText = codeWidget.getText();
+        if (codeWidgetText != null && !codeWidgetText.contains("(Shortest Path)")) {
+            codeWidget.setText("(Shortest Path) " + codeWidgetText);
+        }
+
+        if (contentsList == null) {
+            return;
+        }
+
         int panelScrollY = Math.min(
             codeWidget.getRelativeY(),
             contentsList.getScrollHeight() - contentsList.getHeight()
@@ -677,12 +687,6 @@ public class ShortestPathPlugin extends Plugin {
 
         contentsList.setScrollY(panelScrollY);
         contentsList.revalidateScroll();
-
-        codeWidget.setTextColor(0x00FF00);
-        String codeWidgetText = codeWidget.getText();
-        if (codeWidgetText != null && !codeWidgetText.contains("(Shortest Path)")) {
-            codeWidget.setText("(Shortest Path) " + codeWidgetText);
-        }
 
         client.runScript(
             ScriptID.UPDATE_SCROLLBAR,
