@@ -526,6 +526,19 @@ public class ShortestPathPlugin extends Plugin {
         if (pathfinder != null && event.getGroupId() == InterfaceID.FAIRYRINGS_LOG) {
             fairyRingPanelOpen = true;
         }
+
+        // Populate spirit tree cache, but only once.
+        // The values here almost never change, we only need to load it once.
+        if (pathfinderConfig.availableSpiritTrees == null) {
+            switch (event.getGroupId()) {
+                case InterfaceID.MENU:
+                    clientThread.invokeLater(() -> parseSpiritTreeWidget(false));
+                    break;
+                case InterfaceID.MENU_NEW:
+                    clientThread.invokeLater(() -> parseSpiritTreeWidget(true));
+                    break;
+            }
+        }
     }
 
     @Subscribe
@@ -539,19 +552,6 @@ public class ShortestPathPlugin extends Plugin {
     public void onPostClientTick(PostClientTick event) {
         if (fairyRingPanelOpen && pathfinder != null) {
             scrollFairyRingPanel();
-        }
-
-        // Populate spirit tree cache, but only once.
-        // The values here almost never change, we only need to load it once.
-        if (pathfinderConfig.availableSpiritTrees == null) {
-            switch (event.getGroupId()) {
-                case InterfaceID.MENU:
-                    clientThread.invokeLater(() -> parseSpiritTreeWidget(false));
-                    break;
-                case InterfaceID.MENU_NEW:
-                    clientThread.invokeLater(() -> parseSpiritTreeWidget(true));
-                    break;
-            }
         }
     }
 
