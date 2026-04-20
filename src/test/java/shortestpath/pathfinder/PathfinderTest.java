@@ -1327,6 +1327,7 @@ public class PathfinderTest {
                 break;
             }
         }
+        expected = null;
         if (actual != null) {
             expected = new TransportItems(
                 new int[][]{
@@ -1434,7 +1435,6 @@ public class PathfinderTest {
         assertTrue("No tests were performed", counter > 0);
         System.out.printf("Successfully completed %d " + transportType + " transport length tests%n", counter);
     }
-
 
     /**
      * Verifies that ALL transports of the given type are present in the usable transports,
@@ -1565,18 +1565,6 @@ public class PathfinderTest {
         return null;
     }
 
-    private Transport findConfiguredTransport(TransportType transportType) {
-        for (Set<Transport> set : pathfinderConfig.getTransports().values()) {
-            for (Transport transport : set) {
-                if (transportType.equals(transport.getType())) {
-                    return transport;
-                }
-            }
-        }
-        fail("No configured transport of type " + transportType + " found");
-        return null;
-    }
-
     private int calculatePathLength(int origin, int destination) {
         Pathfinder pathfinder = runPathfinder(origin, destination);
         return pathfinder.getPath().size();
@@ -1588,14 +1576,17 @@ public class PathfinderTest {
         return pathfinder;
     }
 
+    // In a future commit, these tests will be rendered onto a debugging dashboard.
     private Pathfinder runScenario(String label, int origin, int destination) {
         Pathfinder pathfinder = runPathfinder(origin, destination);
-        PathfinderTestDashboardCollector.record(
+        if (pathfinder.getResult() != null) {
+            PathfinderTestDashboardCollector.record(
                 label,
                 pathfinder.getResult(),
                 pathfinderConfig,
                 null,
                 null);
+        }
         return pathfinder;
     }
 
