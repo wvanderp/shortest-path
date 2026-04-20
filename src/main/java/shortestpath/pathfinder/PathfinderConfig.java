@@ -239,8 +239,19 @@ public class PathfinderConfig {
         if (transport.isConsumable() && TransportType.TELEPORTATION_ITEM.equals(transport.getType())) {
             return costConsumableTeleportationItems;
         }
-        int cost = transportTypeConfig.getCost(transport.getType());
-        return cost;
+        return transportTypeConfig.getCost(transport.getType());
+    }
+
+    /**
+     * Returns the differential cost for a transport type that shares destinations with another type.
+     * This cost is only applied when the transport is in delayed-visit competition with its partner,
+     * not globally against all other transport types.
+     */
+    public int getDifferentialCost(Transport transport) {
+        if (transport.getType().differentialCostFunction() != null) {
+            return transport.getType().differentialCostFunction().apply(config);
+        }
+        return 0;
     }
 
     private Map<String, Set<Integer>> filterDestinations(Map<String, Set<Integer>> allDestinations) {
@@ -491,7 +502,9 @@ public class PathfinderConfig {
      * Returns false if the transport should be filtered out based on teleportation item settings.
      */
     private boolean checkTeleportationItemRules(Transport transport, TransportType type) {
-        if (!TransportType.TELEPORTATION_ITEM.equals(type) && !TransportType.SEASONAL_TRANSPORTS.equals(type)) {
+        if (!TransportType.TELEPORTATION_ITEM.equals(type)
+                && !TransportType.SEASONAL_TRANSPORTS.equals(type)
+                && !TransportType.QUETZAL_WHISTLE.equals(type)) {
             return true; // Not a teleportation item type
         }
 
@@ -592,7 +605,8 @@ public class PathfinderConfig {
                                      boolean checkBank,
                                      boolean checkRunePouch) {
         if (TransportType.TELEPORTATION_ITEM.equals(transport.getType()) ||
-                TransportType.SEASONAL_TRANSPORTS.equals(transport.getType())) {
+                TransportType.SEASONAL_TRANSPORTS.equals(transport.getType()) ||
+                TransportType.QUETZAL_WHISTLE.equals(transport.getType())) {
             switch (transportTypeConfig.getTeleportationItemSetting()) {
                 case ALL:
                 case ALL_NON_CONSUMABLE:

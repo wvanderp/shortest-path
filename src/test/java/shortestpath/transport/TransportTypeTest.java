@@ -11,6 +11,7 @@ public class TransportTypeTest {
         assertTrue(TransportType.TELEPORTATION_ITEM.isTeleport());
         assertTrue(TransportType.TELEPORTATION_MINIGAME.isTeleport());
         assertTrue(TransportType.TELEPORTATION_SPELL.isTeleport());
+        assertTrue(TransportType.QUETZAL_WHISTLE.isTeleport());
 
         assertFalse(TransportType.TRANSPORT.isTeleport());
         assertFalse(TransportType.AGILITY_SHORTCUT.isTeleport());
@@ -33,4 +34,5 @@ public class TransportTypeTest {
         assertFalse(TransportType.TELEPORTATION_PORTAL.isTeleport());
         assertFalse(TransportType.WILDERNESS_OBELISK.isTeleport());
     }
+
 }
