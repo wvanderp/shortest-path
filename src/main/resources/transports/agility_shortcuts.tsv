@@ -73,6 +73,8 @@
 3208 9572 0	3204 9572 0	Jump-across Stepping stone 5948	1 Agility				4	
 2698 9492 0	2698 9500 0	Squeeze-through Pipe 21727	1 Agility				13	
 2698 9500 0	2698 9492 0	Squeeze-through Pipe 21727	1 Agility				13	
+2697 9436 0	2684 9436 0	Enter Crevice 30198	1 Agility				3	
+2684 9436 0	2697 9436 0	Enter Crevice 30198	1 Agility				3	
 2655 9566 0	2655 9573 0	Squeeze-through Pipe 21728	1 Agility				13	
 2655 9573 0	2655 9566 0	Squeeze-through Pipe 21728	1 Agility				13	
 2649 9562 0	2647 9557 0	Jump-from Stepping stone 21738	1 Agility				7	
